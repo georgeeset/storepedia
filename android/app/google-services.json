@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "554052814079",
+    "project_id": "storepedia-ac09d",
+    "storage_bucket": "storepedia-ac09d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:554052814079:android:ab8166c736e7637fcf38ca",
+        "android_client_info": {
+          "package_name": "com.flexautomation.storepedia"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "554052814079-qs3h8rjs2lsn8rjkso7cfsbi25ctpqjv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCS6gpacsqiyB4RsuW0RoIYGXmlHKOZPYU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "554052814079-qs3h8rjs2lsn8rjkso7cfsbi25ctpqjv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

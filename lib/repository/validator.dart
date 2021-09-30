@@ -1,0 +1,28 @@
+class Validator{
+
+  String? validateString(String value){
+    if(value.length<3){
+      return 'Data is too Short';
+    }
+    return null;
+  }
+
+  String? validatePassword(String val) {
+    if (val.isEmpty) {
+      return 'Password must not be empty';
+    } else {
+      if (val.length < 6) {
+        return 'Your password is too short';
+      }
+      return null;
+    }
+  }
+
+  String? validateEmail(String val) {
+    if (!RegExp(r"^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(val)) {
+      return 'Invalid email';
+    }
+
+    return null;
+  }
+}
