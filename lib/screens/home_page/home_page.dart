@@ -2,11 +2,14 @@ import 'package:store_pedia/bloc/authentication_bloc/bloc/authentication_bloc.da
 import 'package:store_pedia/bloc/photo_manager_bloc/photomanager_bloc.dart';
 import 'package:store_pedia/cubit/edit_item_cubit/edititem_cubit.dart';
 import 'package:store_pedia/cubit/form_level_cubit/formlevel_cubit.dart';
+import 'package:store_pedia/cubit/recent_item_cubit/cubit/recentitems_cubit.dart';
 import 'package:store_pedia/cubit/user_manager_cubit/cubit/usermanager_cubit.dart';
+import 'package:store_pedia/model/part.dart';
 import 'package:store_pedia/screens/add_item_page/add_item_page.dart';
 import 'package:store_pedia/screens/search_page/search_page.dart';
 import 'package:store_pedia/widgets/input_editor.dart';
 import 'package:store_pedia/widgets/loading_indicator.dart';
+import 'package:store_pedia/widgets/one_part.dart';
 import 'package:store_pedia/widgets/warining_dialog.dart';
 
 import '../../constants/number_constants.dart' as NumberConstants;
@@ -56,7 +59,7 @@ class HomePage extends StatelessWidget {
               child: Container(
                   width: sizeData.width,
                   height: sizeData.height - NumberConstants.appbarHeight,
-                  padding: EdgeInsets.symmetric(vertical: 30.0),
+                  //padding: EdgeInsets.symmetric(vertical: 5.0),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.only(
@@ -95,7 +98,8 @@ class HomePage extends StatelessWidget {
                                 ),
                                 splashColor: Colors.blue,
                                 onTap: () {
-                                  Navigator.pushNamed(context, SearchPage.routName);
+                                  Navigator.pushNamed(
+                                      context, SearchPage.routName);
                                 },
                               ),
                             ),
@@ -103,6 +107,10 @@ class HomePage extends StatelessWidget {
                               child: BlocConsumer<UserManagerCubit,
                                   UserManagerState>(
                                 listener: (context, state) {
+
+
+                                  // check if UserManager has loaded and give option for reloading
+                                  // if failed, reload option will be provided.
                                   var authSample =
                                       context.read<AuthenticationBloc>().state;
 
@@ -126,11 +134,21 @@ class HomePage extends StatelessWidget {
                                     );
                                   }
 
+                                  // if usermanagerState is loaded,
+                                  // if loaded, go adhead and display
+                                  //recent parts added to db 
+
+                                  if (state is UserLoadedState) {
+                                    context
+                                        .read<RecentItemsCubit>()
+                                        .listenForRecentParts();
+                                  }
+
                                   /// this check should be the last one so we confirm how serious the
                                   /// user is before app access is checked.
 
                                   if (state is UserLoadedState &&
-                                      state.userData.accessLevel == null &&
+                                      state.userData.accessLevel == 0 &&
                                       state.userData.hasName() &&
                                       authSample is AuthenticatedState &&
                                       authSample.user.emailVerified) {
@@ -149,12 +167,16 @@ class HomePage extends StatelessWidget {
                                     );
                                   }
 
+                                  // if you observe device info change,
+                                  // just display snackbar to inform for now.
+
                                   if (state is UserLoadedState &&
                                       state.userData.deviceId ==
                                           state.actualDeviceInfo) {
                                     SnackBar(
-                                      backgroundColor:
-                                          Theme.of(context).colorScheme.secondary,
+                                      backgroundColor: Theme.of(context)
+                                          .colorScheme
+                                          .secondary,
                                       duration: Duration(
                                           seconds: NumberConstants
                                               .errorSnackBarDelay),
@@ -171,7 +193,10 @@ class HomePage extends StatelessWidget {
                                     );
                                   }
                                 },
+
                                 builder: (context, state) {
+
+                                  //loading indicatior if loading
                                   if (state is UserLoadingState) {
                                     return Container(
                                       width: horizontalListWidth,
@@ -181,6 +206,9 @@ class HomePage extends StatelessWidget {
                                       child: Center(child: LoadingIndicator()),
                                     );
                                   }
+
+                                  // deside what to display if user is loaded
+                                  // and level of user's registeration
                                   if (state is UserLoadedState) {
                                     var user = context
                                         .read<AuthenticationBloc>()
@@ -269,8 +297,19 @@ class HomePage extends StatelessWidget {
                           child: Text('Recently Added Store Items')),
                       Container(
                         width: sizeData.width,
-                        height: sizeData.height / 4,
+                        height: sizeData.height / 3,
                         color: Colors.black12,
+                        child: BlocBuilder<RecentItemsCubit, List<Part>>(
+                          builder: (context, recentItemState) {
+                            return ListView(
+                              scrollDirection: Axis.horizontal,
+                              children: recentItemState
+                                  .map((e) => Container(
+                                      width: 150, child: OnePart(part: e)))
+                                  .toList(),
+                            );
+                          },
+                        ),
                       ),
                     ],
                   )

@@ -1,20 +1,23 @@
 import 'dart:io';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:pinch_zoom_image_last/pinch_zoom_image_last.dart';
 import 'package:store_pedia/bloc/part_upload_wizard/bloc/partuploadwizard_bloc.dart';
 import 'package:store_pedia/bloc/photo_manager_bloc/photomanager_bloc.dart';
-import 'package:store_pedia/bloc/photo_upload_bloc.dart/cubit/photoupload_cubit.dart';
 import 'package:store_pedia/cubit/edit_item_cubit/edititem_cubit.dart';
 import 'package:store_pedia/cubit/form_level_cubit/formlevel_cubit.dart';
+import 'package:store_pedia/cubit/photo_upload_cubit/photoupload_cubit.dart';
+import 'package:store_pedia/cubit/repitition_cubit/cubit/repitition_cubit.dart';
 import 'package:store_pedia/cubit/user_manager_cubit/cubit/usermanager_cubit.dart';
 import 'package:store_pedia/model/part.dart';
 import 'package:store_pedia/repository/crop_image.dart';
 import 'package:store_pedia/repository/image_getter.dart';
+import 'package:store_pedia/screens/search_page/search_page.dart';
 import 'package:store_pedia/widgets/input_editor.dart';
 import 'package:store_pedia/widgets/loading_indicator.dart';
+import 'package:store_pedia/widgets/online_pinch_zoom.dart';
 import 'package:store_pedia/widgets/page_layout.dart';
 import '../../constants/number_constants.dart' as NumberConstants;
 import '../../constants/string_constants.dart' as StringConstants;
@@ -35,106 +38,279 @@ class AddItemPage extends StatelessWidget {
             ?.copyWith(color: Colors.white),
       ),
       hasBackButton: true,
-      body: BlocBuilder<EditItemCubit, Part>(
-        builder: (context, state) {
-          return ListView(
-            children: [
-              FormListItem(
-                sizeData: sizeData,
-                info: StringConstants.partNameInfo,
-                title: StringConstants.partNameTitle,
-                fieldValue: state.partName,
-                onSubmit: (value) {
-                  context.read<EditItemCubit>().editPartName(value);
-                },
-              ),
-              FormListItem(
-                title: StringConstants.partDescriptionTitle,
-                info: StringConstants.partDescriptionInfo,
-                sizeData: sizeData,
-                fieldValue: state.partDescription,
-                onSubmit: (value) {
-                  context.read<EditItemCubit>().editPartDescription(value);
-                },
-              ),
-              FormListItem(
-                title: StringConstants.brandTitle,
-                info: StringConstants.brandInfo,
-                sizeData: sizeData,
-                fieldValue: state.brand,
-                onSubmit: (value) {
-                  context.read<EditItemCubit>().editBrand(value);
-                },
-              ),
-              FormListItem(
-                title: StringConstants.partNumberTitle,
-                info: StringConstants.partNumberInfo,
-                sizeData: sizeData,
-                fieldValue: state.partNumber,
-                onSubmit: (value) {
-                  context.read<EditItemCubit>().editPartNumber(value);
-                },
-              ),
-              FormListItem(
-                title: StringConstants.storeIdTitle,
-                info: StringConstants.storeIdInfo,
-                sizeData: sizeData,
-                fieldValue: state.storeId,
-                onSubmit: (value) {
-                  context.read<EditItemCubit>().editStoreid(value);
-                },
-              ),
-              FormListItem(
-                title: StringConstants.storeLocationTitle,
-                info: StringConstants.storeLocationInfo,
-                sizeData: sizeData,
-                fieldValue: state.storeLocation,
-                onSubmit: (value) {
-                  context.read<EditItemCubit>().editStoreLocation(value);
-                },
-              ),
-              SectionDropdown(
-                onSelect: (value) {
-                  context.read<EditItemCubit>().editSection(value);
-                },
-                fieldValue: state.section,
-              ),
-              PhotoManager(),
-              Card(
-                margin: EdgeInsets.all(10.0),
-                elevation: 3.0,
-                shadowColor: Colors.blue,
-                child: Container(
-                  height: 50.0,
-                  padding: EdgeInsets.symmetric(horizontal: 10.0),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: BlocBuilder<PartuploadwizardBloc,
-                            PartuploadwizardState>(
-                          builder: (context, uploadState) {
-                            return uploadState is PartuploadwizardLoadingState
-                                ? Center(child: LoadingIndicator())
-                                : ElevatedButton(
-                                    onPressed: () {
-                                      var score =
-                                          context.read<FormLevelCubit>().state;
-                                      context.read<PartuploadwizardBloc>().add(
-                                          UploadPartEvent(
-                                              part: state, score: score));
-                                    },
-                                    child: Text('Add Part'),
-                                  );
+      body: MultiBlocListener(
+        listeners: [
+          ///When Image is selected by PhotoManagerBloc:
+          ///Check if the part editor form has passed the minimum form score
+          ///Then start uploading the Image rightaway
+          BlocListener<PhotomanagerBloc, PhotomanagerState>(
+            listener: (context, state) {
+              var scoreState = context.read<FormLevelCubit>().state;
+              print(scoreState);
+              if (state is ImageSelectedState &&
+                  scoreState >= NumberConstants.minimumScore) {
+                context
+                    .read<PhotouploadCubit>()
+                    .attemptUpload(photo: state.image);
+              }
+
+              if (state is PhotomanagerEmptyState) {
+                var itemEditor = context.read<EditItemCubit>();
+                var photoUpload = context.read<PhotouploadCubit>().state;
+                var userInfo = context.read<UserManagerCubit>().state;
+
+                if (photoUpload is PhotouploadedState) {
+                  itemEditor.editPhoto(photoUpload.uploadLink);
+                }
+                if (userInfo is UserLoadedState) {
+                  itemEditor.updateTheRestInfo(userInfo.userData);
+                }
+              }
+            },
+          ),
+
+          ///when photo is uploaded:
+          ///Update the link of uploaded file to the part Being Edited
+          ///Indicate That the file have been uploaded Ok
+          ///Add search Keywords to part
+          BlocListener<PhotouploadCubit, PhotouploadState>(
+            listener: (context, state) {
+              if (state is PhotouploadedState) {
+              
+                //Ensure photo is removed to prevent image form uploading again
+                context.read<PhotomanagerBloc>().add(RemovePhotoEvent());
+
+                // itemEditor.editPhoto(state.uploadLink);
+
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    backgroundColor: Colors.blue,
+                    duration:
+                        Duration(seconds: NumberConstants.errorSnackBarDelay),
+                    content: Text('Picture Upload Successful !'),
+                  ),
+                );
+              }
+              if (state is PhotouploadErrorState) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    backgroundColor: Colors.pink,
+                    duration:
+                        Duration(seconds: NumberConstants.errorSnackBarDelay),
+                    content: Text('Picture Upload Failed ${state.message}'),
+                  ),
+                );
+              }
+            },
+          ),
+
+          BlocListener<PartuploadwizardBloc, PartuploadwizardState>(
+              listener: (context, state) {
+            /// display information if upload is successful
+            if (state is PartuploadwizardErrorState) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  backgroundColor: Colors.pink,
+                  duration:
+                      Duration(seconds: NumberConstants.errorSnackBarDelay),
+                  content: Text('Upload failed ${state.message}'),
+                ),
+              );
+            }
+
+            /// clear from make them no send am again
+            if (state is PartuploadwizardLoadedState) {
+              context.read<EditItemCubit>().clearPart();
+              context.read<PhotomanagerBloc>().add(RemovePhotoEvent());
+            }
+          }),
+
+          ///listen for form level to help activate file upload if file has been uploaded
+          ///check if:
+          ///Image have been selected,
+          ///AND Image have NOT been uploaded
+          ///AND Form score have passed minimum setpoint
+          ///Do Upload the Image
+          BlocListener<FormLevelCubit, int>(listener: (context, state) {
+            var photoState = context.read<PhotomanagerBloc>().state;
+            var upload = context.read<PhotouploadCubit>();
+            var formStatus = context.read<EditItemCubit>().state;
+            if (state >= NumberConstants.minimumScore &&
+                photoState is ImageSelectedState) {
+              upload.attemptUpload(
+                photo: photoState.image,
+                fileName: formStatus.photo,
+              );
+            }
+
+            if (state >= NumberConstants.minimumScore) {
+              var formStatus = context.read<EditItemCubit>().state;
+              context.read<RepititionCubit>().searchDB(
+                    partNumber: formStatus.partNumber,
+                    storeid: formStatus.storeId,
+                    storageLocation: formStatus.storeLocation,
+                  );
+            }
+          }),
+
+          // BlocListener<RepititionCubit, RepititionCubitState>(
+          //   listener: (context,repititionState){
+          //     if(repititionState is RepititionNotFoundState){
+          //       //upload file if you like
+          //     }
+          // }),
+          
+        ],
+        child: BlocBuilder<EditItemCubit, Part>(
+          builder: (context, state) {
+            // print(state.partUid);
+            return ListView(
+              children: [
+                FormListItem(
+                  sizeData: sizeData,
+                  info: StringConstants.partNameInfo,
+                  title: StringConstants.partNameTitle,
+                  fieldValue: state.partName,
+                  onSubmit: (value) {
+                    context.read<EditItemCubit>().editPartName(value);
+                  },
+                ),
+                FormListItem(
+                  title: StringConstants.partDescriptionTitle,
+                  info: StringConstants.partDescriptionInfo,
+                  sizeData: sizeData,
+                  fieldValue: state.partDescription,
+                  onSubmit: (value) {
+                    context.read<EditItemCubit>().editPartDescription(value);
+                  },
+                ),
+                FormListItem(
+                  title: StringConstants.brandTitle,
+                  info: StringConstants.brandInfo,
+                  sizeData: sizeData,
+                  fieldValue: state.brand,
+                  onSubmit: (value) {
+                    context.read<EditItemCubit>().editBrand(value);
+                  },
+                ),
+                FormListItem(
+                  title: StringConstants.partNumberTitle,
+                  info: StringConstants.partNumberInfo,
+                  sizeData: sizeData,
+                  fieldValue: state.partNumber,
+                  textCapitalization: TextCapitalization.characters,
+                  onSubmit: (value) {
+                    value = value.replaceAll(' ', '');
+                    value = value.toUpperCase();
+                    context.read<EditItemCubit>().editPartNumber(value);
+                  },
+                ),
+                FormListItem(
+                  title: StringConstants.storeIdTitle,
+                  info: StringConstants.storeIdInfo,
+                  sizeData: sizeData,
+                  textCapitalization: TextCapitalization.characters,
+                  fieldValue: state.storeId,
+                  onSubmit: (value) {
+                    context.read<EditItemCubit>().editStoreid(value);
+                  },
+                ),
+                FormListItem(
+                  title: StringConstants.storeLocationTitle,
+                  info: StringConstants.storeLocationInfo,
+                  sizeData: sizeData,
+                  fieldValue: state.storeLocation,
+                  textCapitalization: TextCapitalization.characters,
+                  noSpace: true,
+                  onSubmit: (value) {
+                    context.read<EditItemCubit>().editStoreLocation(value);
+                  },
+                ),
+                SectionDropdown(
+                  onSelect: (value) {
+                    context.read<EditItemCubit>().editSection(value);
+                  },
+                  fieldValue: state.section,
+                ),
+                PhotoManager(),
+
+                //checking for duplicate part.
+                // if duplicate is found, then 
+                // Upload part button will not be activated
+                Card(
+                  child: Container(
+                    padding: EdgeInsets.all(10.0),
+                    child: BlocBuilder<RepititionCubit, RepititionCubitState>(
+                        builder: (context, repititionState) {
+                      if (repititionState is RepititionFoundState &&
+                          state.partUid == null) {
+                        return TextButton(
+                          onPressed: () {
+                            Navigator.of(context)
+                                .pushNamed(SearchPage.routName);
                           },
-                        ),
-                      ),
-                    ],
+                          child: Text(
+                            'It seems the part already exist,\n Click Here to View,Edit or Delete the existing part.',
+                            softWrap: true,
+                            
+                            style: Theme.of(context)
+                                .textTheme
+                                .subtitle1!
+                                .copyWith(color: Colors.redAccent,decoration: TextDecoration.underline),
+                          ),
+                        );
+                      } else {
+                        if (repititionState is RepititionSearchError) {
+                          return Icon(Icons.running_with_errors);
+                        } else {
+                          return Container();
+                        }
+                      }
+                    }),
                   ),
                 ),
-              ),
-            ],
-          );
-        },
+                 Container(
+                  //height: 100.0,
+                  padding: EdgeInsets.all(10),
+                  child:
+                      BlocBuilder<PartuploadwizardBloc, PartuploadwizardState>(
+                    builder: (context, uploadState) {
+                      return uploadState is PartuploadwizardLoadingState
+                          ? Center(child: LoadingIndicator())
+                          : ElevatedButton(
+                              onPressed: () {
+                                var score =
+                                    context.read<FormLevelCubit>().state;
+                                var userInfo =
+                                    context.read<UserManagerCubit>().state;
+                                if (userInfo is UserLoadedState) {
+                                  context
+                                      .read<EditItemCubit>()
+                                      .updateTheRestInfo(userInfo.userData);
+                                }
+
+                                Future.delayed(
+                                    Duration(seconds: 1),
+                                    () => context
+                                        .read<PartuploadwizardBloc>()
+                                        .add(UploadPartEvent(
+                                            part: context
+                                                .read<EditItemCubit>()
+                                                .state,
+                                            score: score)));
+                              },
+                              child: Text(state.partUid == null
+                                  ? 'Add Part'
+                                  : 'Update'),
+                            );
+                    },
+                  ),
+                ),
+                
+              ],
+            );
+          },
+        ),
       ),
       levelIndicator:
           BlocBuilder<FormLevelCubit, int>(builder: (context, state) {
@@ -174,14 +350,7 @@ class _PhotoManagerState extends State<PhotoManager> {
       margin: EdgeInsets.all(10.0),
       elevation: 3.0,
       shadowColor: Colors.blue,
-      child: BlocConsumer<PhotomanagerBloc, PhotomanagerState>(
-        listener: (context, state){
-          var scoreState=context.read<FormLevelCubit>().state;
-          print(scoreState);
-          if(state is ImageSelectedState && scoreState>NumberConstants.minimumScore){
-            context.read<PhotouploadCubit>().attemptUpload(photo: state.image);
-          }
-        },
+      child: BlocBuilder<PhotomanagerBloc, PhotomanagerState>(
         builder: ((context, state) {
           if (state is ImageSelectedState) {
             return DisplayOfflineImage(image: state.image);
@@ -210,9 +379,13 @@ class _PhotoManagerState extends State<PhotoManager> {
                 ? Stack(
                     alignment: Alignment.topCenter,
                     children: [
-                      CachedNetworkImage(
-                        imageUrl: state.photo!,
-                      ),
+                      // CachedNetworkImage(
+                      //   imageUrl: state.photo!,
+                      //   errorWidget: (context,_,__)=>Image.asset('assets/images/main_logo.jpg'),
+                      //   placeholder:(context,_)=> Center(child: LoadingIndicator()),
+
+                      // ),
+                      OnlinePinchZoomImage(link: state.photo),
                       Positioned(
                           bottom: 10,
                           child: Container(
@@ -345,7 +518,7 @@ class _PhotoManagerState extends State<PhotoManager> {
           if (value != null) {
             //this will yield PhotoSelectedState
             context.read<PhotomanagerBloc>()
-              ..add(SelectPhotoEvent(photo: value));
+              .add(SelectPhotoEvent(photo: value));
           }
         });
       }
@@ -365,7 +538,7 @@ class DisplayOfflineImage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        Image.file(image),
+        PinchZoomImage(image: Image.file(image)),
         Positioned(
           top: 20,
           right: 20,
@@ -381,16 +554,17 @@ class DisplayOfflineImage extends StatelessWidget {
                         shape: BoxShape.circle,
                       ),
                       child: InkWell(
-                          onTap: () {
-                            context
-                                .read<PhotomanagerBloc>()
-                                .add(RemovePhotoEvent());
-                          },
-                          child: Icon(
-                            Icons.cancel,
-                            color: Colors.white,
-                            size: 32,
-                          )),
+                        onTap: () {
+                          context
+                              .read<PhotomanagerBloc>()
+                              .add(RemovePhotoEvent());
+                        },
+                        child: Icon(
+                          Icons.cancel,
+                          color: Colors.white,
+                          size: 32,
+                        ),
+                      ),
                     );
             },
           ),
@@ -398,38 +572,7 @@ class DisplayOfflineImage extends StatelessWidget {
         Positioned(
             top: 50,
             left: 50,
-            child: BlocConsumer<PhotouploadCubit, PhotouploadState>(
-              listener: (context, state) {
-                if (state is PhotouploadedState) {
-                  var itemEditor= context.read<EditItemCubit>();
-                  var userInfo=context.read<UserManagerCubit>().state;
-                  itemEditor.editPhoto(state.uploadLink);
-                  if(userInfo is UserLoadedState){
-                    itemEditor.updateTheRestInfo(userInfo.userData);
-                  }
-                  
-
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      backgroundColor: Colors.blue,
-                      duration:
-                          Duration(seconds: NumberConstants.errorSnackBarDelay),
-                      content: Text('Picture Upload Successful !'),
-                    ),
-                  );
-                }
-                if (state is PhotouploadErrorState) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      backgroundColor: Colors.pink,
-                      duration:
-                          Duration(seconds: NumberConstants.errorSnackBarDelay),
-                      content: Text('Picture Upload Failed ${state.message}'),
-                    ),
-                  );
-                }
-
-              },
+            child: BlocBuilder<PhotouploadCubit, PhotouploadState>(
               builder: (context, state) {
                 if (state is PhotouploadingState) {
                   return Container(
@@ -445,9 +588,11 @@ class DisplayOfflineImage extends StatelessWidget {
                   return Container(
                     height: 50,
                     width: 50,
+                    color: Colors.white12,
                     child: Center(
                       child: IconButton(
                         icon: Icon(Icons.refresh, size: 64),
+                        tooltip: 'Retry upload',
                         onPressed: () => context
                             .read<PhotouploadCubit>()
                             .attemptUpload(photo: image)(image),
@@ -531,9 +676,10 @@ class FormListItem extends StatelessWidget {
     required this.title,
     required this.info,
     required this.onSubmit,
-    this.textCapitalization,
+    this.textCapitalization = TextCapitalization.sentences,
     this.textInputType,
     this.initialValue,
+    this.noSpace = false,
   }) : super(key: key);
 
   final Size sizeData;
@@ -542,8 +688,9 @@ class FormListItem extends StatelessWidget {
   final String? fieldValue;
   final Function onSubmit;
   final TextInputType? textInputType;
-  final TextCapitalization? textCapitalization;
+  final TextCapitalization textCapitalization;
   final String? initialValue;
+  final bool noSpace;
 
   @override
   Widget build(BuildContext context) {
@@ -582,12 +729,16 @@ class FormListItem extends StatelessWidget {
               InkWell(
                 onTap: () {
                   SignupFormDialog.formDialog(
-                      context: context,
-                      onSubmit: onSubmit,
-                      title: title,
-                      initialValue: fieldValue);
+                    context: context,
+                    onSubmit: onSubmit,
+                    title: title,
+                    initialValue: fieldValue,
+                    textCapitalization: textCapitalization,
+                    noSpace: noSpace,
+                  );
                 },
                 child: Container(
+                  color:Colors.red[50],
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [

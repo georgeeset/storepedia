@@ -1,12 +1,12 @@
-import 'package:bloc/bloc.dart';
+import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:store_pedia/model/part.dart';
 import 'package:store_pedia/model/user_model.dart';
 import 'package:store_pedia/repository/string_processor.dart';
 
-class EditItemCubit extends Cubit<Part> {
+class EditItemCubit extends HydratedCubit<Part> {
   late Part part;
   EditItemCubit() : super(Part()) {
-    part = Part();
+   // part = Part();
     print('buildef-------------');
   }
 
@@ -46,6 +46,30 @@ class EditItemCubit extends Cubit<Part> {
     emit(state.clear());
   }
 
+  jumpEdit(Part newPart){
+   state.clear();
+   emit(state.copyWith(
+    partName: newPart.partName,
+    partDescription:newPart.partDescription,
+    partNumber:newPart.partNumber,
+    storeId:newPart.storeId,
+    storeLocation:newPart.storeLocation,
+    addedBy:newPart.addedBy,
+    addedById:newPart.addedById,
+    dateAdded:newPart.dateAdded,
+    lastEditedBy:newPart.lastEditedBy,
+    section:newPart.section,
+    brand:newPart.brand,
+    likesCount:newPart.likesCount,
+    photo:newPart.photo,
+    markedBadByUid:newPart.markedBadByUid,
+    reasonForMarkingBad:newPart.reasonForMarkingBad,
+    searchKeywords: newPart.searchKeywords,
+    partUid: newPart.partUid,
+   ));
+  }
+  
+
   updateTheRestInfo(UserModel user) {
     //  required String addedBy,
     //  required String addedById,
@@ -54,7 +78,8 @@ class EditItemCubit extends Cubit<Part> {
     var combinedString =
         '${state.partDescription ?? ''} ${state.partName ?? ''}  ${state.partNumber ?? ''} ${state.storeId ?? ''} ${state.storeLocation ?? ''}';
     StringProcessor stringProcessor = StringProcessor();
-    if(state.partUid==null && state.addedById==null){
+    print(state.partUid);
+    if(state.partUid==null){
       emit(
       state.copyWith(
         addedBy: user.userName,
@@ -71,4 +96,14 @@ class EditItemCubit extends Cubit<Part> {
     }
     
   }
+  @override
+  Part? fromJson(Map<String, dynamic> json) {
+    return Part.fromMap(mapFormat:json['value']);
+  }
+
+  @override
+  Map<String, dynamic>? toJson(Part state) {
+    return {'value': state.toMap()};
+  }
+
 }

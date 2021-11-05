@@ -3,38 +3,91 @@ import 'package:equatable/equatable.dart';
 import 'package:store_pedia/model/part.dart';
 import 'package:store_pedia/repository/part_query.dart';
 
+import 'package:store_pedia/constants/number_constants.dart' as NumberConstants;
+
 part 'partquerymanager_state.dart';
 
-class PartquerymanagerCubit extends Cubit<PartquerymanagerState> {
-  PartquerymanagerCubit() : super(PartquerymanagerInitialState());
-  final PartQuery partQueryRepository=PartQuery();
+class PartqueryManagerCubit extends Cubit<PartqueryManagerState> {
+  PartqueryManagerCubit() : super(PartqueryManagerState());
+  final PartQuery partQueryRepository = PartQuery();
 
-  attemptQuery(String query){
-
-    if(query.length>3 && query.contains(' ')){
-      emit(PartqueryloadingState());
+  void attemptQuery(String query) {
+    if (query.length > 3) {
+      emit(state.copyWith(queryStatus: QueryStatus.loading));
       partQueryRepository.searchPart(searchString: query).then((value) {
-        if(value==null){
-          emit(NopartfoundState());
-        }
-        else{
-          emit( PartqueryloadedState(response:value) );
+                    print('${value?.length}');
+
+        if (value == null) {
+          emit(state.copyWith(queryStatus: QueryStatus.noResult));
+        } else {
+          
+          // marked parts for delete are removed here if user level is Not admin
+         // value.removeWhere((element) => element.markedBadByUid!=null);
+
+          if (value.length < NumberConstants.maximumSearchResult) {
+            emit(state.copyWith(
+              queryStatus: QueryStatus.loaded,
+              paginationLoading: false,
+              hasReachedMax: true,
+              searchString: query,
+              response: value,
+            ));
+          } else {
+            emit(state.copyWith(
+              queryStatus: QueryStatus.loaded,
+              hasReachedMax: false,
+              searchString: query,
+              response: value,
+            ));
+          }
         }
       }).onError((error, stackTrace) {
-        emit(PartqueryerrorState(message: error.toString(),stackTrace: stackTrace));
+        emit(state.copyWith(
+            queryStatus: QueryStatus.error, errorMessage: error.toString()));
       });
-
     }
   }
 
+  void moreResult() {
+    if (state.queryStatus!= QueryStatus.loaded ||
+        state.hasReachedMax ||
+        state.paginationLoading) {
+          return;
+        }
 
-  @override
-  void onChange(Change<PartquerymanagerState> change) {
-    print(change.nextState);
-    var msg=change.nextState;
-    // if(msg is PartqueryerrorState){
-    //   print(msg.stackTrace);
-    // }
-    super.onChange(change);
+      state.copyWith(paginationLoading: true);
+
+      print('requresting more');
+      partQueryRepository
+          .searchPart(searchString: state.searchString, newSearch: false)
+          .then((value) {
+            print('${value?.length}');
+        if (value == null) {
+          emit(state.copyWith(hasReachedMax: true, paginationLoading: false));
+        } else {
+          if (value.length < NumberConstants.maximumSearchResult) {
+            emit(state.copyWith(
+              paginationLoading: false,
+              hasReachedMax: true,
+              response: List.of(state.response)..addAll(value),
+            ));
+          } else {
+            emit(state.copyWith(
+              paginationLoading: false,
+              hasReachedMax: false,
+              response: List.of(state.response)..addAll(value),
+            ));
+          }
+        }
+      });
+      // state.copyWith(paginationLoading: false);
+
+    
   }
+
+  // @override
+  // void onChange(Change<PartqueryManagerState> change) {
+  //   print(change.nextState);
+  //   super.onChange(change);
+  // }
 }

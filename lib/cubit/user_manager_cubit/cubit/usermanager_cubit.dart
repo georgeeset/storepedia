@@ -25,7 +25,7 @@ class UserManagerCubit extends Cubit<UserManagerState> {
       print(value.hasName());
       emit(UserLoadedState(userData: value,actualDeviceInfo: deviceValue));
     }).catchError(((error, stackTrace) {
-      //print('error observed from getUser... $error');
+      print('error observed from getUser... $error');
       emit(UserLoadingErrorState(error: error));
     }));
     // emit user loading
@@ -42,7 +42,7 @@ class UserManagerCubit extends Cubit<UserManagerState> {
     required String fullName,
   }) {
     //update The rest
-    var nameAdded = userData.copyWith(
+    UserModel nameAdded = userData.copyWith(
       userName: fullName,
       userId: user.uid,
       email: user.email,
@@ -51,7 +51,7 @@ class UserManagerCubit extends Cubit<UserManagerState> {
     //upload the document
     emit(UserLoadingState());
     userRepository
-        .addUserProfile(user.uid,nameAdded.toMap())
+        .addUserProfile(user.uid,nameAdded)
         .then(
           (value) => emit(
             UserLoadedState(userData: nameAdded,actualDeviceInfo: deviceValue),

@@ -30,7 +30,7 @@ class FirestoreOperations {
     await _firebaseFirestore
         .collection(collection)
         .doc(documentId)
-        .update(document)
+        .set(document)
         .onError((e, stackTrace) {
       Future.error(e.toString(), stackTrace);
     });
@@ -38,8 +38,13 @@ class FirestoreOperations {
 
   Future<void> addDocument(
       String collection, Map<String, dynamic> document) async {
-    await _firebaseFirestore.collection(collection).add(document).onError(
-        (error, stackTrace) => Future.error(error.toString(), stackTrace));
+    await _firebaseFirestore
+        .collection(collection)
+        .add(document)
+        .onError((error, stackTrace) => Future.error(
+              error.toString(),
+              stackTrace,
+            ));
   }
 
   Future<List<DocumentSnapshot>> queryWithListKeywords(
@@ -55,8 +60,10 @@ class FirestoreOperations {
         .limit(resultLimit)
         .get()
         .then((value) => value.docs)
-        .onError(
-            (error, stackTrace) => Future.error(error.toString(), stackTrace));
+        .onError((error, stackTrace) => Future.error(
+              error.toString(),
+              stackTrace,
+            ));
   }
 
   Future<List<DocumentSnapshot>> pagenateQueryWithListKeywords(
@@ -74,7 +81,23 @@ class FirestoreOperations {
         .startAfterDocument(startAfter)
         .get()
         .then((value) => value.docs)
-        .onError(
-            (error, stackTrace) => Future.error(error.toString(), stackTrace));
+        .onError((error, stackTrace) => Future.error(
+              error.toString(),
+              stackTrace,
+            ));
+  }
+
+  Stream<List<DocumentSnapshot>> streamRecentDocs(
+    String collection,
+    String sortField,
+    int quantity,
+  ){
+    return _firebaseFirestore
+        .collection(collection)
+        .orderBy(sortField, descending: true)
+        .limit(quantity)
+        .snapshots()
+        .map((event) => event.docs);
+       
   }
 }

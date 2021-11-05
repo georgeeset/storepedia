@@ -1,25 +1,49 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hydrated_bloc/hydrated_bloc.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:store_pedia/bloc/authentication_bloc/bloc/authentication_bloc.dart';
 import 'package:store_pedia/bloc/part_upload_wizard/bloc/partuploadwizard_bloc.dart';
 import 'package:store_pedia/bloc/photo_manager_bloc/photomanager_bloc.dart';
-import 'package:store_pedia/bloc/photo_upload_bloc.dart/cubit/photoupload_cubit.dart';
 import 'package:store_pedia/bloc/signin_option_bloc/bloc/signinoption_bloc.dart';
 import 'package:store_pedia/cubit/connectivity_cubit/cubit/connectivity_cubit.dart';
 import 'package:store_pedia/cubit/form_level_cubit/formlevel_cubit.dart';
+import 'package:store_pedia/cubit/recent_item_cubit/cubit/recentitems_cubit.dart';
 import 'package:store_pedia/cubit/user_manager_cubit/cubit/usermanager_cubit.dart';
 import 'package:store_pedia/screens/add_item_page/add_item_page.dart';
 import 'package:store_pedia/screens/home_page/home_page.dart';
+import 'package:store_pedia/screens/part_detail_page/part_detail_page.dart';
 import 'package:store_pedia/screens/search_page/search_page.dart';
 import 'package:store_pedia/screens/signin_screen/signin_screen.dart';
 import 'cubit/edit_item_cubit/edititem_cubit.dart';
 import 'package:store_pedia/constants/number_constants.dart' as NumberConstants;
 
+import 'cubit/mark_bad_part/cubit/markbadpart_cubit.dart';
 import 'cubit/part_query_manager.dart/cubit/partquerymanager_cubit.dart';
+import 'cubit/photo_upload_cubit/photoupload_cubit.dart';
+import 'cubit/repitition_cubit/cubit/repitition_cubit.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  HydratedBloc.storage = await HydratedStorage.build(
+    storageDirectory: kIsWeb
+        ? HydratedStorage.webStorageDirectory
+        : await getTemporaryDirectory(),
+  );
+
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    systemNavigationBarColor: Colors.white, // navigation bar color
+    statusBarColor: Colors.blue, // status bar color
+    statusBarBrightness: Brightness.dark, //status bar brigtness
+    statusBarIconBrightness: Brightness.light, //status barIcon Brightness
+    systemNavigationBarDividerColor:
+        Colors.black, //Navigation bar divider color
+    systemNavigationBarIconBrightness: Brightness.dark,
+  )); //navigation bar icon
   runApp(MyApp());
 }
 
@@ -49,18 +73,14 @@ class MyApp extends StatelessWidget {
         BlocProvider<PhotouploadCubit>(
           create: (context) => PhotouploadCubit(),
         ),
-        BlocProvider(
-          create: (context) => AuthenticationBloc(),
-          lazy: false,
-        ),
-        BlocProvider<AuthenticationBloc>(
-          create: (context) => AuthenticationBloc(),
-        ),
         BlocProvider<UserManagerCubit>(
           create: (context) => UserManagerCubit(),
         ),
         BlocProvider<PartuploadwizardBloc>(
           create: (context) => PartuploadwizardBloc(),
+        ),
+        BlocProvider<PartqueryManagerCubit>(
+          create: (context) => PartqueryManagerCubit(),
         ),
       ],
       child: MaterialApp(
@@ -74,11 +94,15 @@ class MyApp extends StatelessWidget {
         initialRoute: '/',
         routes: <String, WidgetBuilder>{
           //MyHomePage.routName : (context)=> MyHomePage(),
-          SearchPage.routName: (context) => BlocProvider<PartquerymanagerCubit>(
-                create: (context) => PartquerymanagerCubit(),
-                child: SearchPage(),
+          SearchPage.routName: (context) => SearchPage(),
+          AddItemPage.routName: (context) => BlocProvider<RepititionCubit>(
+                create: (context) => RepititionCubit(),
+                child: AddItemPage(),
               ),
-          AddItemPage.routName: (context) => AddItemPage(),
+          PartDetailPage.routeName: (context) => BlocProvider(
+                create: (context) => MarkbadpartCubit(),
+                child: PartDetailPage(),
+              ),
           //UpdatePage.routName:(context) => UpdatePage(),
           // IntroductionPage.routName: (context) => IntroductionPage(),
           // UserTypeSelectionPage.routName: (context) => UserTypeSelectionPage(),
@@ -93,9 +117,21 @@ class MyApp extends StatelessWidget {
                 ? BlocConsumer<AuthenticationBloc, AuthenticationState>(
                     builder: ((context, state) {
                     if (state is AuthenticatedState) {
-                      return HomePage();
+                      return BlocProvider<RecentItemsCubit>(
+                        create: (context) => RecentItemsCubit(),
+                        child: HomePage(),
+                      );
                     } else {
-                      return MultiBlocProvider(
+                      if (state is AuthenticationInitial) {
+                        return Scaffold(
+                          backgroundColor: Colors.white,
+                          body: Container(
+                            alignment: Alignment.center,
+                            child: Image.asset('assets/images/main_logo.jpg'),
+                          ),
+                        );
+                      }else{
+                        return MultiBlocProvider(
                         providers: [
                           BlocProvider<SigninoptionBloc>(
                             create: (context) => SigninoptionBloc(),
@@ -103,20 +139,22 @@ class MyApp extends StatelessWidget {
                         ],
                         child: SigninScreen(),
                       );
+                      }
+                      
                     }
-                  }), listener: (context, state) {
-                    if (state is AuthenticatedState) {
+                  }), listener: (context, authState) {
+                    if (authState is AuthenticatedState) {
                       // start getting the user's information from database
-                      context.read<UserManagerCubit>().getUser(state.user);
+                      context.read<UserManagerCubit>().getUser(authState.user);
                     }
-                    if (state is AuthenticationFailedState) {
+                    if (authState is AuthenticationFailedState) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           backgroundColor: Colors.pink,
                           duration: Duration(
                               seconds: NumberConstants.errorSnackBarDelay),
                           content:
-                              Text('Login Failed !\n${state.errorMessage}'),
+                              Text('Login Failed !\n${authState.errorMessage}'),
                         ),
                       );
                     }

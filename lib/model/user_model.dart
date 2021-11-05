@@ -18,7 +18,7 @@ class UserModel {
 
   /// With access level you can control
   /// who has access to do some tasks
-  int? accessLevel;
+  int accessLevel=0;
 
   UserModel({
     this.userName,
@@ -26,7 +26,7 @@ class UserModel {
     this.email,
     this.userId,
     this.partsAddedCount,
-    this.accessLevel,
+    this.accessLevel=0,
   });
 
   UserModel.fromMap({required DocumentSnapshot snapshot}) {
@@ -37,7 +37,7 @@ class UserModel {
       email= data[StringConstants.email];
       userId= data[StringConstants.userId];
       partsAddedCount= data[StringConstants.partsAddedCount];
-      accessLevel= data[StringConstants.accessLevel];
+      accessLevel= data[StringConstants.accessLevel]??0;
     
   }
 

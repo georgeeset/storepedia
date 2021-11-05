@@ -56,11 +56,12 @@ class PageLayout extends StatelessWidget {
                 width: sizeData.width,
                 child: Center(child: title),
               ),
-            ),
+            ),// clipBehavior: Clip.antiAliasWithSaveLayer,
             Positioned(
               top: NumberConstants.appbarHeight,
               child: Container(
-                padding: EdgeInsets.symmetric(vertical: 20),
+                padding: EdgeInsets.only(bottom: 20),
+                clipBehavior: Clip.antiAliasWithSaveLayer,
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.only(
@@ -69,7 +70,7 @@ class PageLayout extends StatelessWidget {
                   ),
                 ),
                 width: sizeData.width / 1.05,
-                height: sizeData.height - NumberConstants.appbarHeight - 40,
+                height: sizeData.height - NumberConstants.appbarHeight,
                 child: body,
               ),
             ),

@@ -19,15 +19,18 @@ class PartuploadwizardBloc
     PartuploadwizardEvent event,
   ) async* {
     if (event is UploadPartEvent) {
-      emit(PartuploadwizardLoadingState());
+      yield(PartuploadwizardLoadingState());
       if (event.part.photo != null && event.score>NumberConstants.minimumScore) {
+        print(event.part.partUid);
         if (event.part.partUid != null) {
+         
           partOperationsRepository
               .editPart(event.part)
               .then((value) => emit(PartuploadwizardLoadedState()))
               .onError((error, stackTrace) =>
                   emit(PartuploadwizardErrorState(message: error.toString()),),);
         }else {
+          print('New Part');
         partOperationsRepository
             .addPart(event.part)
             .then((value) => emit(PartuploadwizardLoadedState()))
@@ -39,7 +42,7 @@ class PartuploadwizardBloc
       }
 
       }else{
-        emit(PartuploadwizardErrorState(message: 'Form is not yet complete!'),);
+        yield(PartuploadwizardErrorState(message: 'Form is not yet complete!'));
       }
     }
     

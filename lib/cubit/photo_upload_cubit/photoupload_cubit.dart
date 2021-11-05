@@ -15,8 +15,14 @@ class PhotouploadCubit extends Cubit<PhotouploadState> {
 
   PhotouploadCubit() : super(PhotouploadInitial());
   
-  attemptUpload({required File photo}){
-     var upload= photoManagerRepository.uploadItemImage(image:photo);
+  attemptUpload({required File photo, String? fileName}){
+    //avoid uploading file multiple times. return void if already uploading
+    if(state is PhotouploadingState){
+      return null;
+    }
+    emit(PhotouploadingState(percentage: 0));
+
+     var upload= photoManagerRepository.uploadItemImage(image:photo, fileName: fileName);
       upload.listen((taskSnapshot) {
       if (taskSnapshot.state == TaskState.success) {
         taskSnapshot.ref.getDownloadURL().then((downloadUrl) {

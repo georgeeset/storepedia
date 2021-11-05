@@ -7,6 +7,16 @@ class Validator{
     return null;
   }
 
+  String? validateStringWithoutSpace(String value){
+    if(!RegExp(r"^[a-zA-Z0-9]+-[0-9]+-[0-9]").hasMatch(value)){
+      return'Format: GES12-19-05';
+    }
+    if(value.contains(' ')){
+      return'White space not allowed';
+    }
+    return null;
+  }
+
   String? validatePassword(String val) {
     if (val.isEmpty) {
       return 'Password must not be empty';

@@ -23,7 +23,7 @@ class StringProcessor{
   ///improve the search speed.
   ///ALL text must be UPPERCASE  so to help us compare accurately
   bool isArticle(String element){
-    var articleList= ['THE','AND','WITH','THE','FOR'];
+    var articleList= ['THE','AND','WITH','THE','FOR','WISH',];
     if(element.length<3){
       return true;
     }

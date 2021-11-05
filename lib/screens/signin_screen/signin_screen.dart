@@ -5,6 +5,7 @@ import 'package:store_pedia/cubit/connectivity_cubit/cubit/connectivity_cubit.da
 import 'package:store_pedia/cubit/email_field_cubit/email_textfield_cubit.dart';
 import 'package:store_pedia/cubit/password_field_cubit/password_textfield_cubit.dart';
 import 'package:store_pedia/cubit/repeat_password_textfield_cubit/cubit/repeatpasswordtextfield_cubit.dart';
+import 'package:store_pedia/cubit/signin_signup_cubit/cubit/signinsignup_cubit.dart';
 import 'package:store_pedia/widgets/email_input_field.dart';
 import 'package:store_pedia/widgets/loading_indicator.dart';
 import 'package:store_pedia/widgets/password_input_field.dart';
@@ -74,40 +75,53 @@ class RegisterWidget extends StatelessWidget {
             Container(
               height: 15.0,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                OutlinedButton(
-                  onPressed: () {
-                    context.read<SigninoptionBloc>().add(SigninEvent());
-                  },
-                  child: Text('Signin with email'),
-                ),
-                Builder(
-                  builder: (context) => ElevatedButton(
-                    onPressed: () {
-                      var repeatPwd =
-                          context.read<RepeatPasswordTextfieldCubit>().state;
-                      var password =
-                          context.read<PasswordTextfieldCubit>().state;
-                      var email = context.read<EmailTextfieldCubit>().state;
-                      if (repeatPwd is RepeatPasswordTextfieldOk &&
-                          password is PasswordTextfieldOk &&
-                          email is EmailTextfieldOk) {
-                        context.read<AuthenticationBloc>().add(RegisterEvent(
-                            email: email.email,
-                            password1: password.password,
-                            password2: repeatPwd.password));
-                      }
-                    },
-                    child: Text('Register'),
-                  ),
-                ),
-              ],
-            )
+
+            ButtonSwitcher(commandButton: SignupSigninButton())
+            //SignupSigninButton()
           ],
         ),
       ),
+    );
+  }
+}
+
+class SignupSigninButton extends StatelessWidget {
+  const SignupSigninButton({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        OutlinedButton(
+          onPressed: () {
+            context.read<SigninoptionBloc>().add(SigninEvent());
+          },
+          child: Text('Signin with email'),
+        ),
+        Builder(
+          builder: (context) => ElevatedButton(
+            onPressed: () {
+              var repeatPwd =
+                  context.read<RepeatPasswordTextfieldCubit>().state;
+              var password =
+                  context.read<PasswordTextfieldCubit>().state;
+              var email = context.read<EmailTextfieldCubit>().state;
+              if (repeatPwd is RepeatPasswordTextfieldOk &&
+                  password is PasswordTextfieldOk &&
+                  email is EmailTextfieldOk) {
+                context.read<AuthenticationBloc>().add(RegisterEvent(
+                    email: email.email,
+                    password1: password.password,
+                    password2: repeatPwd.password));
+              }
+            },
+            child: Text('Register'),
+          ),
+        ),
+      ],
     );
   }
 }
@@ -141,7 +155,7 @@ class SigninWidget extends StatelessWidget {
             Container(
               height: 20.0,
             ),
-            ButtonSwitcher(),
+            ButtonSwitcher(commandButton: SigninSignupButton(),),
           ],
         ),
       ),
@@ -151,8 +165,10 @@ class SigninWidget extends StatelessWidget {
 
 class ButtonSwitcher extends StatelessWidget {
   const ButtonSwitcher({
+    required this.commandButton,
     Key? key,
   }) : super(key: key);
+  final Widget commandButton;
 
   @override
   Widget build(BuildContext context) {
@@ -160,7 +176,7 @@ class ButtonSwitcher extends StatelessWidget {
       builder: (context, state) {
         return state is AuthenticatingState
             ? LoadingIndicator()
-            : SigninSignupButton();
+            : commandButton;//SigninSignupButton();
       },
     );
   }
@@ -178,12 +194,12 @@ class SigninSignupButton extends StatelessWidget {
         return Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            TextButton(
-              onPressed: () {
-                context.read<SigninoptionBloc>().add(ForgotPasswordEvent());
-              },
-              child: Text('Forgot Password'),
-            ),
+            // TextButton(
+            //   onPressed: () {
+            //     context.read<SigninoptionBloc>().add(ForgotPasswordEvent());
+            //   },
+            //   child: Text('Forgot Password'),
+            // ),
             OutlinedButton(
               onPressed: () {
                 context.read<SigninoptionBloc>().add(RegisterOptionEvent());

@@ -12,6 +12,8 @@ class AuthenticationInitial extends AuthenticationState {
   String toString() {
     return 'AuthenticaitonInitial';
   }
+  @override
+  List<Object> get props => [];
 }
 
 class UnauthenticatedState extends AuthenticationState{
@@ -19,6 +21,8 @@ class UnauthenticatedState extends AuthenticationState{
   String toString() {
     return 'UnauthenticatedState';
   }
+  @override
+  List<Object> get props => [];
 }
 
 class AuthenticatingState extends AuthenticationState{
@@ -27,6 +31,8 @@ class AuthenticatingState extends AuthenticationState{
   String toString() {
     return 'AuthenticatingState';
   }
+  @override
+  List<Object> get props => [];
 }
 
 class AuthenticationFailedState extends AuthenticationState{
@@ -38,10 +44,14 @@ class AuthenticationFailedState extends AuthenticationState{
   String toString() {
     return 'AuthenticationFiled';
   }
+  @override
+  List<Object> get props => [errorMessage];
 }
 
 class AuthenticatedState extends AuthenticationState{
   final User user;
   AuthenticatedState({required this.user});
+  @override
+  List<Object> get props => [user];
 }
 

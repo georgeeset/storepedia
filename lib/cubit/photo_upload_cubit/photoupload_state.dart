@@ -20,7 +20,7 @@ class PhotouploadingState extends PhotouploadState{
 
   @override
   String toString() {
-    return 'PhotouploadingStte';
+    return 'PhotouploadingState';
   }
 
   @override

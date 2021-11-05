@@ -7,7 +7,7 @@ class ImageGetter {
 
   static Future<File> getImage(ImageSource source) async {
     final picker = ImagePicker();
-    XFile? image = await picker.pickImage(source: source,);
+    XFile? image = await picker.pickImage(source: source, imageQuality: 30);
     if (image != null) {
       return File(image.path);
       //image.delete(recursive: false);

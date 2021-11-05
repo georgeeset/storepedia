@@ -24,14 +24,17 @@ class ActionDialog extends StatelessWidget {
     final Size pageSize= MediaQuery.of(context).size;
     return AlertDialog(
       shape: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-      title: Row(mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
-        Icon(
-          Icons.warning,
-          color: Colors.red,
-          size: 20,
-        ),
-        Container(padding: EdgeInsets.symmetric(horizontal: 10),width:pageSize.width, child: Text(titleText,softWrap: true,))
-      ]),
+      title: Container(
+        width:pageSize.width,
+        child: Row(mainAxisAlignment: MainAxisAlignment.start, mainAxisSize: MainAxisSize.min, children: <Widget>[
+          Icon(
+            Icons.warning,
+            color: Colors.red,
+            size: 20,
+          ),
+          Container(padding: EdgeInsets.symmetric(horizontal: 10), child: Text(titleText,softWrap: true,))
+        ]),
+      ),
       titleTextStyle: TextStyle(
         color: Colors.black,
         fontWeight: FontWeight.bold,

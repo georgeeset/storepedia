@@ -15,6 +15,9 @@ class EmailPasswordSigninEvent extends AuthenticationEvent{
   String toString() {
     return 'SigninEvent';
   }
+
+  @override
+  List<Object> get props => [email, password];
 }
 
 class SignOutEvent extends AuthenticationEvent{
@@ -23,6 +26,8 @@ class SignOutEvent extends AuthenticationEvent{
   String toString() {
     return 'SignoutEvent';
   }
+  @override
+  List<Object> get props => [];
 }
 
 class RegisterEvent extends AuthenticationEvent{
@@ -36,4 +41,7 @@ class RegisterEvent extends AuthenticationEvent{
   String toString() {
     return 'RegisterEvent';
   }
+
+  @override
+  List<Object> get props => [email, password1, password2];
 }

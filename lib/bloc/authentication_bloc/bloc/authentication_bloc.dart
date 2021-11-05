@@ -9,7 +9,7 @@ part 'authentication_event.dart';
 part 'authentication_state.dart';
 
 class AuthenticationBloc
-    extends Bloc<AuthenticationEvent, AuthenticationState> {
+  extends Bloc<AuthenticationEvent, AuthenticationState> {
   late FirebaseAuth _auth;
   late User? _user;
 
@@ -33,14 +33,15 @@ class AuthenticationBloc
   Stream<AuthenticationState> mapEventToState(
     AuthenticationEvent event,
   ) async* {
+    
     if (event is EmailPasswordSigninEvent) {
       yield (AuthenticatingState());
        try {
         await _auth.signInWithEmailAndPassword(
             email: event.email, password: event.password);
       } on FirebaseAuthException catch (err) {
-        print(err.toString());
-        emit(AuthenticationFailedState(errorMessage: err.message.toString()));
+       // print(err.toString());
+        yield(AuthenticationFailedState(errorMessage: err.message.toString()));
       }
     }
 
@@ -51,36 +52,40 @@ class AuthenticationBloc
 
         yield (AuthenticatingState());
 
-      try{ _auth
-          .createUserWithEmailAndPassword(
-        email: event.email,
-        password: password,
-      );}on FirebaseAuthException catch (err){
-
-           print(err.toString());
-        emit(
-          AuthenticationFailedState(
-            errorMessage: err.message.toString(),
-          ),
-        );
-
+        try{
+          await _auth
+            .createUserWithEmailAndPassword(
+          email: event.email,
+          password: password,
+        );}on FirebaseAuthException catch(err){
+          yield(AuthenticationFailedState(errorMessage: err.message.toString()));
+        }
       }
-          
+      else {
+      yield (AuthenticationFailedState(
+          errorMessage: 'Passwords not consistent'));
+      }
          
-      } else {
-        yield (AuthenticationFailedState(
-            errorMessage: 'Passwords not consistent'));
-      }
+    } 
       
-    }
-
     if(event is SignOutEvent){
       _auth.signOut();
     }
+
+    
   }
+
+ 
+
   @override
   void onChange(Change<AuthenticationState> change) {
     print(change.nextState);
     super.onChange(change);
+  }
+
+  @override
+  void onEvent(AuthenticationEvent event) {
+    print(event);
+    super.onEvent(event);
   }
 }

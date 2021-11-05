@@ -10,6 +10,7 @@ class FormLevelCubit extends Cubit<int> {
  final EditItemCubit editItemCubit;
  late StreamSubscription editItemSubscription;
   FormLevelCubit({required this.editItemCubit}) : super(0){
+    updateFormLevel(partForm: editItemCubit.state);
     editItemSubscription=editItemCubit.stream.listen((update) {
       updateFormLevel(partForm: update);
     });

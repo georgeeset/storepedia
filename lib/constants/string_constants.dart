@@ -16,9 +16,11 @@ library string_constants;
   const String photo='photo';
   const String markedBadByUid='markedbadbyuid';
   const String reasonFormarkingBad='reasonformarkingbad';
+  const String partsCollection='parts';
+  const String userCollection='users';
 
 
-  const String dialogTitleAddPart='Uncompleted Form Detected';
+  const String dialogTitleAddPart='Uncompleted Form';
   const String dialogBodyAddPart='You were previously editing a part on this device.\nDo you want to continue from where you left off?';
   const String yes='Yes';
   const String no='No';
@@ -43,6 +45,7 @@ library string_constants;
   const String brandInfo='State the Item brand if avaialble';
   const String storeLocationTitle='Item Location';
   const String storeLocationInfo='State the Shelf Number where it is stored if you know it';
+  const String sectionTitle='Section';
   
   const String isMachineSpecific='Indicate the department where it is commonly used. e.g Cable ties are used by Electrial Department';
 

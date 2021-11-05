@@ -44,11 +44,19 @@ class Part {
     this.photo ,
     this.markedBadByUid,
     this.reasonForMarkingBad,
+    this.partUid,
   });
 
 
-  Part.fromMap(DocumentSnapshot snapshot) {
-    Map<String,dynamic> data=snapshot.data() as Map<String,dynamic>;
+  Part.fromMap({DocumentSnapshot? snapshot, Map<String,dynamic>? mapFormat} ) {
+    Map<String,dynamic> data;
+    if(mapFormat==null && snapshot!=null){data = snapshot.data() as Map<String,dynamic>;}
+    else{
+      if(mapFormat!=null){data=mapFormat;}
+      else{
+        throw('No Valid Input');
+      }
+    }
     partName= data[StringConstants.partName];
     partDescription= data[StringConstants.partDescription];
     partNumber= data[StringConstants.partNumber];
@@ -61,11 +69,11 @@ class Part {
     section= data[StringConstants.section];
     brand= data[StringConstants.brand];
     likesCount= data[StringConstants.likesCount];
-    searchKeywords= List<String>.from(data[StringConstants.searchKeywords]);
+    searchKeywords= List<String>.from(data[StringConstants.searchKeywords]?? []);
     photo= data[StringConstants.photo];
     markedBadByUid= data[StringConstants.markedBadByUid];
     reasonForMarkingBad= data[StringConstants.reasonFormarkingBad];
-    partUid=snapshot.id;
+    partUid=snapshot?.id;
   }
 
 
@@ -106,6 +114,7 @@ class Part {
     String? photo,
     String? markedBadByUid,
     String? reasonForMarkingBad,
+    String? partUid,
   }){
     return Part( partName:partName?? this.partName,
     partDescription: partDescription?? this.partDescription,
@@ -123,6 +132,7 @@ class Part {
     photo: photo?? this.photo,
     markedBadByUid: markedBadByUid?? this.markedBadByUid,
     reasonForMarkingBad: reasonForMarkingBad?? this.reasonForMarkingBad,
+    partUid: partUid?? this.partUid,
     );
   }
 

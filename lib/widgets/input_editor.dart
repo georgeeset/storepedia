@@ -1,6 +1,7 @@
 
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../repository/validator.dart';
 
 class SignupFormDialog {
@@ -9,9 +10,11 @@ class SignupFormDialog {
     required Function onSubmit,
     required String title,
     TextInputType? textInputType,
-    TextCapitalization? textCapitalization,
+    TextCapitalization textCapitalization = TextCapitalization.sentences,
     String? initialValue,
+    bool noSpace=false,
   }) {
+    
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -34,6 +37,7 @@ class SignupFormDialog {
                     textInputType: textInputType,
                     textCapitalization: textCapitalization,
                     initialValue: initialValue,
+                    noSpace:noSpace,
                   ),
                 ],
               ),
@@ -48,14 +52,16 @@ class TextInputField extends StatefulWidget {
   final Function onSubmit;
   final String title;
   final TextInputType? textInputType;
-  final TextCapitalization? textCapitalization;
+  final TextCapitalization textCapitalization;
   final String? initialValue;
+  final bool noSpace;
   TextInputField({
     required this.onSubmit,
     required this.title,
     this.textInputType = TextInputType.text,
     this.textCapitalization = TextCapitalization.sentences,
     this.initialValue,
+    required this.noSpace,
   });
   @override
   _TextInputFieldState createState() => _TextInputFieldState();
@@ -63,6 +69,7 @@ class TextInputField extends StatefulWidget {
 
 class _TextInputFieldState extends State<TextInputField> {
   TextEditingController? textEditingController;
+  //MaskedTextController controller
   late Validator validator;
   String? err;
   //var _userProfile=Provider.of<ProfileProvider>(context,listen: false);
@@ -70,45 +77,65 @@ class _TextInputFieldState extends State<TextInputField> {
   @override
   void initState() {
     super.initState();
-    textEditingController = TextEditingController(text: widget.initialValue);
+   textEditingController= TextEditingController(text: widget.initialValue);
     validator = Validator();
   }
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
-      controller: textEditingController,
-      keyboardType: widget.textInputType,
-      enabled: true,
-      autofocus: true,
-      textAlign: TextAlign.justify,
-      textInputAction: TextInputAction.done,
-      textCapitalization: widget.textCapitalization ?? TextCapitalization.none,
-      onChanged: (val) {
-        setState(() {
-          err = validator.validateString(val);
-        });
-      },
-      onSubmitted: (val) async {
-        if (err == null) {
-          widget.onSubmit(val);
-          Navigator.pop(context);
-        }
-      },
-      decoration: InputDecoration(
-        errorText: err,
-        hintText: widget.title,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.all(
-            Radius.circular(10),
+    final Size size=MediaQuery.of(context).size;
+    return Container(
+      width: size.width,
+      child: Row(
+        //mainAxisSize: MainAxisSize.min,
+        children: [
+          Expanded(
+            child: TextField(
+              controller: textEditingController,
+              keyboardType: widget.textInputType,
+              enabled: true,
+              autofocus: true,
+              textAlign: TextAlign.justify,
+              textInputAction: TextInputAction.done,
+              textCapitalization: widget.textCapitalization,
+              onChanged: (val) {
+                setState(() {
+                  print(widget.noSpace);
+                  err = widget.noSpace==false? validator.validateString(val): validator.validateStringWithoutSpace(val);
+                });
+              },
+              onSubmitted: (val) async {
+               submitField();
+              },
+              decoration: InputDecoration(
+                errorText: err,
+                hintText: widget.title,
+                isCollapsed: true,
+                contentPadding: EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(10),
+                  ),
+                ),
+          
+                //fillColor:Theme.of(context).primaryColor,
+                //filled: true
+              
+              ),
+            ),
           ),
-        ),
-
-        //fillColor:Theme.of(context).primaryColor,
-        //filled: true
-
-        suffix: Icon(Icons.check),
+                IconButton(icon:Icon(Icons.check_circle_outline, size:30), onPressed:()=> submitField(),),
+        ],
       ),
     );
   }
+
+  void submitField(){
+     if (err == null && textEditingController!.text.isNotEmpty) {
+          widget.onSubmit(textEditingController!.text);
+          Navigator.pop(context);
+        }
+  }
 }
+
