@@ -1,3 +1,4 @@
+import 'package:about/about.dart';
 import 'package:store_pedia/bloc/authentication_bloc/bloc/authentication_bloc.dart';
 import 'package:store_pedia/bloc/photo_manager_bloc/photomanager_bloc.dart';
 import 'package:store_pedia/cubit/edit_item_cubit/edititem_cubit.dart';
@@ -44,11 +45,42 @@ class HomePage extends StatelessWidget {
               child: Container(
                 width: sizeData.width,
                 child: Center(
-                  child: Text('Store Pedia',
-                      style: Theme.of(context)
-                          .textTheme
-                          .headline4
-                          ?.copyWith(color: Colors.white)),
+                  child: SelectableText(
+                    'Store Pedia',
+                    style: Theme.of(context)
+                        .textTheme
+                        .headline4
+                        ?.copyWith(color: Colors.white),
+                    onTap: () {
+                      showAboutPage(
+                        context: context,
+                        values: {'version': '1.0', 'year': '2021'},
+                        applicationLegalese:
+                            'Copyright © Flex-Automation, {{ year }}',
+                        applicationDescription: const Text(
+                           StringConstants.aboutApp,
+                           softWrap: true,
+                            ),
+                        children: const <Widget>[
+                          MarkdownPageListTile(
+                            icon: Icon(Icons.list),
+                            title: Text('StorePedia'),
+                            filename: 'CHANGELOG.md',
+                          ),
+                          LicensesPageListTile(
+                            icon: Icon(Icons.favorite),
+                          ),
+                        ],
+                        applicationIcon: const SizedBox(
+                          width: 100,
+                          height: 100,
+                          child: Image(
+                            image: AssetImage('assets/images/splash.png'),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
                 ),
               ),
             ),
@@ -107,8 +139,6 @@ class HomePage extends StatelessWidget {
                               child: BlocConsumer<UserManagerCubit,
                                   UserManagerState>(
                                 listener: (context, state) {
-
-
                                   // check if UserManager has loaded and give option for reloading
                                   // if failed, reload option will be provided.
                                   var authSample =
@@ -136,7 +166,7 @@ class HomePage extends StatelessWidget {
 
                                   // if usermanagerState is loaded,
                                   // if loaded, go adhead and display
-                                  //recent parts added to db 
+                                  //recent parts added to db
 
                                   if (state is UserLoadedState) {
                                     context
@@ -193,9 +223,7 @@ class HomePage extends StatelessWidget {
                                     );
                                   }
                                 },
-
                                 builder: (context, state) {
-
                                   //loading indicatior if loading
                                   if (state is UserLoadingState) {
                                     return Container(
@@ -364,8 +392,8 @@ class AddStoreItem extends StatelessWidget {
 
           if (dialogResult == true) {
             context.read<EditItemCubit>().clearPart();
-            context.read<FormLevelCubit>().clearScore();
             context.read<PhotomanagerBloc>().add(RemovePhotoEvent());
+            context.read<FormLevelCubit>().clearScore();
             Navigator.pushNamed(context, AddItemPage.routName);
           } else {
             Navigator.pushNamed(context, AddItemPage.routName);

@@ -15,3 +15,8 @@ class UploadPartEvent extends PartuploadwizardEvent{
   @override
   List<Object> get props => [part,score];
 }
+
+class DeletePartEvent extends PartuploadwizardEvent{
+  final String partId;
+  const DeletePartEvent({required this.partId});
+}

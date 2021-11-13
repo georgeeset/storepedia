@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:store_pedia/bloc/part_upload_wizard/bloc/partuploadwizard_bloc.dart';
 
 import 'package:store_pedia/cubit/edit_item_cubit/edititem_cubit.dart';
 import 'package:store_pedia/cubit/mark_bad_part/cubit/markbadpart_cubit.dart';
@@ -46,7 +47,7 @@ class PartBody extends StatelessWidget {
     return ListView(
       keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
       children: [
-       OnlinePinchZoomImage(link:part.photo),
+        OnlinePinchZoomImage(link: part.photo),
 
         // Container(
         //   child: Row(
@@ -117,70 +118,131 @@ class PartBody extends StatelessWidget {
             ? Container()
             : textCard('Tags', part.searchKeywords!.toString(), context),
 
-        part.markedBadByUid==null 
-        ? BlocBuilder<UserManagerCubit, UserManagerState>(
-            builder: (context, state) {
-          if (state is UserLoadedState && state.userData.accessLevel!=null &&
-              state.userData.accessLevel >=
-                  NumberConstants.minimumAccessLevelForPartEdit) {
-            return Row(
-              children: [
-                IconButton(
-                  onPressed: () {
-                    context.read<EditItemCubit>().jumpEdit(part);
-                    Navigator.of(context).popAndPushNamed(AddItemPage.routName);
-                  },
-                  icon: Icon(Icons.edit),
-                  tooltip: 'Edit',
-                ),
+        part.markedBadByUid == null
+            ? BlocBuilder<UserManagerCubit, UserManagerState>(
+                builder: (context, state) {
+                if (state is UserLoadedState &&
+                    state.userData.accessLevel != null &&
+                    state.userData.accessLevel >=
+                        NumberConstants.minimumAccessLevelForPartEdit) {
+                  return Row(
+                    children: [
+                      IconButton(
+                        onPressed: () {
+                          context.read<EditItemCubit>().jumpEdit(part);
+                          Navigator.of(context)
+                              .popAndPushNamed(AddItemPage.routName);
+                        },
+                        icon: Icon(Icons.edit),
+                        tooltip: 'Edit',
+                      ),
 
-                //only display this delete icon 
-                //if the file have not been marked for delete.
-                BlocBuilder<MarkbadpartCubit, MarkbadpartState>(
-                  builder: (context, markState) {
-                    if(markState == MarkbadpartState.idle) {
-                      return IconButton(
-                      onPressed: () {
-                        //Todo marked bad
-                        SignupFormDialog.formDialog(
-                          context: context,
-                          onSubmit: (value) {
-                            var userInfo =
-                                context.read<UserManagerCubit>().state;
-                            if (userInfo is UserLoadedState) {
-                              context.read<MarkbadpartCubit>().markBad(
-                                  part: part,
-                                  reason: value,
-                                  userId: userInfo.userData.userId!);
+                      //only display this delete icon
+                      //if the file have not been marked for delete.
+                      BlocBuilder<MarkbadpartCubit, MarkbadpartState>(
+                        builder: (context, markState) {
+                          if (markState == MarkbadpartState.idle) {
+                            return IconButton(
+                              onPressed: () {
+                                //Todo marked bad
+                                SignupFormDialog.formDialog(
+                                  context: context,
+                                  onSubmit: (value) {
+                                    var userInfo =
+                                        context.read<UserManagerCubit>().state;
+                                    if (userInfo is UserLoadedState) {
+                                      context.read<MarkbadpartCubit>().markBad(
+                                          part: part,
+                                          reason: value,
+                                          userId: userInfo.userData.userId!);
+                                    }
+                                  },
+                                  title: 'State reason for Deleting this part',
+                                );
+                              },
+                              icon: Icon(
+                                Icons.delete,
+                              ),
+                              tooltip: 'Delete',
+                            );
+                          } else {
+                            // indicate loading if mark bad delete button has been peressed.
+                            if (markState == MarkbadpartState.loading) {
+                              return Container(
+                                width: 15,
+                                height: 15,
+                                child: CircularProgressIndicator(),
+                              );
                             }
-                          },
-                          title: 'State reason for Deleting this part',
-                        );
-                      },
-                      icon: Icon(Icons.delete,),
-                      tooltip: 'Delete',
-                    );}
-                    else{
-                      if(markState==MarkbadpartState.loading){
-                        return Container(width:15, height:15, child: CircularProgressIndicator(),);
+                            //if data has been marked bad already and the user level >=7 then show
+                            // permanent delete icon, so it can be deleted finally.
+                            //delete the image file with cloud function to save time.
+
+                            return Container();
+                          }
+                        },
+                      ),
+                    ],
+                  );
+                } else {
+                  return Container();
+                }
+              })
+            : BlocBuilder<UserManagerCubit, UserManagerState>(
+                builder: (context, state) {
+                if (state is UserLoadedState &&
+                    state.userData.accessLevel >=
+                        NumberConstants.minimunAccessLevelForDeletingPart) {
+                  return BlocConsumer<PartuploadwizardBloc,
+                      PartuploadwizardState>(
+                    listener: (context, state) {
+                      if (state is PartuploadwizardState) {
+                        Navigator.of(context).pop();
                       }
-                        return Container();
-                      
-                    }
-                  },
-                ),
-              ],
-            );
-          } else {
-            return Container();
-          }
-        })
-        : Container(),
+                      if (state is PartuploadwizardErrorState) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            backgroundColor: Colors.blue,
+                            duration: Duration(
+                                seconds: NumberConstants.errorSnackBarDelay),
+                            content: Text(
+                                'Delete not successful:\n${state.message}'),
+                          ),
+                        );
+                      }
+                    },
+                    builder: (context, partState) {
+                      return partState is PartuploadwizardLoadingState
+                          ? Container(
+                              width: 10,
+                              height: 10,
+                              child: CircularProgressIndicator())
+                          : IconButton(
+                              onPressed: () {
+                                context.read<PartuploadwizardBloc>().add(
+                                    DeletePartEvent(partId: part.partUid!));
+                              },
+                              icon: Icon(
+                                Icons.delete_forever,
+                                color: Colors.redAccent,
+                              ),
+                              tooltip: 'Delete Forever',
+                            );
+                    },
+                  );
+                } else {
+                  return Container();
+                }
+              })
       ],
     );
   }
 
-  Widget textCard(String field, String value, BuildContext context,) {
+  Widget textCard(
+    String field,
+    String value,
+    BuildContext context,
+  ) {
     return Card(
       color: Colors.blue[50],
       margin: EdgeInsets.symmetric(vertical: 5.0),
@@ -193,11 +255,12 @@ class PartBody extends StatelessWidget {
               style: Theme.of(context).textTheme.subtitle1,
             ),
             Expanded(
-                child: SelectableText(
-              value,
-              //softWrap: true,
-              textAlign: TextAlign.end,
-            ),),
+              child: SelectableText(
+                value,
+                //softWrap: true,
+                textAlign: TextAlign.end,
+              ),
+            ),
           ],
         ),
       ),

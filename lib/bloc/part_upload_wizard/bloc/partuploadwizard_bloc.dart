@@ -19,39 +19,52 @@ class PartuploadwizardBloc
     PartuploadwizardEvent event,
   ) async* {
     if (event is UploadPartEvent) {
-      yield(PartuploadwizardLoadingState());
-      if (event.part.photo != null && event.score>NumberConstants.minimumScore) {
+      yield (PartuploadwizardLoadingState());
+      if (event.part.photo != null &&
+          event.score > NumberConstants.minimumScore) {
         print(event.part.partUid);
         if (event.part.partUid != null) {
-         
           partOperationsRepository
               .editPart(event.part)
               .then((value) => emit(PartuploadwizardLoadedState()))
-              .onError((error, stackTrace) =>
-                  emit(PartuploadwizardErrorState(message: error.toString()),),);
-        }else {
+              .onError(
+                (error, stackTrace) => emit(
+                  PartuploadwizardErrorState(message: error.toString()),
+                ),
+              );
+        } else {
           print('New Part');
-        partOperationsRepository
-            .addPart(event.part)
-            .then((value) => emit(PartuploadwizardLoadedState()))
-            .onError(
-              (error, stackTrace) => emit(PartuploadwizardErrorState(
-                message: error.toString(),
-              )),
-            );
-      }
-
-      }else{
-        yield(PartuploadwizardErrorState(message: 'Form is not yet complete!'));
+          partOperationsRepository
+              .addPart(event.part)
+              .then((value) => emit(PartuploadwizardLoadedState()))
+              .onError(
+                (error, stackTrace) => emit(PartuploadwizardErrorState(
+                  message: error.toString(),
+                )),
+              );
+        }
+      } else {
+        yield (PartuploadwizardErrorState(
+            message: 'Form is not yet complete!'));
       }
     }
-    
+
+    if (event is DeletePartEvent) {
+      yield (PartuploadwizardLoadingState());
+
+      partOperationsRepository
+          .deletePart(partId: event.partId)
+          .then((value) => emit(PartuploadwizardLoadedState()))
+          .onError((error, stackTrace) =>
+              emit(PartuploadwizardErrorState(message: error.toString())));
+    }
   }
+
   @override
   void onChange(Change<PartuploadwizardState> change) {
     print(change.nextState);
-    var nxt=change.nextState;
-    if(nxt  is PartuploadwizardErrorState){
+    var nxt = change.nextState;
+    if (nxt is PartuploadwizardErrorState) {
       print(nxt.message);
     }
     super.onChange(change);

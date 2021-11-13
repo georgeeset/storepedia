@@ -60,3 +60,18 @@ library string_constants;
 
 
 
+  const String aboutApp='''StorePedia is a robust database for keeping record of parts stored in the factory’s engineering store. This project was motivated by time loss while trying to locate required part at the spare part store.\n
+  StorePedia works on the principle of active information collation. In this case, Store items information and location will be stored by approved app users in a central repository, where it can be queried and retrieved by the app 
+  users in need of it. This app comes with the following features:\n
+  Add and Edit Store Item: Users can either add non existing store items or Edit existing store items with latest information to enable others get more accurate information.\n
+  Delete Store Item: Users can tag an item as deprecated or Inaccurate if an item location has been replaced with another item or if the item information is misleading. Deleted Items will be indicated in Orange color and will be completely removed from data repository by cloud maintenance Robot.\n
+  Search Store Item: StorePedia search engine is quite smart with capability of using keywords and part description to locate closely related part with minimum latency.\n
+  Access control: Users can only get access to this app if approval is granted by the Admin. Access level is used to control who can delete or add part to repository.\n
+  Why do you need StorePedia?\n
+  Ease of use: Adding part to storage is very flexible; users only have to input most critical information about the part.\n
+  Graphical: Identify part easily with photograph; users can get part information in one glance.\n
+  Save time: Users can easily find and locate part in the store within seconds.\n
+  Real time Update: Create or Updated part information on one device and it is available on all devices.\n
+  Smart: search for part like you do on E-commerce platforms like Jumia and Aliexpress.
+  ''';
+

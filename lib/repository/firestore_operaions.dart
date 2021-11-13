@@ -100,4 +100,8 @@ class FirestoreOperations {
         .map((event) => event.docs);
        
   }
+
+  Future<void>deleteDocumentLevel1(String collection,String documentId){
+   return _firebaseFirestore.collection(collection).doc(documentId).delete().onError((error, stackTrace) => Future.error(error.toString(),stackTrace));
+  }
 }
