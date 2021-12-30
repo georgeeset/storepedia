@@ -2,16 +2,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:store_pedia/model/part.dart';
 import 'package:store_pedia/repository/firestore_operaions.dart';
 import 'package:store_pedia/repository/string_processor.dart';
-import 'package:store_pedia/constants/firebase_constants.dart'
-    as FirebaseConstants;
+import 'package:store_pedia/constants/string_constants.dart' as StringConstants;
 import 'package:store_pedia/constants/number_constants.dart' as NumberConstants;
 
 class PartQuery {
   final FirestoreOperations _firestoreOperations = FirestoreOperations();
   final StringProcessor _stringProcessor = StringProcessor();
-  
 
   DocumentSnapshot? lastDoc;
+  DocumentSnapshot? exhaustedLastDoc;
 
   ///returns null if query yields no result.
   ///returns List of parts if qurey yeild result.
@@ -35,10 +34,10 @@ class PartQuery {
       queryResult = await _firestoreOperations
           .pagenateQueryWithListKeywords(
               keywords,
-              FirebaseConstants.parts,
-              FirebaseConstants.searchKeywords,
+              StringConstants.partsCollection,
+              StringConstants.searchKeywords,
               NumberConstants.maximumSearchResult,
-              FirebaseConstants.likesCount,
+              StringConstants.likesCount,
               lastDoc!)
           .onError(
             (error, stackTrace) => Future.error(error.toString(), stackTrace),
@@ -47,10 +46,10 @@ class PartQuery {
       queryResult = await _firestoreOperations
           .queryWithListKeywords(
               keywords,
-              FirebaseConstants.parts,
-              FirebaseConstants.searchKeywords,
+              StringConstants.partsCollection,
+              StringConstants.searchKeywords,
               NumberConstants.maximumSearchResult,
-              FirebaseConstants.likesCount)
+              StringConstants.likesCount)
           .onError(
             (error, stackTrace) => Future.error(error.toString(), stackTrace),
           );

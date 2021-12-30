@@ -3,7 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:store_pedia/bloc/part_upload_wizard/bloc/partuploadwizard_bloc.dart';
 
 import 'package:store_pedia/cubit/edit_item_cubit/edititem_cubit.dart';
-import 'package:store_pedia/cubit/mark_bad_part/cubit/markbadpart_cubit.dart';
+import 'package:store_pedia/cubit/mark_bad_part/cubit/mark_bad_part_cubit.dart';
+import 'package:store_pedia/cubit/mark_exhausted_part_cubit/cubit/markexhaustedpart_cubit.dart';
 import 'package:store_pedia/cubit/user_manager_cubit/cubit/usermanager_cubit.dart';
 import 'package:store_pedia/model/part.dart';
 import 'package:store_pedia/screens/add_item_page/add_item_page.dart';
@@ -39,15 +40,21 @@ class PartDetailPage extends StatelessWidget {
   }
 }
 
-class PartBody extends StatelessWidget {
+class PartBody extends StatefulWidget {
   const PartBody({required this.part, Key? key}) : super(key: key);
   final Part part;
+
+  @override
+  State<PartBody> createState() => _PartBodyState();
+}
+
+class _PartBodyState extends State<PartBody> {
   @override
   Widget build(BuildContext context) {
     return ListView(
       keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
       children: [
-        OnlinePinchZoomImage(link: part.photo),
+        OnlinePinchZoomImage(link: widget.part.photo),
 
         // Container(
         //   child: Row(
@@ -73,52 +80,103 @@ class PartBody extends StatelessWidget {
         //   ),
         // ),
         space(),
-        part.partDescription == null
+        widget.part.partDescription == null
             ? Container()
             : textCard(StringConstants.partDescriptionTitle,
-                part.partDescription!, context),
-        part.brand == null
+                widget.part.partDescription!, context),
+        widget.part.brand == null
             ? Container()
-            : textCard(StringConstants.brandTitle, part.brand!, context),
+            : textCard(StringConstants.brandTitle, widget.part.brand!, context),
 
-        part.partNumber == null
+        widget.part.partNumber == null
+            ? Container()
+            : textCard(StringConstants.partNumberTitle, widget.part.partNumber!,
+                context),
+        widget.part.storeId == null
             ? Container()
             : textCard(
-                StringConstants.partNumberTitle, part.partNumber!, context),
-        part.storeId == null
+                StringConstants.storeIdTitle, widget.part.storeId!, context),
+        widget.part.storeLocation == null
             ? Container()
-            : textCard(StringConstants.storeIdTitle, part.storeId!, context),
-        part.storeLocation == null
+            : textCard(StringConstants.storeLocationTitle,
+                widget.part.storeLocation!, context),
+        widget.part.section == null
             ? Container()
-            : textCard(StringConstants.storeLocationTitle, part.storeLocation!,
-                context),
-        part.section == null
+            : textCard(
+                StringConstants.sectionTitle, widget.part.section!, context),
+        widget.part.reasonForMarkingBad == null
             ? Container()
-            : textCard(StringConstants.sectionTitle, part.section!, context),
-        part.reasonForMarkingBad == null
-            ? Container()
-            : textCard('Deleted', part.reasonForMarkingBad!, context),
+            : textCard('Deleted', widget.part.reasonForMarkingBad!, context),
 
-        part.addedBy == null
+        widget.part.addedBy == null
             ? Container()
-            : textCard('Added By', part.addedBy!, context),
+            : textCard('Added By', widget.part.addedBy!, context),
 
-        part.dateAdded == null
+        widget.part.dateAdded == null
             ? Container()
             : textCard(
                 'Date Added',
-                DateTime.fromMillisecondsSinceEpoch(part.dateAdded!).toString(),
+                DateTime.fromMillisecondsSinceEpoch(widget.part.dateAdded!)
+                    .toString(),
                 context),
 
-        part.lastEditedBy == null
+        widget.part.lastEditedBy == null
             ? Container()
-            : textCard('Last Edited By', part.lastEditedBy!, context),
+            : textCard('Last Edited By', widget.part.lastEditedBy!, context),
 
-        part.searchKeywords == null
+        widget.part.searchKeywords == null
             ? Container()
-            : textCard('Tags', part.searchKeywords!.toString(), context),
+            : textCard('Tags', widget.part.searchKeywords!.toString(), context),
 
-        part.markedBadByUid == null
+        widget.part.markedBadByUid == null
+            ? Card(
+                color: widget.part.isExhausted
+                    ? Colors.orange
+                    : Theme.of(context).primaryColor,
+                margin: EdgeInsets.symmetric(vertical: 5.0),
+                child: Container(
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'THIS PART HAVE BEEN EXHAUSTED',
+                        // style: Theme.of(context)
+                        //     .textTheme
+                        //     .bodyText1
+                        //     ?.copyWith(color: Colors.white),
+                      ),
+                      BlocBuilder<MarkexhaustedpartCubit,
+                          MarkexhaustedpartState>(
+                        builder: (context, state) {
+                          return state == MarkexhaustedpartState.loading
+                              ? Container(
+                                  width: 15,
+                                  height: 15,
+                                  child: Center(
+                                      child: CircularProgressIndicator()),
+                                )
+                              : Switch(
+                                  value: widget.part.isExhausted,
+                                  onChanged: (newValue) {
+                                    setState(() {
+                                      widget.part.isExhausted = newValue;
+                                    });
+                                    context
+                                        .read<MarkexhaustedpartCubit>()
+                                        .makrExhausted(
+                                            data: newValue, part: widget.part);
+                                  });
+                        },
+                      )
+                    ],
+                  ),
+                ),
+              )
+            : Container(),
+
+        widget.part.markedBadByUid == null
             ? BlocBuilder<UserManagerCubit, UserManagerState>(
                 builder: (context, state) {
                 if (state is UserLoadedState &&
@@ -129,7 +187,7 @@ class PartBody extends StatelessWidget {
                     children: [
                       IconButton(
                         onPressed: () {
-                          context.read<EditItemCubit>().jumpEdit(part);
+                          context.read<EditItemCubit>().jumpEdit(widget.part);
                           Navigator.of(context)
                               .popAndPushNamed(AddItemPage.routName);
                         },
@@ -139,9 +197,9 @@ class PartBody extends StatelessWidget {
 
                       //only display this delete icon
                       //if the file have not been marked for delete.
-                      BlocBuilder<MarkbadpartCubit, MarkbadpartState>(
+                      BlocBuilder<MarkpartCubit, MarkpartState>(
                         builder: (context, markState) {
-                          if (markState == MarkbadpartState.idle) {
+                          if (markState == MarkpartState.idle) {
                             return IconButton(
                               onPressed: () {
                                 //Todo marked bad
@@ -151,8 +209,8 @@ class PartBody extends StatelessWidget {
                                     var userInfo =
                                         context.read<UserManagerCubit>().state;
                                     if (userInfo is UserLoadedState) {
-                                      context.read<MarkbadpartCubit>().markBad(
-                                          part: part,
+                                      context.read<MarkpartCubit>().markBad(
+                                          part: widget.part,
                                           reason: value,
                                           userId: userInfo.userData.userId!);
                                     }
@@ -167,7 +225,7 @@ class PartBody extends StatelessWidget {
                             );
                           } else {
                             // indicate loading if mark bad delete button has been peressed.
-                            if (markState == MarkbadpartState.loading) {
+                            if (markState == MarkpartState.loading) {
                               return Container(
                                 width: 15,
                                 height: 15,
@@ -220,7 +278,8 @@ class PartBody extends StatelessWidget {
                           : IconButton(
                               onPressed: () {
                                 context.read<PartuploadwizardBloc>().add(
-                                    DeletePartEvent(partId: part.partUid!));
+                                    DeletePartEvent(
+                                        partId: widget.part.partUid!));
                               },
                               icon: Icon(
                                 Icons.delete_forever,
@@ -233,7 +292,10 @@ class PartBody extends StatelessWidget {
                 } else {
                   return Container();
                 }
-              })
+              }),
+        Container(
+          height: 40,
+        )
       ],
     );
   }

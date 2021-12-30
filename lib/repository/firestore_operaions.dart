@@ -87,21 +87,62 @@ class FirestoreOperations {
             ));
   }
 
+  Future<List<DocumentSnapshot>> paginateQueryWithValue(
+      String collection,
+      String field,
+      bool fieldValue,
+      int limit,
+      String orderBy,
+      DocumentSnapshot startAfter) {
+    return _firebaseFirestore
+        .collection(collection)
+        .where(field, isEqualTo: fieldValue)
+        // .orderBy(orderBy)
+        .limit(limit)
+        .startAfterDocument(startAfter)
+        .get()
+        .then((value) => value.docs)
+        .onError(
+            (error, stackTrace) => Future.error(error.toString(), stackTrace));
+  }
+
+  Future<List<DocumentSnapshot>> queryWithValue(
+    String collection,
+    String field,
+    bool fieldValue,
+    int limit,
+    String orderBy,
+  ) {
+    return _firebaseFirestore
+        .collection(collection)
+        .where(field, isEqualTo: fieldValue)
+        // .orderBy(orderBy)
+        .limit(limit)
+        .get()
+        .then((value) => value.docs)
+        .onError(
+            (error, stackTrace) => Future.error(error.toString(), stackTrace));
+  }
+
   Stream<List<DocumentSnapshot>> streamRecentDocs(
     String collection,
     String sortField,
     int quantity,
-  ){
+  ) {
     return _firebaseFirestore
         .collection(collection)
         .orderBy(sortField, descending: true)
         .limit(quantity)
         .snapshots()
         .map((event) => event.docs);
-       
   }
 
-  Future<void>deleteDocumentLevel1(String collection,String documentId){
-   return _firebaseFirestore.collection(collection).doc(documentId).delete().onError((error, stackTrace) => Future.error(error.toString(),stackTrace));
+  Future<void> deleteDocumentLevel1(String collection, String documentId) {
+    return _firebaseFirestore
+        .collection(collection)
+        .doc(documentId)
+        .delete()
+        .onError(
+            (error, stackTrace) => Future.error(error.toString(), stackTrace));
   }
 }

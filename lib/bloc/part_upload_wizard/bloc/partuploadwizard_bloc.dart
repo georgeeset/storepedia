@@ -11,15 +11,15 @@ part 'partuploadwizard_state.dart';
 
 class PartuploadwizardBloc
     extends Bloc<PartuploadwizardEvent, PartuploadwizardState> {
-  PartuploadwizardBloc() : super(PartuploadwizardIdleState());
-  final PartOperationsRepository partOperationsRepository =
-      PartOperationsRepository();
-  @override
-  Stream<PartuploadwizardState> mapEventToState(
-    PartuploadwizardEvent event,
-  ) async* {
-    if (event is UploadPartEvent) {
-      yield (PartuploadwizardLoadingState());
+  PartuploadwizardBloc() : super(PartuploadwizardIdleState()) {
+    final PartOperationsRepository partOperationsRepository =
+        PartOperationsRepository();
+    // @override
+    // Stream<PartuploadwizardState> mapEventToState(
+    //   PartuploadwizardEvent event,
+    // ) async* {
+    on<UploadPartEvent>((event, emit) {
+      emit(PartuploadwizardLoadingState());
       if (event.part.photo != null &&
           event.score > NumberConstants.minimumScore) {
         print(event.part.partUid);
@@ -44,20 +44,19 @@ class PartuploadwizardBloc
               );
         }
       } else {
-        yield (PartuploadwizardErrorState(
-            message: 'Form is not yet complete!'));
+        emit(PartuploadwizardErrorState(message: 'Form is not yet complete!'));
       }
-    }
+    });
 
-    if (event is DeletePartEvent) {
-      yield (PartuploadwizardLoadingState());
+    on<DeletePartEvent>((event, emit) {
+      emit(PartuploadwizardLoadingState());
 
       partOperationsRepository
           .deletePart(partId: event.partId)
           .then((value) => emit(PartuploadwizardLoadedState()))
           .onError((error, stackTrace) =>
               emit(PartuploadwizardErrorState(message: error.toString())));
-    }
+    });
   }
 
   @override

@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
@@ -7,21 +5,23 @@ part 'signinoption_event.dart';
 part 'signinoption_state.dart';
 
 class SigninoptionBloc extends Bloc<SigninoptionEvent, SigninoptionState> {
-  SigninoptionBloc() : super(SigninState());
+  SigninoptionBloc() : super(SigninState()) {
+    // @override
+    // Stream<SigninoptionState> mapEventToState(
+    //   SigninoptionEvent event,
+    // ) async* {
 
-  @override
-  Stream<SigninoptionState> mapEventToState(
-    SigninoptionEvent event,
-  ) async* {
-    if(event is SigninoptionEvent){
-      yield(SigninState());
-    }
-    if(event is RegisterOptionEvent){
-      yield(RegisterState());
-    }
-    if(event is ForgotPasswordEvent){
-      yield(ForgotPasswordState());
-    }
+    on<SigninoptionEvent>((event, emit) {
+      emit(SigninState());
+    });
+
+    on<RegisterOptionEvent>((event, emit) {
+      emit(RegisterState());
+    });
+
+    on<ForgotPasswordEvent>((event, emit) {
+      emit(ForgotPasswordState());
+    });
   }
 
   @override

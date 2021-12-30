@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:io';
 
 import 'package:bloc/bloc.dart';
@@ -8,27 +7,27 @@ part 'photomanager_event.dart';
 part 'photomanager_state.dart';
 
 class PhotomanagerBloc extends Bloc<PhotomanagerEvent, PhotomanagerState> {
-   PhotomanagerBloc() : super(PhotomanagerEmptyState());
+  PhotomanagerBloc() : super(PhotomanagerEmptyState()) {
+    // @override
+    // Stream<PhotomanagerState> mapEventToState(
+    //   PhotomanagerEvent event,
+    // ) async* {
 
-  @override
-  Stream<PhotomanagerState> mapEventToState(
-    PhotomanagerEvent event,
-  ) async* {
-    
-    if(event is SelectPhotoEvent){
-      yield(ImageSelectedState(image: event.photo));
-    }
-    
-    if(event is RemovePhotoEvent){
-      yield(PhotomanagerEmptyState());
-    }
+    on<SelectPhotoEvent>((event, emit) {
+      emit(ImageSelectedState(image: event.photo));
+    });
+
+    on<RemovePhotoEvent>((event, emit) {
+      emit(PhotomanagerEmptyState());
+    });
   }
-@override
+  @override
   void onChange(Change<PhotomanagerState> change) {
     print('Image manager State change ${change.nextState}');
     super.onChange(change);
   }
-@override
+
+  @override
   void onEvent(PhotomanagerEvent event) {
     print('Image manager Event ${event.toString()}');
     super.onEvent(event);

@@ -7,6 +7,7 @@ import 'package:store_pedia/cubit/recent_item_cubit/cubit/recentitems_cubit.dart
 import 'package:store_pedia/cubit/user_manager_cubit/cubit/usermanager_cubit.dart';
 import 'package:store_pedia/model/part.dart';
 import 'package:store_pedia/screens/add_item_page/add_item_page.dart';
+import 'package:store_pedia/screens/exhausted_items_page/exhausted_items_page.dart';
 import 'package:store_pedia/screens/search_page/search_page.dart';
 import 'package:store_pedia/widgets/input_editor.dart';
 import 'package:store_pedia/widgets/loading_indicator.dart';
@@ -58,9 +59,9 @@ class HomePage extends StatelessWidget {
                         applicationLegalese:
                             'Copyright © Flex-Automation, {{ year }}',
                         applicationDescription: const Text(
-                           StringConstants.aboutApp,
-                           softWrap: true,
-                            ),
+                          StringConstants.aboutApp,
+                          softWrap: true,
+                        ),
                         children: const <Widget>[
                           MarkdownPageListTile(
                             icon: Icon(Icons.list),
@@ -316,6 +317,7 @@ class HomePage extends StatelessWidget {
                             //         .read<AuthenticationBloc>()
                             //         .add(SignOutEvent()),
                             //     child: Text('Signout'))
+                            Card(child: ExhaustedItems(sizeData: sizeData)),
                           ],
                         ),
                       ),
@@ -448,6 +450,41 @@ class EditProfileOption extends StatelessWidget {
           },
           title: 'Your Name In Full \n This cannot be edited',
         );
+      },
+    );
+  }
+}
+
+class ExhaustedItems extends StatelessWidget {
+  const ExhaustedItems({
+    Key? key,
+    required this.sizeData,
+  }) : super(key: key);
+
+  final Size sizeData;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      splashColor: Colors.blue,
+      child: Container(
+        width: sizeData.width / 2.1,
+        height: sizeData.width / 2.1,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.hourglass_empty,
+              size: 54,
+            ),
+            Text(
+              'Exhausted Items',
+            ),
+          ],
+        ),
+      ),
+      onTap: () async {
+        Navigator.pushNamed(context, ExhaustedItemsPage.routName);
       },
     );
   }

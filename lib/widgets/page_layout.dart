@@ -29,38 +29,40 @@ class PageLayout extends StatelessWidget {
                 color: Colors.blue,
               ),
             ),
-             Positioned(
+            Positioned(
               top: 10,
               left: 10,
-              child: hasBackButton? InkWell(
-                splashColor: Colors.purple,
-                onTap: () {
-                  if (Navigator.of(context).canPop()) Navigator.pop(context);
-                },
-                child: CircleAvatar(
-                  radius: 15,
-                  backgroundColor: Colors.white,
-                  child: Icon(
-                    Icons.arrow_back,
-                    size: 32,
-                    color: Colors.blue,
-                  ),
-                ),
-              )
-              : Container(),
+              child: hasBackButton
+                  ? InkWell(
+                      splashColor: Colors.purple,
+                      onTap: () {
+                        if (Navigator.of(context).canPop())
+                          Navigator.pop(context);
+                      },
+                      child: CircleAvatar(
+                        radius: 15,
+                        backgroundColor: Colors.white,
+                        child: Icon(
+                          Icons.arrow_back,
+                          size: 32,
+                          color: Colors.blue,
+                        ),
+                      ),
+                    )
+                  : Container(),
             ),
-            
+
             Positioned(
               top: 20,
               child: Container(
                 width: sizeData.width,
                 child: Center(child: title),
               ),
-            ),// clipBehavior: Clip.antiAliasWithSaveLayer,
+            ), // clipBehavior: Clip.antiAliasWithSaveLayer,
             Positioned(
               top: NumberConstants.appbarHeight,
               child: Container(
-                padding: EdgeInsets.only(bottom: 20),
+                padding: EdgeInsets.only(bottom: 60),
                 clipBehavior: Clip.antiAliasWithSaveLayer,
                 decoration: BoxDecoration(
                   color: Colors.white,

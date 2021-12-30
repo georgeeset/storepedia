@@ -10,7 +10,11 @@ class OnePart extends StatelessWidget {
   Widget build(BuildContext context) {
     //Size space=MediaQuery.of(context).size;
     return Card(
-      color: part.markedBadByUid!=null? Colors.red[50] :Colors.blue[50],
+      color: part.markedBadByUid != null
+          ? Colors.red[50]
+          : part.isExhausted == false
+              ? Colors.blue[50]
+              : Colors.orange,
       clipBehavior: Clip.antiAliasWithSaveLayer,
       child: InkWell(
         child: Container(
@@ -32,12 +36,12 @@ class OnePart extends StatelessWidget {
                                 return Stack(
                                   alignment: Alignment.center,
                                   children: [
-                                      Image.asset('assets/images/bin.jpg'),
-                                      Container(
-                                        width: 15,
-                                        height: 15,
-                                        child: CircularProgressIndicator(),
-                                      )
+                                    Image.asset('assets/images/bin.jpg'),
+                                    Container(
+                                      width: 15,
+                                      height: 15,
+                                      child: CircularProgressIndicator(),
+                                    )
                                   ],
                                 );
                               })),

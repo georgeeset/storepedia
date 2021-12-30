@@ -77,7 +77,6 @@ class AddItemPage extends StatelessWidget {
           BlocListener<PhotouploadCubit, PhotouploadState>(
             listener: (context, state) {
               if (state is PhotouploadedState) {
-              
                 //Ensure photo is removed to prevent image form uploading again
                 context.read<PhotomanagerBloc>().add(RemovePhotoEvent());
 
@@ -160,7 +159,6 @@ class AddItemPage extends StatelessWidget {
           //       //upload file if you like
           //     }
           // }),
-          
         ],
         child: BlocBuilder<EditItemCubit, Part>(
           builder: (context, state) {
@@ -236,7 +234,7 @@ class AddItemPage extends StatelessWidget {
                 PhotoManager(),
 
                 //checking for duplicate part.
-                // if duplicate is found, then 
+                // if duplicate is found, then
                 // Upload part button will not be activated
                 Card(
                   child: Container(
@@ -253,11 +251,12 @@ class AddItemPage extends StatelessWidget {
                           child: Text(
                             'It seems the part already exist,\n Click Here to View,Edit or Delete the existing part.',
                             softWrap: true,
-                            
                             style: Theme.of(context)
                                 .textTheme
                                 .subtitle1!
-                                .copyWith(color: Colors.redAccent,decoration: TextDecoration.underline),
+                                .copyWith(
+                                    color: Colors.redAccent,
+                                    decoration: TextDecoration.underline),
                           ),
                         );
                       } else {
@@ -270,7 +269,7 @@ class AddItemPage extends StatelessWidget {
                     }),
                   ),
                 ),
-                 Container(
+                Container(
                   //height: 100.0,
                   padding: EdgeInsets.all(10),
                   child:
@@ -284,31 +283,35 @@ class AddItemPage extends StatelessWidget {
                                     context.read<FormLevelCubit>().state;
                                 var userInfo =
                                     context.read<UserManagerCubit>().state;
-                                var network=context.read<ConnectivityCubit>().state;
+                                var network =
+                                    context.read<ConnectivityCubit>().state;
                                 if (userInfo is UserLoadedState) {
                                   context
                                       .read<EditItemCubit>()
                                       .updateTheRestInfo(userInfo.userData);
                                 }
 
-                             if(network is ConnectivityOffline){
-                               ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    backgroundColor: Colors.pink,
-                    duration:
-                        Duration(seconds: NumberConstants.errorSnackBarDelay),
-                    content: Text('Your Device is Offline!'),
-                  ),
-                );
-                             }else{   Future.delayed(
-                                    Duration(seconds: 1),
-                                    () => context
-                                        .read<PartuploadwizardBloc>()
-                                        .add(UploadPartEvent(
-                                            part: context
-                                                .read<EditItemCubit>()
-                                                .state,
-                                            score: score)));}
+                                if (network is ConnectivityOffline) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      backgroundColor: Colors.pink,
+                                      duration: Duration(
+                                          seconds: NumberConstants
+                                              .errorSnackBarDelay),
+                                      content: Text('Your Device is Offline!'),
+                                    ),
+                                  );
+                                } else {
+                                  Future.delayed(
+                                      Duration(seconds: 1),
+                                      () => context
+                                          .read<PartuploadwizardBloc>()
+                                          .add(UploadPartEvent(
+                                              part: context
+                                                  .read<EditItemCubit>()
+                                                  .state,
+                                              score: score)));
+                                }
                               },
                               child: Text(state.partUid == null
                                   ? 'Add Part'
@@ -317,7 +320,9 @@ class AddItemPage extends StatelessWidget {
                     },
                   ),
                 ),
-                
+                Container(
+                  height: 45,
+                ),
               ],
             );
           },
@@ -528,8 +533,9 @@ class _PhotoManagerState extends State<PhotoManager> {
         await CropImage.getCroppedImage(image: value).then((value) {
           if (value != null) {
             //this will yield PhotoSelectedState
-            context.read<PhotomanagerBloc>()
-              .add(SelectPhotoEvent(photo: value));
+            context
+                .read<PhotomanagerBloc>()
+                .add(SelectPhotoEvent(photo: value));
           }
         });
       }
@@ -749,7 +755,7 @@ class FormListItem extends StatelessWidget {
                   );
                 },
                 child: Container(
-                  color:Colors.red[50],
+                  color: Colors.red[50],
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [

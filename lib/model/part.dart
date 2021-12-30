@@ -14,7 +14,15 @@ class Part {
   String? section;
   String? brand;
   int? likesCount;
-  
+
+  ///if a part is almost finished,
+  ///this field should be switched to true
+  bool isExhausted = false;
+
+  ///time of marking a store item as exhausted
+  ///we will need that to sort exhausted items
+  int? markExhaustedTime;
+
   ///unique ad for part Document
   String? partUid;
 
@@ -41,61 +49,67 @@ class Part {
     this.brand,
     this.likesCount,
     this.searchKeywords,
-    this.photo ,
+    this.photo,
     this.markedBadByUid,
     this.reasonForMarkingBad,
     this.partUid,
+    this.isExhausted = false,
+    this.markExhaustedTime,
   });
 
-
-  Part.fromMap({DocumentSnapshot? snapshot, Map<String,dynamic>? mapFormat} ) {
-    Map<String,dynamic> data;
-    if(mapFormat==null && snapshot!=null){data = snapshot.data() as Map<String,dynamic>;}
-    else{
-      if(mapFormat!=null){data=mapFormat;}
-      else{
-        throw('No Valid Input');
+  Part.fromMap({DocumentSnapshot? snapshot, Map<String, dynamic>? mapFormat}) {
+    Map<String, dynamic> data;
+    if (mapFormat == null && snapshot != null) {
+      data = snapshot.data() as Map<String, dynamic>;
+    } else {
+      if (mapFormat != null) {
+        data = mapFormat;
+      } else {
+        throw ('No Valid Input');
       }
     }
-    partName= data[StringConstants.partName];
-    partDescription= data[StringConstants.partDescription];
-    partNumber= data[StringConstants.partNumber];
-    storeId= data[StringConstants.storeId];
-    storeLocation= data[StringConstants.storeLocation];
-    addedBy= data[StringConstants.addedBy];
-    addedById= data[StringConstants.addedById];
-    dateAdded= data[StringConstants.dateAdded];
-    lastEditedBy= data[StringConstants.lastEditedBy];
-    section= data[StringConstants.section];
-    brand= data[StringConstants.brand];
-    likesCount= data[StringConstants.likesCount];
-    searchKeywords= List<String>.from(data[StringConstants.searchKeywords]?? []);
-    photo= data[StringConstants.photo];
-    markedBadByUid= data[StringConstants.markedBadByUid];
-    reasonForMarkingBad= data[StringConstants.reasonFormarkingBad];
-    partUid=snapshot?.id;
+    partName = data[StringConstants.partName];
+    partDescription = data[StringConstants.partDescription];
+    partNumber = data[StringConstants.partNumber];
+    storeId = data[StringConstants.storeId];
+    storeLocation = data[StringConstants.storeLocation];
+    addedBy = data[StringConstants.addedBy];
+    addedById = data[StringConstants.addedById];
+    dateAdded = data[StringConstants.dateAdded];
+    lastEditedBy = data[StringConstants.lastEditedBy];
+    section = data[StringConstants.section];
+    brand = data[StringConstants.brand];
+    likesCount = data[StringConstants.likesCount];
+    isExhausted = data[StringConstants.isExhausted] ?? false;
+    markExhaustedTime = data[StringConstants.markExhaustedTime];
+    searchKeywords =
+        List<String>.from(data[StringConstants.searchKeywords] ?? []);
+    photo = data[StringConstants.photo];
+    markedBadByUid = data[StringConstants.markedBadByUid];
+    reasonForMarkingBad = data[StringConstants.reasonFormarkingBad];
+    partUid = snapshot?.id;
   }
 
-
-  Map<String,dynamic> toMap()=> {
-    StringConstants.partName:partName,
-    StringConstants.partDescription: partDescription,
-    StringConstants.partNumber: partNumber,
-    StringConstants.storeId: storeId,
-    StringConstants.storeLocation: storeLocation,
-    StringConstants.addedBy: addedBy,
-    StringConstants.dateAdded: dateAdded,
-    StringConstants.addedById: addedById,
-    StringConstants.lastEditedBy: lastEditedBy,
-    StringConstants.section: section,
-    StringConstants.brand: brand,
-    StringConstants.likesCount: likesCount,
-    StringConstants.searchKeywords: searchKeywords,
-    StringConstants.photo:photo,
-    StringConstants.markedBadByUid: markedBadByUid,
-    StringConstants.reasonFormarkingBad:reasonForMarkingBad,
-  } ;
-  
+  Map<String, dynamic> toMap() => {
+        StringConstants.partName: partName,
+        StringConstants.partDescription: partDescription,
+        StringConstants.partNumber: partNumber,
+        StringConstants.storeId: storeId,
+        StringConstants.storeLocation: storeLocation,
+        StringConstants.addedBy: addedBy,
+        StringConstants.dateAdded: dateAdded,
+        StringConstants.addedById: addedById,
+        StringConstants.lastEditedBy: lastEditedBy,
+        StringConstants.section: section,
+        StringConstants.brand: brand,
+        StringConstants.likesCount: likesCount,
+        StringConstants.isExhausted: isExhausted,
+        StringConstants.markExhaustedTime: markExhaustedTime,
+        StringConstants.searchKeywords: searchKeywords,
+        StringConstants.photo: photo,
+        StringConstants.markedBadByUid: markedBadByUid,
+        StringConstants.reasonFormarkingBad: reasonForMarkingBad,
+      };
 
   copyWith({
     String? partName,
@@ -115,28 +129,33 @@ class Part {
     String? markedBadByUid,
     String? reasonForMarkingBad,
     String? partUid,
-  }){
-    return Part( partName:partName?? this.partName,
-    partDescription: partDescription?? this.partDescription,
-    partNumber: partNumber?? this.partNumber,
-    storeId: storeId?? this.storeId,
-    storeLocation: storeLocation?? this.storeLocation,
-    addedBy: addedBy?? this.addedBy,
-    addedById: addedById?? this.addedById,
-    dateAdded: dateAdded?? this.dateAdded,
-    lastEditedBy: lastEditedBy?? this.lastEditedBy,
-    section: section?? this.section,
-    brand: brand?? this.brand,
-    likesCount: likesCount?? this.likesCount,
-    searchKeywords: searchKeywords?? this.searchKeywords,
-    photo: photo?? this.photo,
-    markedBadByUid: markedBadByUid?? this.markedBadByUid,
-    reasonForMarkingBad: reasonForMarkingBad?? this.reasonForMarkingBad,
-    partUid: partUid?? this.partUid,
+    bool? isExhausted,
+    int? markExhaustedTime,
+  }) {
+    return Part(
+      partName: partName ?? this.partName,
+      partDescription: partDescription ?? this.partDescription,
+      partNumber: partNumber ?? this.partNumber,
+      storeId: storeId ?? this.storeId,
+      storeLocation: storeLocation ?? this.storeLocation,
+      addedBy: addedBy ?? this.addedBy,
+      addedById: addedById ?? this.addedById,
+      dateAdded: dateAdded ?? this.dateAdded,
+      lastEditedBy: lastEditedBy ?? this.lastEditedBy,
+      section: section ?? this.section,
+      brand: brand ?? this.brand,
+      likesCount: likesCount ?? this.likesCount,
+      searchKeywords: searchKeywords ?? this.searchKeywords,
+      photo: photo ?? this.photo,
+      markedBadByUid: markedBadByUid ?? this.markedBadByUid,
+      reasonForMarkingBad: reasonForMarkingBad ?? this.reasonForMarkingBad,
+      partUid: partUid ?? this.partUid,
+      isExhausted: isExhausted ?? this.isExhausted,
+      markExhaustedTime: markExhaustedTime ?? this.markExhaustedTime,
     );
   }
 
-  clear(){
+  clear() {
     return Part();
   }
 }

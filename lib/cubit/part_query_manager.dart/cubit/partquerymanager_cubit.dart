@@ -15,14 +15,13 @@ class PartqueryManagerCubit extends Cubit<PartqueryManagerState> {
     if (query.length > 3) {
       emit(state.copyWith(queryStatus: QueryStatus.loading));
       partQueryRepository.searchPart(searchString: query).then((value) {
-                    print('${value?.length}');
+        print('${value?.length}');
 
         if (value == null) {
           emit(state.copyWith(queryStatus: QueryStatus.noResult));
         } else {
-          
           // marked parts for delete are removed here if user level is Not admin
-         // value.removeWhere((element) => element.markedBadByUid!=null);
+          // value.removeWhere((element) => element.markedBadByUid!=null);
 
           if (value.length < NumberConstants.maximumSearchResult) {
             emit(state.copyWith(
@@ -49,42 +48,39 @@ class PartqueryManagerCubit extends Cubit<PartqueryManagerState> {
   }
 
   void moreResult() {
-    if (state.queryStatus!= QueryStatus.loaded ||
+    if (state.queryStatus != QueryStatus.loaded ||
         state.hasReachedMax ||
         state.paginationLoading) {
-          return;
-        }
+      return;
+    }
 
-      state.copyWith(paginationLoading: true);
+    state.copyWith(paginationLoading: true);
 
-      print('requresting more');
-      partQueryRepository
-          .searchPart(searchString: state.searchString, newSearch: false)
-          .then((value) {
-            print('${value?.length}');
-        if (value == null) {
-          emit(state.copyWith(hasReachedMax: true, paginationLoading: false));
+    print('requresting more');
+    partQueryRepository
+        .searchPart(searchString: state.searchString, newSearch: false)
+        .then((value) {
+      print('${value?.length}');
+      if (value == null) {
+        emit(state.copyWith(hasReachedMax: true, paginationLoading: false));
+      } else {
+        if (value.length < NumberConstants.maximumSearchResult) {
+          emit(state.copyWith(
+            paginationLoading: false,
+            hasReachedMax: true,
+            response: List.of(state.response)..addAll(value),
+          ));
         } else {
-          if (value.length < NumberConstants.maximumSearchResult) {
-            emit(state.copyWith(
-              paginationLoading: false,
-              hasReachedMax: true,
-              response: List.of(state.response)..addAll(value),
-            ));
-          } else {
-            emit(state.copyWith(
-              paginationLoading: false,
-              hasReachedMax: false,
-              response: List.of(state.response)..addAll(value),
-            ));
-          }
+          emit(state.copyWith(
+            paginationLoading: false,
+            hasReachedMax: false,
+            response: List.of(state.response)..addAll(value),
+          ));
         }
-      });
-      // state.copyWith(paginationLoading: false);
-
-    
+      }
+    });
+    // state.copyWith(paginationLoading: false);
   }
-
   // @override
   // void onChange(Change<PartqueryManagerState> change) {
   //   print(change.nextState);
