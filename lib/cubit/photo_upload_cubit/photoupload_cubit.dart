@@ -8,37 +8,41 @@ import 'package:store_pedia/repository/photo_manager_repository.dart';
 part 'photoupload_state.dart';
 
 class PhotouploadCubit extends Cubit<PhotouploadState> {
-  
-
-  
-  final PhotoManagerRepository photoManagerRepository= PhotoManagerRepository();
+  final PhotoManagerRepository photoManagerRepository =
+      PhotoManagerRepository();
 
   PhotouploadCubit() : super(PhotouploadInitial());
-  
-  attemptUpload({required File photo, String? fileName}){
+
+  attemptUpload({required File photo, String? fileName}) {
     //avoid uploading file multiple times. return void if already uploading
-    if(state is PhotouploadingState){
+    if (state is PhotouploadingState) {
       return null;
     }
     emit(PhotouploadingState(percentage: 0));
 
-     var upload= photoManagerRepository.uploadItemImage(image:photo, fileName: fileName);
-      upload.listen((taskSnapshot) {
+    var upload = photoManagerRepository.uploadItemImage(
+        image: photo, fileName: fileName);
+    upload.listen((taskSnapshot) async {
       if (taskSnapshot.state == TaskState.success) {
-        taskSnapshot.ref.getDownloadURL().then((downloadUrl) {
-          emit(PhotouploadedState(uploadLink: downloadUrl));
-        },);
+        await taskSnapshot.ref.getDownloadURL().then(
+          (downloadUrl) {
+            emit(PhotouploadedState(uploadLink: downloadUrl));
+          },
+        );
       }
-      if(taskSnapshot.state == TaskState.running){
-        emit(PhotouploadingState(percentage: ((taskSnapshot.bytesTransferred*100)/taskSnapshot.totalBytes),),);
+      if (taskSnapshot.state == TaskState.running) {
+        emit(
+          PhotouploadingState(
+            percentage: ((taskSnapshot.bytesTransferred * 100) /
+                taskSnapshot.totalBytes),
+          ),
+        );
       }
-     
-    }).onError((error){
+    }).onError((error) {
       emit(PhotouploadErrorState(message: error.toString()));
     });
-    
   }
-  
+
   @override
   void onError(Object error, StackTrace stackTrace) {
     print('Error at PhotoUploadBloc ${error.toString} stackTrace: $stackTrace');

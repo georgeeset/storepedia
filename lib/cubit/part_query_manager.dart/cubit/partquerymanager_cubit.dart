@@ -47,7 +47,7 @@ class PartqueryManagerCubit extends Cubit<PartqueryManagerState> {
     }
   }
 
-  void moreResult() {
+  void moreResult() async {
     if (state.queryStatus != QueryStatus.loaded ||
         state.hasReachedMax ||
         state.paginationLoading) {
@@ -57,7 +57,7 @@ class PartqueryManagerCubit extends Cubit<PartqueryManagerState> {
     state.copyWith(paginationLoading: true);
 
     print('requresting more');
-    partQueryRepository
+    await partQueryRepository
         .searchPart(searchString: state.searchString, newSearch: false)
         .then((value) {
       print('${value?.length}');

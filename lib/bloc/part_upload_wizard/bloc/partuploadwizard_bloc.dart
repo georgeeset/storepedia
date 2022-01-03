@@ -18,13 +18,13 @@ class PartuploadwizardBloc
     // Stream<PartuploadwizardState> mapEventToState(
     //   PartuploadwizardEvent event,
     // ) async* {
-    on<UploadPartEvent>((event, emit) {
+    on<UploadPartEvent>((event, emit) async {
       emit(PartuploadwizardLoadingState());
       if (event.part.photo != null &&
           event.score > NumberConstants.minimumScore) {
         print(event.part.partUid);
         if (event.part.partUid != null) {
-          partOperationsRepository
+          await partOperationsRepository
               .editPart(event.part)
               .then((value) => emit(PartuploadwizardLoadedState()))
               .onError(
@@ -34,7 +34,7 @@ class PartuploadwizardBloc
               );
         } else {
           print('New Part');
-          partOperationsRepository
+          await partOperationsRepository
               .addPart(event.part)
               .then((value) => emit(PartuploadwizardLoadedState()))
               .onError(
@@ -48,7 +48,7 @@ class PartuploadwizardBloc
       }
     });
 
-    on<DeletePartEvent>((event, emit) {
+    on<DeletePartEvent>((event, emit) async {
       emit(PartuploadwizardLoadingState());
 
       partOperationsRepository

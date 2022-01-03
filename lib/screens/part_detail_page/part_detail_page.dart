@@ -140,12 +140,15 @@ class _PartBodyState extends State<PartBody> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        'THIS PART HAVE BEEN EXHAUSTED',
-                        // style: Theme.of(context)
-                        //     .textTheme
-                        //     .bodyText1
-                        //     ?.copyWith(color: Colors.white),
+                      Expanded(
+                        child: Text(
+                          'THIS PART HAVE BEEN EXHAUSTED',
+                          softWrap: true,
+                          // style: Theme.of(context)
+                          //     .textTheme
+                          //     .bodyText1
+                          //     ?.copyWith(color: Colors.white),
+                        ),
                       ),
                       BlocBuilder<MarkexhaustedpartCubit,
                           MarkexhaustedpartState>(

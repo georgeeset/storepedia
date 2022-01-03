@@ -10,10 +10,12 @@ class MarkpartCubit extends Cubit<MarkpartState> {
   final FirestoreOperations _firestoreOperations = FirestoreOperations();
 
   markBad(
-      {required Part part, required String reason, required String userId}) {
+      {required Part part,
+      required String reason,
+      required String userId}) async {
     part = part.copyWith(reasonForMarkingBad: reason, markedBadByUid: userId);
     emit(MarkpartState.loading);
-    _firestoreOperations
+    await _firestoreOperations
         .editDocument(
             StringConstants.partsCollection, part.partUid!, part.toMap())
         .then((_) => emit(MarkpartState.loaded))

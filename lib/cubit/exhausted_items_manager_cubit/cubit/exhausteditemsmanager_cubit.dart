@@ -12,9 +12,9 @@ class ExhausteditemsmanagerCubit extends Cubit<ExhausteditemsmanagerState> {
   final ExhaustedItemsRepository partQueryRepository =
       ExhaustedItemsRepository();
 
-  void getExhaustedItems() {
+  void getExhaustedItems() async {
     emit(state.copyWith(queryStatus: QueryStatus.loading));
-    partQueryRepository.search().then((value) {
+    await partQueryRepository.search().then((value) {
       print('${value?.length}');
 
       if (value == null) {
@@ -44,7 +44,7 @@ class ExhausteditemsmanagerCubit extends Cubit<ExhausteditemsmanagerState> {
     });
   }
 
-  void moreExhaustedItems() {
+  Future<void> moreExhaustedItems() async {
     if (state.queryStatus != QueryStatus.loaded ||
         state.hasReachedMax ||
         state.paginationLoading) {
@@ -54,7 +54,7 @@ class ExhausteditemsmanagerCubit extends Cubit<ExhausteditemsmanagerState> {
     state.copyWith(paginationLoading: true);
 
     print('requresting more');
-    partQueryRepository.search().then((value) {
+    await partQueryRepository.search().then((value) {
       print('${value?.length}');
       if (value == null) {
         emit(state.copyWith(hasReachedMax: true, paginationLoading: false));

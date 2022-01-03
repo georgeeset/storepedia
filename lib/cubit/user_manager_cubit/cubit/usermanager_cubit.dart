@@ -12,18 +12,18 @@ class UserManagerCubit extends Cubit<UserManagerState> {
 
   final UserRepository userRepository = UserRepository();
   late User user;
-  
-  DeveiceInfo deviceInfo=DeveiceInfo();
+
+  DeveiceInfo deviceInfo = DeveiceInfo();
   late String deviceValue;
 
-  getUser(User user) {
+  getUser(User user) async {
     this.user = user;
-    deviceInfo.androidDeviceInfo().then((value) => deviceValue=value);
+    await deviceInfo.androidDeviceInfo().then((value) => deviceValue = value);
     // call user managerRepository and ask for user with the information gotten from Auth
     emit(UserLoadingState());
     userRepository.getUser(user.uid).then((value) {
       print(value.hasName());
-      emit(UserLoadedState(userData: value,actualDeviceInfo: deviceValue));
+      emit(UserLoadedState(userData: value, actualDeviceInfo: deviceValue));
     }).catchError(((error, stackTrace) {
       print('error observed from getUser... $error');
       emit(UserLoadingErrorState(error: error));
@@ -40,7 +40,7 @@ class UserManagerCubit extends Cubit<UserManagerState> {
   updateUserName({
     required UserModel userData,
     required String fullName,
-  }) {
+  }) async {
     //update The rest
     UserModel nameAdded = userData.copyWith(
       userName: fullName,
@@ -50,11 +50,11 @@ class UserManagerCubit extends Cubit<UserManagerState> {
 
     //upload the document
     emit(UserLoadingState());
-    userRepository
-        .addUserProfile(user.uid,nameAdded)
+    await userRepository
+        .addUserProfile(user.uid, nameAdded)
         .then(
           (value) => emit(
-            UserLoadedState(userData: nameAdded,actualDeviceInfo: deviceValue),
+            UserLoadedState(userData: nameAdded, actualDeviceInfo: deviceValue),
           ),
         )
         .onError(
@@ -65,9 +65,9 @@ class UserManagerCubit extends Cubit<UserManagerState> {
         );
   }
 
-  verifyEmail() {
+  verifyEmail() async {
     emit(UserLoadingState());
-    user
+    await user
         .sendEmailVerification()
         .then((value) => emit(EmailVerificationSentState(user.email!)));
   }
