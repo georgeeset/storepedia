@@ -38,6 +38,7 @@ dependencies:
   hydrated_bloc: ^8.0.0
   image_cropper: ^1.4.1
   image_picker: ^0.8.3+2
+  photo_view: ^0.13.0
   pinch_zoom_image_last: ^0.4.1
   shimmer: ^2.0.0
   url_launcher_web: ^2.0.4

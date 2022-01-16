@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:store_pedia/constants/number_constants.dart' as NumberConstants;
+import 'package:store_pedia/widgets/back_button.dart';
 
 class PageLayout extends StatelessWidget {
   const PageLayout(
@@ -32,24 +33,7 @@ class PageLayout extends StatelessWidget {
             Positioned(
               top: 10,
               left: 10,
-              child: hasBackButton
-                  ? InkWell(
-                      splashColor: Colors.purple,
-                      onTap: () {
-                        if (Navigator.of(context).canPop())
-                          Navigator.pop(context);
-                      },
-                      child: CircleAvatar(
-                        radius: 15,
-                        backgroundColor: Colors.white,
-                        child: Icon(
-                          Icons.arrow_back,
-                          size: 32,
-                          color: Colors.blue,
-                        ),
-                      ),
-                    )
-                  : Container(),
+              child: hasBackButton ? BackButtonWidget() : Container(),
             ),
 
             Positioned(

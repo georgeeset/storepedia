@@ -99,11 +99,11 @@ class _ExhaustedBodyState extends State<ExhaustedBody> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              'Our Stock seem OK',
+              'Our Stock seems OK',
               style: Theme.of(context).textTheme.subtitle1,
             ),
             Text(
-              'Kindly check physically to be souble sure.',
+              'Kindly check physically to be double sure.',
               style: Theme.of(context)
                   .textTheme
                   .subtitle2

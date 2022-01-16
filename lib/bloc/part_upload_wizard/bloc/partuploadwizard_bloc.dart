@@ -51,7 +51,7 @@ class PartuploadwizardBloc
     on<DeletePartEvent>((event, emit) async {
       emit(PartuploadwizardLoadingState());
 
-      partOperationsRepository
+      await partOperationsRepository
           .deletePart(partId: event.partId)
           .then((value) => emit(PartuploadwizardLoadedState()))
           .onError((error, stackTrace) =>

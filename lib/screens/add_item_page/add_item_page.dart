@@ -3,12 +3,12 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:pinch_zoom_image_last/pinch_zoom_image_last.dart';
 import 'package:store_pedia/bloc/part_upload_wizard/bloc/partuploadwizard_bloc.dart';
 import 'package:store_pedia/bloc/photo_manager_bloc/photomanager_bloc.dart';
 import 'package:store_pedia/cubit/connectivity_cubit/cubit/connectivity_cubit.dart';
 import 'package:store_pedia/cubit/edit_item_cubit/edititem_cubit.dart';
 import 'package:store_pedia/cubit/form_level_cubit/formlevel_cubit.dart';
+import 'package:store_pedia/cubit/part_query_manager.dart/cubit/partquerymanager_cubit.dart';
 import 'package:store_pedia/cubit/photo_upload_cubit/photoupload_cubit.dart';
 import 'package:store_pedia/cubit/repitition_cubit/cubit/repitition_cubit.dart';
 import 'package:store_pedia/cubit/user_manager_cubit/cubit/usermanager_cubit.dart';
@@ -245,6 +245,9 @@ class AddItemPage extends StatelessWidget {
                           state.partUid == null) {
                         return TextButton(
                           onPressed: () {
+                            context
+                                .read<PartqueryManagerCubit>()
+                                .attemptQuery(repititionState.searchString);
                             Navigator.of(context)
                                 .pushNamed(SearchPage.routName);
                           },
@@ -555,7 +558,11 @@ class DisplayOfflineImage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        PinchZoomImage(image: Image.file(image)),
+        InteractiveViewer(
+          constrained: false,
+          scaleEnabled: true,
+          child: Image.file(image),
+        ),
         Positioned(
           top: 20,
           right: 20,

@@ -2,7 +2,6 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:store_pedia/model/part.dart';
 import 'package:store_pedia/repository/exhausted_items_repository.dart';
-import 'package:store_pedia/constants/string_constants.dart' as StringConstants;
 import 'package:store_pedia/constants/number_constants.dart' as NumberConstants;
 
 part 'exhausteditemsmanager_state.dart';

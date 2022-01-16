@@ -17,8 +17,9 @@ class RepititionInitialState extends RepititionCubitState {
 }
 
 class RepititionFoundState extends RepititionCubitState {
-  RepititionFoundState({required this.partsFound});
+  RepititionFoundState({required this.partsFound, required this.searchString});
   final List<Part> partsFound;
+  final String searchString;
 
   @override
   List<Object> get props => [partsFound];
@@ -28,18 +29,17 @@ class RepititionFoundState extends RepititionCubitState {
   }
 }
 
-class RepititionNotFoundState extends RepititionCubitState{
-
+class RepititionNotFoundState extends RepititionCubitState {
   @override
   List<Object> get props => [];
-  
+
   @override
   String toString() {
     return 'RepititionNotFoundState';
   }
 }
 
-class RepititionSearchError extends RepititionCubitState{
+class RepititionSearchError extends RepititionCubitState {
   RepititionSearchError({required this.errorMessage, this.stackTrace});
   final String errorMessage;
   final StackTrace? stackTrace;

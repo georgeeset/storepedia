@@ -17,6 +17,7 @@ import 'package:store_pedia/cubit/user_manager_cubit/cubit/usermanager_cubit.dar
 import 'package:store_pedia/screens/add_item_page/add_item_page.dart';
 import 'package:store_pedia/screens/exhausted_items_page/exhausted_items_page.dart';
 import 'package:store_pedia/screens/home_page/home_page.dart';
+import 'package:store_pedia/screens/image_shower/image_shower.dart';
 import 'package:store_pedia/screens/part_detail_page/part_detail_page.dart';
 import 'package:store_pedia/screens/search_page/search_page.dart';
 import 'package:store_pedia/screens/signin_screen/signin_screen.dart';
@@ -123,11 +124,12 @@ class MyApp extends StatelessWidget {
                 create: (context) => ExhausteditemsmanagerCubit(),
                 child: ExhaustedItemsPage(),
               ),
+          ImageShower.routeName: (context) => ImageShower(),
+
           // IntroductionPage.routName: (context) => IntroductionPage(),
           // UserTypeSelectionPage.routName: (context) => UserTypeSelectionPage(),
           // ProfilePage.routName: (context) => ProfilePage(),
           // UserSignUpPage.routName: (context) => UserSignUpPage(),
-          // ImageShower.routeName:(context)=>ImageShower(),
         },
         home: FutureBuilder(
           future: _initialization,
