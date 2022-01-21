@@ -30,11 +30,9 @@ class PageLayout extends StatelessWidget {
                 color: Colors.blue,
               ),
             ),
-            Positioned(
-              top: 10,
-              left: 10,
-              child: hasBackButton ? BackButtonWidget() : Container(),
-            ),
+            hasBackButton
+                ? Positioned(top: 10, left: 10, child: BackButtonWidget())
+                : Container(),
 
             Positioned(
               top: 20,

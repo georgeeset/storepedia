@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:pinch_zoom_image_last/pinch_zoom_image_last.dart';
 import 'package:store_pedia/bloc/part_upload_wizard/bloc/partuploadwizard_bloc.dart';
 import 'package:store_pedia/bloc/photo_manager_bloc/photomanager_bloc.dart';
 import 'package:store_pedia/cubit/connectivity_cubit/cubit/connectivity_cubit.dart';
@@ -365,6 +366,7 @@ class _PhotoManagerState extends State<PhotoManager> {
   //UploadTask? _uploadTask;
   @override
   Widget build(BuildContext context) {
+    // Size mediaSize = MediaQuery.of(context).size;
     return Card(
       margin: EdgeInsets.all(10.0),
       elevation: 3.0,
@@ -558,10 +560,9 @@ class DisplayOfflineImage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        InteractiveViewer(
-          constrained: false,
-          scaleEnabled: true,
-          child: Image.file(image),
+        PinchZoomImage(
+          image: Image.file(image, fit: BoxFit.contain),
+          zoomedBackgroundColor: Colors.black12,
         ),
         Positioned(
           top: 20,

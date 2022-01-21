@@ -40,7 +40,9 @@ class OnePart extends StatelessWidget {
                                     Container(
                                       width: 15,
                                       height: 15,
-                                      child: CircularProgressIndicator(),
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 1.5,
+                                      ),
                                     )
                                   ],
                                 );
