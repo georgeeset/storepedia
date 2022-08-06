@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pinch_zoom_image_last/pinch_zoom_image_last.dart';
 import 'package:store_pedia/bloc/part_upload_wizard/bloc/partuploadwizard_bloc.dart';
@@ -14,6 +15,7 @@ import 'package:store_pedia/cubit/photo_upload_cubit/photoupload_cubit.dart';
 import 'package:store_pedia/cubit/repitition_cubit/cubit/repitition_cubit.dart';
 import 'package:store_pedia/cubit/user_manager_cubit/cubit/usermanager_cubit.dart';
 import 'package:store_pedia/model/part.dart';
+import 'package:store_pedia/model/screenargs.dart';
 import 'package:store_pedia/repository/crop_image.dart';
 import 'package:store_pedia/repository/image_getter.dart';
 import 'package:store_pedia/screens/search_page/search_page.dart';
@@ -30,7 +32,12 @@ class AddItemPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final args = ModalRoute.of(context)!.settings.arguments as ScreenArguments;
     final Size sizeData = MediaQuery.of(context).size;
+    if (args.purpose == Reason.editPart) {
+      context.read<PhotomanagerBloc>().add(RemovePhotoEvent());
+    }
+
     return PageLayout(
       title: Text(
         'Add/Edit Store Item',
@@ -534,16 +541,12 @@ class _PhotoManagerState extends State<PhotoManager> {
 
   getImage(ImageSource source) async {
     await ImageGetter.getImage(source).then((value) async {
-      if (value != null) {
-        await CropImage.getCroppedImage(image: value).then((value) {
-          if (value != null) {
-            //this will yield PhotoSelectedState
-            context
-                .read<PhotomanagerBloc>()
-                .add(SelectPhotoEvent(photo: value));
-          }
-        });
-      }
+      await CropImage.getCroppedImage(image: value).then((value) {
+        if (value != null) {
+          //this will yield PhotoSelectedState
+          context.read<PhotomanagerBloc>().add(SelectPhotoEvent(photo: value));
+        }
+      });
     });
   }
 }
@@ -554,14 +557,14 @@ class DisplayOfflineImage extends StatelessWidget {
     required this.image,
   }) : super(key: key);
 
-  final File image;
+  final CroppedFile image;
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
         PinchZoomImage(
-          image: Image.file(image, fit: BoxFit.contain),
+          image: Image.file(File(image.path), fit: BoxFit.contain),
           zoomedBackgroundColor: Colors.black12,
         ),
         Positioned(

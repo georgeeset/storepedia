@@ -7,6 +7,7 @@ import 'package:store_pedia/cubit/mark_bad_part/cubit/mark_bad_part_cubit.dart';
 import 'package:store_pedia/cubit/mark_exhausted_part_cubit/cubit/markexhaustedpart_cubit.dart';
 import 'package:store_pedia/cubit/user_manager_cubit/cubit/usermanager_cubit.dart';
 import 'package:store_pedia/model/part.dart';
+import 'package:store_pedia/model/screenargs.dart';
 import 'package:store_pedia/screens/add_item_page/add_item_page.dart';
 import 'package:store_pedia/widgets/input_editor.dart';
 import 'package:store_pedia/widgets/online_pinch_zoom.dart';
@@ -79,6 +80,7 @@ class _PartBodyState extends State<PartBody> {
         //     ],
         //   ),
         // ),
+
         space(),
         widget.part.partDescription == null
             ? Container()
@@ -183,7 +185,6 @@ class _PartBodyState extends State<PartBody> {
             ? BlocBuilder<UserManagerCubit, UserManagerState>(
                 builder: (context, state) {
                 if (state is UserLoadedState &&
-                    state.userData.accessLevel != null &&
                     state.userData.accessLevel >=
                         NumberConstants.minimumAccessLevelForPartEdit) {
                   return Row(
@@ -191,8 +192,10 @@ class _PartBodyState extends State<PartBody> {
                       IconButton(
                         onPressed: () {
                           context.read<EditItemCubit>().jumpEdit(widget.part);
-                          Navigator.of(context)
-                              .popAndPushNamed(AddItemPage.routName);
+                          Navigator.of(context).popAndPushNamed(
+                              AddItemPage.routName,
+                              arguments:
+                                  ScreenArguments('Edit', Reason.editPart));
                         },
                         icon: Icon(Icons.edit),
                         tooltip: 'Edit',

@@ -6,11 +6,13 @@ import 'package:store_pedia/cubit/form_level_cubit/formlevel_cubit.dart';
 import 'package:store_pedia/cubit/recent_item_cubit/cubit/recentitems_cubit.dart';
 import 'package:store_pedia/cubit/user_manager_cubit/cubit/usermanager_cubit.dart';
 import 'package:store_pedia/model/part.dart';
+import 'package:store_pedia/model/screenargs.dart';
 import 'package:store_pedia/screens/add_item_page/add_item_page.dart';
 import 'package:store_pedia/screens/exhausted_items_page/exhausted_items_page.dart';
 import 'package:store_pedia/screens/search_page/search_page.dart';
 import 'package:store_pedia/widgets/input_editor.dart';
 import 'package:store_pedia/widgets/loading_indicator.dart';
+import 'package:store_pedia/widgets/navigation_bar.dart';
 import 'package:store_pedia/widgets/one_part.dart';
 import 'package:store_pedia/widgets/warining_dialog.dart';
 
@@ -29,6 +31,12 @@ class HomePage extends StatelessWidget {
     final double horizontalListHeight = sizeData.width / 2.1;
     return Scaffold(
       backgroundColor: Colors.white,
+      bottomNavigationBar: MyNavBar(),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        child: Icon(Icons.search),
+      ),
       body: SafeArea(
         child: Stack(
           children: [
@@ -41,6 +49,13 @@ class HomePage extends StatelessWidget {
                 color: Colors.blue,
               ),
             ),
+            Positioned(
+                top: 10,
+                left: 20,
+                child: ElevatedButton(
+                  onPressed: () => Scaffold.of(context).openDrawer(),
+                  child: Icon(Icons.menu),
+                )),
             Positioned(
               top: 10,
               child: Container(
@@ -103,7 +118,7 @@ class HomePage extends StatelessWidget {
                     children: [
                       Divider(),
                       Container(
-                        height: sizeData.height / 2.5,
+                        height: sizeData.height / 2.8,
                         color: Colors.black12,
                         child: ListView(
                           scrollDirection: Axis.horizontal,
@@ -396,12 +411,16 @@ class AddStoreItem extends StatelessWidget {
             context.read<EditItemCubit>().clearPart();
             context.read<PhotomanagerBloc>().add(RemovePhotoEvent());
             context.read<FormLevelCubit>().clearScore();
-            Navigator.pushNamed(context, AddItemPage.routName);
+
+            Navigator.pushNamed(context, AddItemPage.routName,
+                arguments: ScreenArguments('Edit', Reason.newPart));
           } else {
-            Navigator.pushNamed(context, AddItemPage.routName);
+            Navigator.pushNamed(context, AddItemPage.routName,
+                arguments: ScreenArguments('Edit', Reason.newPart));
           }
         } else {
-          Navigator.pushNamed(context, AddItemPage.routName);
+          Navigator.pushNamed(context, AddItemPage.routName,
+              arguments: ScreenArguments('Edit', Reason.newPart));
         }
       },
     );

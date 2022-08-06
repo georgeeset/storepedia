@@ -1,6 +1,6 @@
 class Validator {
   String? validateString(String value) {
-    if (value.length < 3) {
+    if (value.length < 4) {
       return 'Data is too Short';
     }
     return null;

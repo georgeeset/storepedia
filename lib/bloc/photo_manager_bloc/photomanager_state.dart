@@ -2,21 +2,20 @@ part of 'photomanager_bloc.dart';
 
 abstract class PhotomanagerState extends Equatable {
   const PhotomanagerState();
-  
+
   @override
   List<Object> get props => [];
 }
 
 class PhotomanagerEmptyState extends PhotomanagerState {
-
   @override
   String toString() {
     return 'PhotomanagerEmptyState';
   }
 }
 
-class ImageSelectedState extends PhotomanagerState{
-  final File image;
+class ImageSelectedState extends PhotomanagerState {
+  final CroppedFile image;
   ImageSelectedState({required this.image});
 
   @override
@@ -25,7 +24,5 @@ class ImageSelectedState extends PhotomanagerState{
   }
 
   @override
-  List<Object> get props=>[image];
+  List<Object> get props => [image];
 }
-
-

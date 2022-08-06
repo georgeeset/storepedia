@@ -6,7 +6,7 @@ import 'package:store_pedia/repository/string_processor.dart';
 class EditItemCubit extends HydratedCubit<Part> {
   late Part part;
   EditItemCubit() : super(Part()) {
-   // part = Part();
+    // part = Part();
     print('buildef-------------');
   }
 
@@ -46,29 +46,28 @@ class EditItemCubit extends HydratedCubit<Part> {
     emit(state.clear());
   }
 
-  jumpEdit(Part newPart){
-   state.clear();
-   emit(state.copyWith(
-    partName: newPart.partName,
-    partDescription:newPart.partDescription,
-    partNumber:newPart.partNumber,
-    storeId:newPart.storeId,
-    storeLocation:newPart.storeLocation,
-    addedBy:newPart.addedBy,
-    addedById:newPart.addedById,
-    dateAdded:newPart.dateAdded,
-    lastEditedBy:newPart.lastEditedBy,
-    section:newPart.section,
-    brand:newPart.brand,
-    likesCount:newPart.likesCount,
-    photo:newPart.photo,
-    markedBadByUid:newPart.markedBadByUid,
-    reasonForMarkingBad:newPart.reasonForMarkingBad,
-    searchKeywords: newPart.searchKeywords,
-    partUid: newPart.partUid,
-   ));
+  jumpEdit(Part newPart) {
+    state.clear();
+    emit(state.copyWith(
+      partName: newPart.partName,
+      partDescription: newPart.partDescription,
+      partNumber: newPart.partNumber,
+      storeId: newPart.storeId,
+      storeLocation: newPart.storeLocation,
+      addedBy: newPart.addedBy,
+      addedById: newPart.addedById,
+      dateAdded: newPart.dateAdded,
+      lastEditedBy: newPart.lastEditedBy,
+      section: newPart.section,
+      brand: newPart.brand,
+      likesCount: newPart.likesCount,
+      photo: newPart.photo,
+      markedBadByUid: newPart.markedBadByUid,
+      reasonForMarkingBad: newPart.reasonForMarkingBad,
+      searchKeywords: newPart.searchKeywords,
+      partUid: newPart.partUid,
+    ));
   }
-  
 
   updateTheRestInfo(UserModel user) {
     //  required String addedBy,
@@ -76,34 +75,33 @@ class EditItemCubit extends HydratedCubit<Part> {
     //  required String dateAdded,
     //  required searchKeywords,
     var combinedString =
-        '${state.partDescription ?? ''} ${state.partName ?? ''}  ${state.partNumber ?? ''} ${state.storeId ?? ''} ${state.storeLocation ?? ''}';
+        '${state.partDescription ?? ''} ${state.partName ?? ''}  ${state.partNumber ?? ''} ${state.partNumber?.substring(0, 3)} ${state.storeId ?? ''} ${state.storeLocation ?? ''}';
     StringProcessor stringProcessor = StringProcessor();
     print(state.partUid);
-    if(state.partUid==null){
+    if (state.partUid == null) {
       emit(
-      state.copyWith(
-        addedBy: user.userName,
-        addedById: user.userId,
-        dateAdded: DateTime.now().millisecondsSinceEpoch,
-        searchKeywords: stringProcessor.searchKeywords(combinedString),
-      ),
-    );
-    }else{
+        state.copyWith(
+          addedBy: user.userName,
+          addedById: user.userId,
+          dateAdded: DateTime.now().millisecondsSinceEpoch,
+          searchKeywords: stringProcessor.searchKeywords(combinedString),
+        ),
+      );
+    } else {
       emit(state.copyWith(
         lastEditedBy: user.userName,
         searchKeywords: stringProcessor.searchKeywords(combinedString),
       ));
     }
-    
   }
+
   @override
   Part? fromJson(Map<String, dynamic> json) {
-    return Part.fromMap(mapFormat:json['value']);
+    return Part.fromMap(mapFormat: json['value']);
   }
 
   @override
   Map<String, dynamic>? toJson(Part state) {
     return {'value': state.toMap()};
   }
-
 }
