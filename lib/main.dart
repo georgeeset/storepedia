@@ -10,9 +10,11 @@ import 'package:store_pedia/bloc/part_upload_wizard/bloc/partuploadwizard_bloc.d
 import 'package:store_pedia/bloc/photo_manager_bloc/photomanager_bloc.dart';
 import 'package:store_pedia/bloc/signin_option_bloc/bloc/signinoption_bloc.dart';
 import 'package:store_pedia/cubit/connectivity_cubit/cubit/connectivity_cubit.dart';
+import 'package:store_pedia/cubit/department_selector_cubit/department_selector_cubit.dart';
 import 'package:store_pedia/cubit/exhausted_items_manager_cubit/cubit/exhausteditemsmanager_cubit.dart';
 import 'package:store_pedia/cubit/form_level_cubit/formlevel_cubit.dart';
 import 'package:store_pedia/cubit/recent_item_cubit/cubit/recentitems_cubit.dart';
+import 'package:store_pedia/cubit/tab_controller_cubit/tab_controller_cubit.dart';
 import 'package:store_pedia/cubit/user_manager_cubit/cubit/usermanager_cubit.dart';
 import 'package:store_pedia/screens/add_item_page/add_item_page.dart';
 import 'package:store_pedia/screens/exhausted_items_page/exhausted_items_page.dart';
@@ -25,6 +27,7 @@ import 'cubit/edit_item_cubit/edititem_cubit.dart';
 import 'package:store_pedia/constants/number_constants.dart' as NumberConstants;
 
 import 'cubit/mark_bad_part/cubit/mark_bad_part_cubit.dart';
+import 'cubit/mark_commonly_used_parts/mark_commonly_used_cubit.dart';
 import 'cubit/mark_exhausted_part_cubit/cubit/markexhaustedpart_cubit.dart';
 import 'cubit/part_query_manager.dart/cubit/partquerymanager_cubit.dart';
 import 'cubit/photo_upload_cubit/photoupload_cubit.dart';
@@ -91,6 +94,7 @@ class MyApp extends StatelessWidget {
         BlocProvider<PartqueryManagerCubit>(
           create: (context) => PartqueryManagerCubit(),
         ),
+        BlocProvider(create: (context) => TabControllerCubit())
       ],
       child: MaterialApp(
         title: 'Store Pedia',
@@ -116,6 +120,9 @@ class MyApp extends StatelessWidget {
                   BlocProvider(
                     create: (context) => MarkexhaustedpartCubit(),
                   ),
+                  BlocProvider(
+                    create: (context) => MarkCommonlyusedCubit(),
+                  )
                 ],
                 child: PartDetailPage(),
               ),
@@ -138,8 +145,12 @@ class MyApp extends StatelessWidget {
                 ? BlocConsumer<AuthenticationBloc, AuthenticationState>(
                     builder: ((context, state) {
                     if (state is AuthenticatedState) {
-                      return BlocProvider<RecentItemsCubit>(
-                        create: (context) => RecentItemsCubit(),
+                      return MultiBlocProvider(
+                        providers: [
+                          BlocProvider<RecentItemsCubit>(
+                            create: (context) => RecentItemsCubit(),
+                          ),
+                        ],
                         child: HomePage(),
                       );
                     } else {

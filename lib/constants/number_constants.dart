@@ -8,3 +8,4 @@ const int minimumAccessLevelForPartEdit = 4;
 const int minimumAccessLevelForAddingPart = 3;
 const int minimunAccessLevelForDeletingPart = 7;
 const int maximumSearchResult = 10;
+const double dropdownMenuHeight = 50.0;

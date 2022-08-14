@@ -21,6 +21,16 @@ const String reasonFormarkingBad = 'reasonformarkingbad';
 const String partsCollection = 'parts';
 const String userCollection = 'users';
 
+const List<String> sectionList = [
+  'Electrical',
+  'Mechanical',
+  'Utility',
+  'Quality',
+  'Production',
+];
+
+const String commonlyUsed = 'commonlyused';
+
 const String dialogTitleAddPart = 'Uncompleted Form';
 const String dialogBodyAddPart =
     'You were previously editing a part on this device.\nDo you want to continue from where you left off?';

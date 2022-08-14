@@ -4,6 +4,7 @@ import 'package:store_pedia/bloc/part_upload_wizard/bloc/partuploadwizard_bloc.d
 
 import 'package:store_pedia/cubit/edit_item_cubit/edititem_cubit.dart';
 import 'package:store_pedia/cubit/mark_bad_part/cubit/mark_bad_part_cubit.dart';
+import 'package:store_pedia/cubit/mark_commonly_used_parts/mark_commonly_used_cubit.dart';
 import 'package:store_pedia/cubit/mark_exhausted_part_cubit/cubit/markexhaustedpart_cubit.dart';
 import 'package:store_pedia/cubit/user_manager_cubit/cubit/usermanager_cubit.dart';
 import 'package:store_pedia/model/part.dart';
@@ -137,6 +138,7 @@ class _PartBodyState extends State<PartBody> {
                     : Theme.of(context).primaryColor,
                 margin: EdgeInsets.symmetric(vertical: 5.0),
                 child: Container(
+                  height: 40.0,
                   padding:
                       EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
                   child: Row(
@@ -177,6 +179,54 @@ class _PartBodyState extends State<PartBody> {
                       )
                     ],
                   ),
+                ),
+              )
+            : Container(),
+
+        widget.part.commonlyUsed != null
+            ? Card(
+                // color: widget.part.isExhausted
+                //     ? Colors.orange
+                //     : Theme.of(context).primaryColor,
+                margin: EdgeInsets.symmetric(vertical: 5.0),
+                child: Container(
+                  height: 40.0,
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            'MARK AS COMMONLY USED PART',
+                            softWrap: true,
+                          ),
+                        ),
+                        BlocBuilder<MarkCommonlyusedCubit,
+                            MarkCommonlyUsedState>(
+                          builder: (context, state) {
+                            return state == MarkCommonlyUsedState.loading
+                                ? Container(
+                                    width: 15,
+                                    height: 15,
+                                    child: Center(
+                                        child: CircularProgressIndicator()),
+                                  )
+                                : Switch(
+                                    value: widget.part.commonlyUsed ?? false,
+                                    onChanged: (newValue) {
+                                      setState(() {
+                                        widget.part.commonlyUsed = newValue;
+                                      });
+                                      context
+                                          .read<MarkCommonlyusedCubit>()
+                                          .makrCommonlyused(
+                                              data: newValue,
+                                              part: widget.part);
+                                    });
+                          },
+                        )
+                      ]),
                 ),
               )
             : Container(),
@@ -260,9 +310,6 @@ class _PartBodyState extends State<PartBody> {
                   return BlocConsumer<PartuploadwizardBloc,
                       PartuploadwizardState>(
                     listener: (context, state) {
-                      if (state is PartuploadwizardState) {
-                        Navigator.of(context).pop();
-                      }
                       if (state is PartuploadwizardErrorState) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
@@ -273,6 +320,8 @@ class _PartBodyState extends State<PartBody> {
                                 'Delete not successful:\n${state.message}'),
                           ),
                         );
+                      } else {
+                        Navigator.of(context).pop();
                       }
                     },
                     builder: (context, partState) {

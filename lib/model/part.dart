@@ -15,6 +15,10 @@ class Part {
   String? brand;
   int? likesCount;
 
+  ///if part is commonly used by department.
+  ///this will indicate so no need to search everytime
+  bool? commonlyUsed;
+
   ///if a part is almost finished,
   ///this field should be switched to true
   bool isExhausted = false;
@@ -55,6 +59,7 @@ class Part {
     this.partUid,
     this.isExhausted = false,
     this.markExhaustedTime,
+    this.commonlyUsed,
   });
 
   Part.fromMap({DocumentSnapshot? snapshot, Map<String, dynamic>? mapFormat}) {
@@ -82,6 +87,7 @@ class Part {
     likesCount = data[StringConstants.likesCount];
     isExhausted = data[StringConstants.isExhausted] ?? false;
     markExhaustedTime = data[StringConstants.markExhaustedTime];
+    commonlyUsed = data[StringConstants.commonlyUsed] ?? false;
     searchKeywords =
         List<String>.from(data[StringConstants.searchKeywords] ?? []);
     photo = data[StringConstants.photo];
@@ -108,6 +114,7 @@ class Part {
         StringConstants.searchKeywords: searchKeywords,
         StringConstants.photo: photo,
         StringConstants.markedBadByUid: markedBadByUid,
+        StringConstants.commonlyUsed: commonlyUsed,
         StringConstants.reasonFormarkingBad: reasonForMarkingBad,
       };
 
@@ -131,6 +138,7 @@ class Part {
     String? partUid,
     bool? isExhausted,
     int? markExhaustedTime,
+    bool? commonlyUsed,
   }) {
     return Part(
       partName: partName ?? this.partName,
@@ -152,6 +160,7 @@ class Part {
       partUid: partUid ?? this.partUid,
       isExhausted: isExhausted ?? this.isExhausted,
       markExhaustedTime: markExhaustedTime ?? this.markExhaustedTime,
+      commonlyUsed: commonlyUsed ?? this.commonlyUsed,
     );
   }
 

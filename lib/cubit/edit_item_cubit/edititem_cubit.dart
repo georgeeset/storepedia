@@ -38,6 +38,10 @@ class EditItemCubit extends HydratedCubit<Part> {
     emit(state.copyWith(brand: brand));
   }
 
+  editCommonlyUsed(bool choice) {
+    emit(state.copyWith(commonlyUsed: choice));
+  }
+
   editPhoto(String photo) {
     emit(state.copyWith(photo: photo));
   }

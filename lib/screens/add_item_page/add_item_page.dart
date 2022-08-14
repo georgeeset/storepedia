@@ -239,6 +239,32 @@ class AddItemPage extends StatelessWidget {
                   },
                   fieldValue: state.section,
                 ),
+                Card(
+                  margin: EdgeInsets.all(10.0),
+                  elevation: 3.0,
+                  shadowColor: Colors.blue,
+                  child: Container(
+                      padding: EdgeInsets.all(10),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              'Set as Commonly Used Part for:\n${state.section ?? 'Section'} Department',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          Switch(
+                              value: state.commonlyUsed ?? false,
+                              onChanged: (newValue) {
+                                context
+                                    .read<EditItemCubit>()
+                                    .editCommonlyUsed(newValue);
+                              }),
+                        ],
+                      )),
+                ),
                 PhotoManager(),
 
                 //checking for duplicate part.
@@ -646,14 +672,7 @@ class SectionDropdown extends StatelessWidget {
   final Function onSelect;
   @override
   Widget build(BuildContext context) {
-    List<String> machineList = [
-      'Electrical',
-      'Mechanical',
-      'Utility',
-      'Quality',
-      'Production',
-    ];
-
+    List<String> sectionList = StringConstants.sectionList;
     return Card(
       elevation: 3.0,
       margin: EdgeInsets.all(10),
@@ -675,7 +694,7 @@ class SectionDropdown extends StatelessWidget {
               hint: Text(
                 'Select Department',
               ),
-              items: machineList.map((String machine) {
+              items: sectionList.map((String machine) {
                 return DropdownMenuItem<String>(
                   child: Text(
                     machine,
