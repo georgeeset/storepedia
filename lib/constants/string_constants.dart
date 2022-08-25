@@ -19,7 +19,11 @@ const String photo = 'photo';
 const String markedBadByUid = 'markedbadbyuid';
 const String reasonFormarkingBad = 'reasonformarkingbad';
 const String partsCollection = 'parts';
+const String partCollection = 'partcollection';
 const String userCollection = 'users';
+const String location = 'location';
+const String companyId = 'companyid';
+const String plantscollection = 'plants';
 
 const List<String> sectionList = [
   'Electrical',

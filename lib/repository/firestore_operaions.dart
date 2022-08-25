@@ -180,6 +180,17 @@ class FirestoreOperations {
         .map((event) => event.docs);
   }
 
+  Future<List<DocumentSnapshot>> readDocsInCollection(String collection) {
+    /// Read all documents in a collection. no limit use with caution
+    ///
+    return _firebaseFirestore
+        .collection(collection)
+        .get()
+        .then((value) => value.docs)
+        .onError(
+            (error, stackTrace) => Future.error(error.toString(), stackTrace));
+  }
+
   Future<void> deleteDocumentLevel1(String collection, String documentId) {
     return _firebaseFirestore
         .collection(collection)

@@ -20,6 +20,12 @@ class UserModel {
   /// who has access to do some tasks
   int accessLevel = 0;
 
+  /// Company info describes location of its part collection.
+  /// companyId and location will be combined to make the part collection.
+  /// many companies and brances will make use of the app.
+  String? companyId;
+  String? location;
+
   UserModel({
     this.userName,
     this.deviceId,
@@ -27,6 +33,8 @@ class UserModel {
     this.userId,
     this.partsAddedCount,
     this.accessLevel = 0,
+    this.companyId,
+    this.location,
   });
 
   UserModel.fromMap({required DocumentSnapshot snapshot}) {
@@ -37,6 +45,8 @@ class UserModel {
     userId = data[StringConstants.userId];
     partsAddedCount = data[StringConstants.partsAddedCount];
     accessLevel = data[StringConstants.accessLevel] ?? 0;
+    companyId = data[StringConstants.companyId];
+    location = data[StringConstants.location];
   }
 
   Map<String, dynamic> get toMap => {
@@ -46,6 +56,8 @@ class UserModel {
         StringConstants.userId: userId,
         StringConstants.partsAddedCount: partsAddedCount,
         StringConstants.accessLevel: accessLevel,
+        StringConstants.companyId: companyId,
+        StringConstants.location: location,
       };
 
   copyWith({
@@ -55,15 +67,22 @@ class UserModel {
     String? userId,
     int? partsAddedCount,
     int? accessLevel,
+    String? location,
+    String? companyId,
   }) {
     return UserModel(
-        userName: userName ?? this.userName,
-        deviceId: deviceId ?? this.deviceId,
-        email: email ?? this.email,
-        userId: userId ?? this.userId,
-        partsAddedCount: partsAddedCount ?? this.partsAddedCount,
-        accessLevel: accessLevel ?? this.accessLevel);
+      userName: userName ?? this.userName,
+      deviceId: deviceId ?? this.deviceId,
+      email: email ?? this.email,
+      userId: userId ?? this.userId,
+      partsAddedCount: partsAddedCount ?? this.partsAddedCount,
+      accessLevel: accessLevel ?? this.accessLevel,
+      companyId: companyId ?? this.companyId,
+      location: location ?? this.location,
+    );
   }
 
   bool hasName() => userName != null;
+  bool hasCompanyId() => companyId != null;
+  bool hasLocation() => location != null;
 }

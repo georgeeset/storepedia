@@ -5,7 +5,6 @@ import 'package:store_pedia/cubit/connectivity_cubit/cubit/connectivity_cubit.da
 import 'package:store_pedia/cubit/email_field_cubit/email_textfield_cubit.dart';
 import 'package:store_pedia/cubit/password_field_cubit/password_textfield_cubit.dart';
 import 'package:store_pedia/cubit/repeat_password_textfield_cubit/cubit/repeatpasswordtextfield_cubit.dart';
-import 'package:store_pedia/cubit/signin_signup_cubit/cubit/signinsignup_cubit.dart';
 import 'package:store_pedia/widgets/email_input_field.dart';
 import 'package:store_pedia/widgets/loading_indicator.dart';
 import 'package:store_pedia/widgets/password_input_field.dart';
@@ -60,6 +59,7 @@ class RegisterWidget extends StatelessWidget {
           create: (context) => RepeatPasswordTextfieldCubit(
               firstPassword: context.read<PasswordTextfieldCubit>()),
         ),
+        // Todo companyId selection Cubit
       ],
       child: Container(
         child: Column(
@@ -106,8 +106,7 @@ class SignupSigninButton extends StatelessWidget {
             onPressed: () {
               var repeatPwd =
                   context.read<RepeatPasswordTextfieldCubit>().state;
-              var password =
-                  context.read<PasswordTextfieldCubit>().state;
+              var password = context.read<PasswordTextfieldCubit>().state;
               var email = context.read<EmailTextfieldCubit>().state;
               if (repeatPwd is RepeatPasswordTextfieldOk &&
                   password is PasswordTextfieldOk &&
@@ -155,7 +154,9 @@ class SigninWidget extends StatelessWidget {
             Container(
               height: 20.0,
             ),
-            ButtonSwitcher(commandButton: SigninSignupButton(),),
+            ButtonSwitcher(
+              commandButton: SigninSignupButton(),
+            ),
           ],
         ),
       ),
@@ -176,7 +177,7 @@ class ButtonSwitcher extends StatelessWidget {
       builder: (context, state) {
         return state is AuthenticatingState
             ? LoadingIndicator()
-            : commandButton;//SigninSignupButton();
+            : commandButton; //SigninSignupButton();
       },
     );
   }
