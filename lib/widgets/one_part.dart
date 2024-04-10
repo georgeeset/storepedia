@@ -1,7 +1,8 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:storepedia/model/part.dart';
 import 'package:storepedia/screens/part_detail_page/part_detail_page.dart';
+
+import 'conditional_image.dart';
 
 class OnePart extends StatelessWidget {
   const OnePart({required this.part, super.key});
@@ -17,64 +18,51 @@ class OnePart extends StatelessWidget {
               : Colors.orange,
       clipBehavior: Clip.antiAliasWithSaveLayer,
       child: InkWell(
-        child: Container(
-          child: Column(
-            children: [
-              Expanded(
-                child: Container(
-                  child: part.photo == null
-                      ? const Icon(
-                          Icons.error,
-                          size: 50,
-                        )
-                      : Hero(
-                          tag: part.photo!,
-                          child: CachedNetworkImage(
-                              imageUrl: part.photo!,
-                              fit: BoxFit.cover,
-                              placeholder: (context, data) {
-                                return Stack(
-                                  alignment: Alignment.center,
-                                  children: [
-                                    Image.asset('assets/images/bin.jpg'),
-                                    const SizedBox(
-                                      width: 15,
-                                      height: 15,
-                                      child: CircularProgressIndicator(),
-                                    )
-                                  ],
-                                );
-                              })),
-                ),
+        child: Column(
+          children: [
+            Expanded(
+              child: Container(
+                child: part.photo == null
+                    ? const Icon(
+                        Icons.error,
+                        size: 50,
+                      )
+                    : Hero(
+                        tag: part.photo!,
+                        child: ConditionalImage(
+                          imageUrl: part.photo!,
+                        ),
+                      ),
               ),
-              Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
-                  child: Column(
-                    children: [
-                      part.partName == null
-                          ? const Text('No Part name')
-                          : Text(
-                              part.partName!,
-                              softWrap: true,
-                              style: const TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                      part.partDescription == null
-                          ? const Text('No Description')
-                          : Text(
-                              part.partDescription!,
-                              softWrap: true,
-                              style: const TextStyle(fontStyle: FontStyle.italic),
-                            ),
-                      part.storeLocation == null
-                          ? Container()
-                          : Text(
-                              part.storeLocation!,
-                              style: const TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                    ],
-                  ))
-            ],
-          ),
+            ),
+            Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
+                child: Column(
+                  children: [
+                    part.partName == null
+                        ? const Text('No Part name')
+                        : Text(
+                            part.partName!,
+                            softWrap: true,
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                    part.partDescription == null
+                        ? const Text('No Description')
+                        : Text(
+                            part.partDescription!,
+                            softWrap: true,
+                            style: const TextStyle(fontStyle: FontStyle.italic),
+                          ),
+                    part.storeLocation == null
+                        ? Container()
+                        : Text(
+                            part.storeLocation!,
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                  ],
+                ))
+          ],
         ),
         onTap: () {
           Navigator.pushNamed(
