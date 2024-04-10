@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:store_pedia/model/part.dart';
-import 'package:store_pedia/repository/firestore_operaions.dart';
+import 'package:storepedia/model/part.dart';
+import 'package:storepedia/repository/firestore_operaions.dart';
 
-import 'package:store_pedia/constants/string_constants.dart' as StringConstants;
-import 'package:store_pedia/constants/number_constants.dart' as NumberConstants;
+import 'package:storepedia/constants/string_constants.dart' as StringConstants;
+import 'package:storepedia/constants/number_constants.dart' as NumberConstants;
 
 class ExhaustedItemsRepository {
   final FirestoreOperations _firestoreOperations = FirestoreOperations();

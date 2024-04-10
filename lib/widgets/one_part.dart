@@ -1,10 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:store_pedia/model/part.dart';
-import 'package:store_pedia/screens/part_detail_page/part_detail_page.dart';
+import 'package:storepedia/model/part.dart';
+import 'package:storepedia/screens/part_detail_page/part_detail_page.dart';
 
 class OnePart extends StatelessWidget {
-  const OnePart({required this.part, Key? key}) : super(key: key);
+  const OnePart({required this.part, super.key});
   final Part part;
   @override
   Widget build(BuildContext context) {
@@ -23,7 +23,7 @@ class OnePart extends StatelessWidget {
               Expanded(
                 child: Container(
                   child: part.photo == null
-                      ? Icon(
+                      ? const Icon(
                           Icons.error,
                           size: 50,
                         )
@@ -37,12 +37,10 @@ class OnePart extends StatelessWidget {
                                   alignment: Alignment.center,
                                   children: [
                                     Image.asset('assets/images/bin.jpg'),
-                                    Container(
+                                    const SizedBox(
                                       width: 15,
                                       height: 15,
-                                      child: CircularProgressIndicator(
-                                        strokeWidth: 1.5,
-                                      ),
+                                      child: CircularProgressIndicator(),
                                     )
                                   ],
                                 );
@@ -50,28 +48,28 @@ class OnePart extends StatelessWidget {
                 ),
               ),
               Container(
-                  padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
                   child: Column(
                     children: [
                       part.partName == null
-                          ? Text('No Part name')
+                          ? const Text('No Part name')
                           : Text(
                               part.partName!,
                               softWrap: true,
-                              style: TextStyle(fontWeight: FontWeight.bold),
+                              style: const TextStyle(fontWeight: FontWeight.bold),
                             ),
                       part.partDescription == null
-                          ? Text('No Description')
+                          ? const Text('No Description')
                           : Text(
                               part.partDescription!,
                               softWrap: true,
-                              style: TextStyle(fontStyle: FontStyle.italic),
+                              style: const TextStyle(fontStyle: FontStyle.italic),
                             ),
                       part.storeLocation == null
                           ? Container()
                           : Text(
                               part.storeLocation!,
-                              style: TextStyle(fontWeight: FontWeight.bold),
+                              style: const TextStyle(fontWeight: FontWeight.bold),
                             ),
                     ],
                   ))

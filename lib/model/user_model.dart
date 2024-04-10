@@ -18,7 +18,7 @@ class UserModel {
 
   /// With access level you can control
   /// who has access to do some tasks
-  int accessLevel = 0;
+  int accessLevel=0;
 
   UserModel({
     this.userName,
@@ -26,17 +26,19 @@ class UserModel {
     this.email,
     this.userId,
     this.partsAddedCount,
-    this.accessLevel = 0,
+    this.accessLevel=0,
   });
 
   UserModel.fromMap({required DocumentSnapshot snapshot}) {
-    Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
-    userName = data[StringConstants.userName];
-    deviceId = data[StringConstants.deviceId];
-    email = data[StringConstants.email];
-    userId = data[StringConstants.userId];
-    partsAddedCount = data[StringConstants.partsAddedCount];
-    accessLevel = data[StringConstants.accessLevel] ?? 0;
+    Map<String,dynamic> data=snapshot.data()as Map<String,dynamic>;
+     
+      userName= data[StringConstants.userName];
+      deviceId= data[StringConstants.deviceId];
+      email= data[StringConstants.email];
+      userId= data[StringConstants.userId];
+      partsAddedCount= data[StringConstants.partsAddedCount];
+      accessLevel= data[StringConstants.accessLevel]??0;
+    
   }
 
   Map<String, dynamic> get toMap => {

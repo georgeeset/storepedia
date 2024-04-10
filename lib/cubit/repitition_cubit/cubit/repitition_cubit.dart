@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:store_pedia/model/part.dart';
-import 'package:store_pedia/repository/part_query.dart';
+import 'package:storepedia/model/part.dart';
+import 'package:storepedia/repository/part_query.dart';
 
 part 'repitition_state.dart';
 
@@ -11,14 +11,13 @@ class RepititionCubit extends Cubit<RepititionCubitState> {
   ///Pick the important search strings and search for repitition on the DB
   searchDB({String? partNumber, String? storageLocation, String? storeid}) {
     PartQuery partQuery = PartQuery();
-    String queryString =
-        '${storageLocation ?? ''} ${storeid ?? ''}  ${partNumber ?? ''}';
-    partQuery.searchPart(searchString: queryString).then((value) {
+    partQuery
+        .searchPart(searchString: '${storageLocation ?? ''} ${storeid ?? ''}')
+        .then((value) {
       if (value == null) {
         emit(RepititionNotFoundState());
       } else {
-        emit(
-            RepititionFoundState(partsFound: value, searchString: queryString));
+        emit(RepititionFoundState(partsFound: value));
       }
     }).onError((error, stackTrace) {
       emit(RepititionSearchError(

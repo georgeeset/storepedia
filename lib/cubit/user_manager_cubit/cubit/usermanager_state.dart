@@ -14,16 +14,14 @@ class UserManagerInitial extends UserManagerState {
   }
 }
 
-class UserLoadingState extends UserManagerState{
+class UserLoadingState extends UserManagerState {
   @override
   String toString() {
     return 'UserLoadingState';
   }
-  @override
-  List<Object> get props => super.props;
 }
 
-class UserLoadingErrorState extends UserManagerState{
+class UserLoadingErrorState extends UserManagerState {
   final String error;
   final Object? stackTrace;
   const UserLoadingErrorState({required this.error, this.stackTrace});
@@ -32,28 +30,28 @@ class UserLoadingErrorState extends UserManagerState{
   String toString() {
     return 'UserLoadingErrorState';
   }
+
   @override
   List<Object> get props => [error];
 }
 
-/// if the loaded widget has data, the 
-class UserLoadedState extends UserManagerState{
+/// if the loaded widget has data, the
+class UserLoadedState extends UserManagerState {
   final UserModel userData;
-  final String actualDeviceInfo;
-   UserLoadedState( {required this.userData, required this.actualDeviceInfo,});
+  const UserLoadedState({required this.userData});
 
-   @override
+  @override
   String toString() {
     return 'UserLoadedState';
   }
 
   @override
-  List<Object> get props => [userData,actualDeviceInfo];
+  List<Object> get props => [userData];
 }
 
-class EmailVerificationSentState extends UserManagerState{
+class EmailVerificationSentState extends UserManagerState {
   final String email;
-  EmailVerificationSentState(this.email);
+  const EmailVerificationSentState(this.email);
   @override
   String toString() {
     return 'EmailVerificationSentState';

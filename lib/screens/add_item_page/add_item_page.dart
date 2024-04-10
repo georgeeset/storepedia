@@ -2,48 +2,40 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pinch_zoom_image_last/pinch_zoom_image_last.dart';
-import 'package:store_pedia/bloc/part_upload_wizard/bloc/partuploadwizard_bloc.dart';
-import 'package:store_pedia/bloc/photo_manager_bloc/photomanager_bloc.dart';
-import 'package:store_pedia/cubit/connectivity_cubit/cubit/connectivity_cubit.dart';
-import 'package:store_pedia/cubit/edit_item_cubit/edititem_cubit.dart';
-import 'package:store_pedia/cubit/form_level_cubit/formlevel_cubit.dart';
-import 'package:store_pedia/cubit/part_query_manager.dart/cubit/partquerymanager_cubit.dart';
-import 'package:store_pedia/cubit/photo_upload_cubit/photoupload_cubit.dart';
-import 'package:store_pedia/cubit/repitition_cubit/cubit/repitition_cubit.dart';
-import 'package:store_pedia/cubit/user_manager_cubit/cubit/usermanager_cubit.dart';
-import 'package:store_pedia/model/part.dart';
-import 'package:store_pedia/model/screenargs.dart';
-import 'package:store_pedia/repository/crop_image.dart';
-import 'package:store_pedia/repository/image_getter.dart';
-import 'package:store_pedia/screens/search_page/search_page.dart';
-import 'package:store_pedia/widgets/input_editor.dart';
-import 'package:store_pedia/widgets/loading_indicator.dart';
-import 'package:store_pedia/widgets/online_pinch_zoom.dart';
-import 'package:store_pedia/widgets/page_layout.dart';
-import '../../constants/number_constants.dart' as NumberConstants;
-import '../../constants/string_constants.dart' as StringConstants;
+import 'package:storepedia/bloc/part_upload_wizard/bloc/partuploadwizard_bloc.dart';
+import 'package:storepedia/bloc/photo_manager_bloc/photomanager_bloc.dart';
+import 'package:storepedia/cubit/connectivity_cubit/cubit/connectivity_cubit.dart';
+import 'package:storepedia/cubit/edit_item_cubit/edititem_cubit.dart';
+import 'package:storepedia/cubit/form_level_cubit/formlevel_cubit.dart';
+import 'package:storepedia/cubit/photo_upload_cubit/photoupload_cubit.dart';
+import 'package:storepedia/cubit/repitition_cubit/cubit/repitition_cubit.dart';
+import 'package:storepedia/cubit/user_manager_cubit/cubit/usermanager_cubit.dart';
+import 'package:storepedia/model/part.dart';
+import 'package:storepedia/repository/crop_image.dart';
+import 'package:storepedia/repository/image_getter.dart';
+import 'package:storepedia/screens/search_page/search_page.dart';
+import 'package:storepedia/widgets/input_editor.dart';
+import 'package:storepedia/widgets/loading_indicator.dart';
+import 'package:storepedia/widgets/online_pinch_zoom.dart';
+import 'package:storepedia/widgets/page_layout.dart';
+import '../../constants/number_constants.dart' as number_constants;
+import '../../constants/string_constants.dart' as string_constants;
 
 class AddItemPage extends StatelessWidget {
-  const AddItemPage({Key? key}) : super(key: key);
+  const AddItemPage({super.key});
   static String routName = '/add_item_page';
 
   @override
   Widget build(BuildContext context) {
-    final args = ModalRoute.of(context)!.settings.arguments as ScreenArguments;
     final Size sizeData = MediaQuery.of(context).size;
-    if (args.purpose == Reason.editPart) {
-      context.read<PhotomanagerBloc>().add(RemovePhotoEvent());
-    }
-
     return PageLayout(
       title: Text(
         'Add/Edit Store Item',
         style: Theme.of(context)
             .textTheme
-            .headline6
+            .titleLarge
             ?.copyWith(color: Colors.white),
       ),
       hasBackButton: true,
@@ -57,7 +49,7 @@ class AddItemPage extends StatelessWidget {
               var scoreState = context.read<FormLevelCubit>().state;
               print(scoreState);
               if (state is ImageSelectedState &&
-                  scoreState >= NumberConstants.minimumScore) {
+                  scoreState >= number_constants.minimumScore) {
                 context
                     .read<PhotouploadCubit>()
                     .attemptUpload(photo: state.image);
@@ -91,10 +83,10 @@ class AddItemPage extends StatelessWidget {
                 // itemEditor.editPhoto(state.uploadLink);
 
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
+                  const SnackBar(
                     backgroundColor: Colors.blue,
                     duration:
-                        Duration(seconds: NumberConstants.errorSnackBarDelay),
+                        Duration(seconds: number_constants.errorSnackBarDelay),
                     content: Text('Picture Upload Successful !'),
                   ),
                 );
@@ -103,8 +95,8 @@ class AddItemPage extends StatelessWidget {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     backgroundColor: Colors.pink,
-                    duration:
-                        Duration(seconds: NumberConstants.errorSnackBarDelay),
+                    duration: const Duration(
+                        seconds: number_constants.errorSnackBarDelay),
                     content: Text('Picture Upload Failed ${state.message}'),
                   ),
                 );
@@ -119,8 +111,8 @@ class AddItemPage extends StatelessWidget {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   backgroundColor: Colors.pink,
-                  duration:
-                      Duration(seconds: NumberConstants.errorSnackBarDelay),
+                  duration: const Duration(
+                      seconds: number_constants.errorSnackBarDelay),
                   content: Text('Upload failed ${state.message}'),
                 ),
               );
@@ -143,7 +135,7 @@ class AddItemPage extends StatelessWidget {
             var photoState = context.read<PhotomanagerBloc>().state;
             var upload = context.read<PhotouploadCubit>();
             var formStatus = context.read<EditItemCubit>().state;
-            if (state >= NumberConstants.minimumScore &&
+            if (state >= number_constants.minimumScore &&
                 photoState is ImageSelectedState) {
               upload.attemptUpload(
                 photo: photoState.image,
@@ -151,7 +143,7 @@ class AddItemPage extends StatelessWidget {
               );
             }
 
-            if (state >= NumberConstants.minimumScore) {
+            if (state >= number_constants.minimumScore) {
               var formStatus = context.read<EditItemCubit>().state;
               context.read<RepititionCubit>().searchDB(
                     partNumber: formStatus.partNumber,
@@ -175,16 +167,16 @@ class AddItemPage extends StatelessWidget {
               children: [
                 FormListItem(
                   sizeData: sizeData,
-                  info: StringConstants.partNameInfo,
-                  title: StringConstants.partNameTitle,
+                  info: string_constants.partNameInfo,
+                  title: string_constants.partNameTitle,
                   fieldValue: state.partName,
                   onSubmit: (value) {
                     context.read<EditItemCubit>().editPartName(value);
                   },
                 ),
                 FormListItem(
-                  title: StringConstants.partDescriptionTitle,
-                  info: StringConstants.partDescriptionInfo,
+                  title: string_constants.partDescriptionTitle,
+                  info: string_constants.partDescriptionInfo,
                   sizeData: sizeData,
                   fieldValue: state.partDescription,
                   onSubmit: (value) {
@@ -192,8 +184,8 @@ class AddItemPage extends StatelessWidget {
                   },
                 ),
                 FormListItem(
-                  title: StringConstants.brandTitle,
-                  info: StringConstants.brandInfo,
+                  title: string_constants.brandTitle,
+                  info: string_constants.brandInfo,
                   sizeData: sizeData,
                   fieldValue: state.brand,
                   onSubmit: (value) {
@@ -201,8 +193,8 @@ class AddItemPage extends StatelessWidget {
                   },
                 ),
                 FormListItem(
-                  title: StringConstants.partNumberTitle,
-                  info: StringConstants.partNumberInfo,
+                  title: string_constants.partNumberTitle,
+                  info: string_constants.partNumberInfo,
                   sizeData: sizeData,
                   fieldValue: state.partNumber,
                   textCapitalization: TextCapitalization.characters,
@@ -213,8 +205,8 @@ class AddItemPage extends StatelessWidget {
                   },
                 ),
                 FormListItem(
-                  title: StringConstants.storeIdTitle,
-                  info: StringConstants.storeIdInfo,
+                  title: string_constants.storeIdTitle,
+                  info: string_constants.storeIdInfo,
                   sizeData: sizeData,
                   textCapitalization: TextCapitalization.characters,
                   fieldValue: state.storeId,
@@ -223,8 +215,8 @@ class AddItemPage extends StatelessWidget {
                   },
                 ),
                 FormListItem(
-                  title: StringConstants.storeLocationTitle,
-                  info: StringConstants.storeLocationInfo,
+                  title: string_constants.storeLocationTitle,
+                  info: string_constants.storeLocationInfo,
                   sizeData: sizeData,
                   fieldValue: state.storeLocation,
                   textCapitalization: TextCapitalization.characters,
@@ -239,49 +231,20 @@ class AddItemPage extends StatelessWidget {
                   },
                   fieldValue: state.section,
                 ),
-                Card(
-                  margin: EdgeInsets.all(10.0),
-                  elevation: 3.0,
-                  shadowColor: Colors.blue,
-                  child: Container(
-                      padding: EdgeInsets.all(10),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              'Set as Commonly Used Part for:\n${state.section ?? 'Section'} Department',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                          Switch(
-                              value: state.commonlyUsed ?? false,
-                              onChanged: (newValue) {
-                                context
-                                    .read<EditItemCubit>()
-                                    .editCommonlyUsed(newValue);
-                              }),
-                        ],
-                      )),
-                ),
-                PhotoManager(),
+                const PhotoManager(),
 
                 //checking for duplicate part.
                 // if duplicate is found, then
                 // Upload part button will not be activated
                 Card(
                   child: Container(
-                    padding: EdgeInsets.all(10.0),
+                    padding: const EdgeInsets.all(10.0),
                     child: BlocBuilder<RepititionCubit, RepititionCubitState>(
                         builder: (context, repititionState) {
                       if (repititionState is RepititionFoundState &&
                           state.partUid == null) {
                         return TextButton(
                           onPressed: () {
-                            context
-                                .read<PartqueryManagerCubit>()
-                                .attemptQuery(repititionState.searchString);
                             Navigator.of(context)
                                 .pushNamed(SearchPage.routName);
                           },
@@ -290,7 +253,7 @@ class AddItemPage extends StatelessWidget {
                             softWrap: true,
                             style: Theme.of(context)
                                 .textTheme
-                                .subtitle1!
+                                .titleMedium!
                                 .copyWith(
                                     color: Colors.redAccent,
                                     decoration: TextDecoration.underline),
@@ -298,7 +261,7 @@ class AddItemPage extends StatelessWidget {
                         );
                       } else {
                         if (repititionState is RepititionSearchError) {
-                          return Icon(Icons.running_with_errors);
+                          return const Icon(Icons.running_with_errors);
                         } else {
                           return Container();
                         }
@@ -308,12 +271,12 @@ class AddItemPage extends StatelessWidget {
                 ),
                 Container(
                   //height: 100.0,
-                  padding: EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
                   child:
                       BlocBuilder<PartuploadwizardBloc, PartuploadwizardState>(
                     builder: (context, uploadState) {
                       return uploadState is PartuploadwizardLoadingState
-                          ? Center(child: LoadingIndicator())
+                          ? const Center(child: LoadingIndicator())
                           : ElevatedButton(
                               onPressed: () {
                                 var score =
@@ -330,17 +293,17 @@ class AddItemPage extends StatelessWidget {
 
                                 if (network is ConnectivityOffline) {
                                   ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
+                                    const SnackBar(
                                       backgroundColor: Colors.pink,
                                       duration: Duration(
-                                          seconds: NumberConstants
+                                          seconds: number_constants
                                               .errorSnackBarDelay),
                                       content: Text('Your Device is Offline!'),
                                     ),
                                   );
                                 } else {
                                   Future.delayed(
-                                      Duration(seconds: 1),
+                                      const Duration(seconds: 1),
                                       () => context
                                           .read<PartuploadwizardBloc>()
                                           .add(UploadPartEvent(
@@ -367,13 +330,13 @@ class AddItemPage extends StatelessWidget {
       ),
       levelIndicator:
           BlocBuilder<FormLevelCubit, int>(builder: (context, state) {
-        return Container(
+        return SizedBox(
           width: sizeData.width / 1.1,
           height: 5,
           child: LinearProgressIndicator(
-            valueColor: state >= NumberConstants.minimumScore
-                ? AlwaysStoppedAnimation<Color>(Colors.purple)
-                : AlwaysStoppedAnimation<Color>(Colors.red),
+            valueColor: state >= number_constants.minimumScore
+                ? const AlwaysStoppedAnimation<Color>(Colors.purple)
+                : const AlwaysStoppedAnimation<Color>(Colors.red),
             value: state / 100,
           ),
         );
@@ -383,13 +346,13 @@ class AddItemPage extends StatelessWidget {
 }
 
 class PhotoManager extends StatefulWidget {
-  const PhotoManager({Key? key}) : super(key: key);
+  const PhotoManager({super.key});
 
   @override
-  _PhotoManagerState createState() => _PhotoManagerState();
+  PhotoManagerState createState() => PhotoManagerState();
 }
 
-class _PhotoManagerState extends State<PhotoManager> {
+class PhotoManagerState extends State<PhotoManager> {
   @override
   void initState() {
     super.initState();
@@ -399,9 +362,8 @@ class _PhotoManagerState extends State<PhotoManager> {
   //UploadTask? _uploadTask;
   @override
   Widget build(BuildContext context) {
-    // Size mediaSize = MediaQuery.of(context).size;
     return Card(
-      margin: EdgeInsets.all(10.0),
+      margin: const EdgeInsets.all(10.0),
       elevation: 3.0,
       shadowColor: Colors.blue,
       child: BlocBuilder<PhotomanagerBloc, PhotomanagerState>(
@@ -442,7 +404,7 @@ class _PhotoManagerState extends State<PhotoManager> {
                       OnlinePinchZoomImage(link: state.photo),
                       Positioned(
                           bottom: 10,
-                          child: Container(
+                          child: SizedBox(
                             height: 50,
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
@@ -459,7 +421,7 @@ class _PhotoManagerState extends State<PhotoManager> {
                                   ),
                                   child: InkWell(
                                     onTap: () => getImage(ImageSource.camera),
-                                    child: Icon(
+                                    child: const Icon(
                                       Icons.photo_camera,
                                       size: 36,
                                     ),
@@ -480,7 +442,7 @@ class _PhotoManagerState extends State<PhotoManager> {
                                   ),
                                   child: InkWell(
                                     onTap: () => getImage(ImageSource.gallery),
-                                    child: Icon(
+                                    child: const Icon(
                                       Icons.photo,
                                       size: 36,
                                     ),
@@ -491,7 +453,7 @@ class _PhotoManagerState extends State<PhotoManager> {
                           ))
                     ],
                   )
-                : Container(
+                : SizedBox(
                     width: 300,
                     height: 200,
                     child: Row(
@@ -507,7 +469,7 @@ class _PhotoManagerState extends State<PhotoManager> {
                             height: double.infinity,
                             decoration: BoxDecoration(
                                 border: Border.all(color: Colors.blue)),
-                            child: Column(
+                            child: const Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Icon(Icons.image, color: Colors.blue, size: 64),
@@ -529,7 +491,7 @@ class _PhotoManagerState extends State<PhotoManager> {
                               width: double.infinity,
                               height: double.infinity,
                               color: Colors.blue,
-                              child: Column(
+                              child: const Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Icon(Icons.photo_camera,
@@ -567,10 +529,12 @@ class _PhotoManagerState extends State<PhotoManager> {
 
   getImage(ImageSource source) async {
     await ImageGetter.getImage(source).then((value) async {
-      await CropImage.getCroppedImage(image: value).then((value) {
+      await CropImage.getCroppedImage(context, image: value).then((value) {
         if (value != null) {
           //this will yield PhotoSelectedState
-          context.read<PhotomanagerBloc>().add(SelectPhotoEvent(photo: value));
+          context
+              .read<PhotomanagerBloc>()
+              .add(SelectPhotoEvent(photo: File(value.path)));
         }
       });
     });
@@ -579,20 +543,17 @@ class _PhotoManagerState extends State<PhotoManager> {
 
 class DisplayOfflineImage extends StatelessWidget {
   const DisplayOfflineImage({
-    Key? key,
+    super.key,
     required this.image,
-  }) : super(key: key);
+  });
 
-  final CroppedFile image;
+  final File image;
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        PinchZoomImage(
-          image: Image.file(File(image.path), fit: BoxFit.contain),
-          zoomedBackgroundColor: Colors.black12,
-        ),
+        PinchZoomImage(image: Image.file(image)),
         Positioned(
           top: 20,
           right: 20,
@@ -603,7 +564,7 @@ class DisplayOfflineImage extends StatelessWidget {
                   : Container(
                       width: 50,
                       height: 50,
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         color: Colors.black54,
                         shape: BoxShape.circle,
                       ),
@@ -613,7 +574,7 @@ class DisplayOfflineImage extends StatelessWidget {
                               .read<PhotomanagerBloc>()
                               .add(RemovePhotoEvent());
                         },
-                        child: Icon(
+                        child: const Icon(
                           Icons.cancel,
                           color: Colors.white,
                           size: 32,
@@ -629,7 +590,7 @@ class DisplayOfflineImage extends StatelessWidget {
             child: BlocBuilder<PhotouploadCubit, PhotouploadState>(
               builder: (context, state) {
                 if (state is PhotouploadingState) {
-                  return Container(
+                  return SizedBox(
                     width: 50,
                     height: 50,
                     child: CircularProgressIndicator(
@@ -645,7 +606,7 @@ class DisplayOfflineImage extends StatelessWidget {
                     color: Colors.white12,
                     child: Center(
                       child: IconButton(
-                        icon: Icon(Icons.refresh, size: 64),
+                        icon: const Icon(Icons.refresh, size: 64),
                         tooltip: 'Retry upload',
                         onPressed: () => context
                             .read<PhotouploadCubit>()
@@ -664,26 +625,33 @@ class DisplayOfflineImage extends StatelessWidget {
 
 class SectionDropdown extends StatelessWidget {
   const SectionDropdown({
-    Key? key,
+    super.key,
     required this.onSelect,
     this.fieldValue,
-  }) : super(key: key);
+  });
   final String? fieldValue;
   final Function onSelect;
   @override
   Widget build(BuildContext context) {
-    List<String> sectionList = StringConstants.sectionList;
+    List<String> machineList = [
+      'Electrical',
+      'Mechanical',
+      'Utility',
+      'Quality',
+      'Production',
+    ];
+
     return Card(
       elevation: 3.0,
-      margin: EdgeInsets.all(10),
+      margin: const EdgeInsets.all(10),
       shadowColor: Colors.blue,
       child: Container(
-        padding: EdgeInsets.all(10.0),
+        padding: const EdgeInsets.all(10.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              StringConstants.isMachineSpecific,
+            const Text(
+              string_constants.isMachineSpecific,
               style:
                   TextStyle(fontStyle: FontStyle.italic, color: Colors.black54),
             ),
@@ -691,16 +659,16 @@ class SectionDropdown extends StatelessWidget {
               isExpanded: true,
               value: fieldValue, //changed when tapped
               elevation: 3,
-              hint: Text(
+              hint: const Text(
                 'Select Department',
               ),
-              items: sectionList.map((String machine) {
+              items: machineList.map((String machine) {
                 return DropdownMenuItem<String>(
+                  value: machine,
                   child: Text(
                     machine,
-                    style: Theme.of(context).textTheme.headline6,
+                    style: Theme.of(context).textTheme.titleLarge,
                   ),
-                  value: machine,
                 );
               }).toList(),
 
@@ -717,7 +685,7 @@ class SectionDropdown extends StatelessWidget {
 
 class FormListItem extends StatelessWidget {
   const FormListItem({
-    Key? key,
+    super.key,
     required this.sizeData,
     this.fieldValue,
     required this.title,
@@ -727,7 +695,7 @@ class FormListItem extends StatelessWidget {
     this.textInputType,
     this.initialValue,
     this.noSpace = false,
-  }) : super(key: key);
+  });
 
   final Size sizeData;
   final String title;
@@ -742,11 +710,11 @@ class FormListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: EdgeInsets.all(10.0),
+      margin: const EdgeInsets.all(10.0),
       elevation: 3.0,
       shadowColor: Colors.blue,
       child: Container(
-          padding: EdgeInsets.all(10.0),
+          padding: const EdgeInsets.all(10.0),
           child: Column(
             children: [
               Row(
@@ -754,10 +722,10 @@ class FormListItem extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    padding: EdgeInsets.only(right: 5.0),
+                    padding: const EdgeInsets.only(right: 5.0),
                     child: Text(
                       title,
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                      style: const TextStyle(fontWeight: FontWeight.bold),
                       softWrap: true,
                     ),
                   ),
@@ -765,14 +733,14 @@ class FormListItem extends StatelessWidget {
                     //width: sizeData.width / 2,
                     child: Text(
                       info,
-                      style: TextStyle(
+                      style: const TextStyle(
                           fontStyle: FontStyle.italic, color: Colors.black54),
                       softWrap: true,
                     ),
                   ),
                 ],
               ),
-              Divider(),
+              const Divider(),
               InkWell(
                 onTap: () {
                   SignupFormDialog.formDialog(
@@ -793,10 +761,10 @@ class FormListItem extends StatelessWidget {
                         child: Text(
                           fieldValue ?? '<Empty>',
                           softWrap: true,
-                          style: Theme.of(context).textTheme.headline6,
+                          style: Theme.of(context).textTheme.titleLarge,
                         ),
                       ),
-                      Align(
+                      const Align(
                         alignment: Alignment.topRight,
                         child: Icon(Icons.edit),
                       ),

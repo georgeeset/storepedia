@@ -1,7 +1,6 @@
 
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import '../repository/validator.dart';
 
 class SignupFormDialog {
@@ -19,17 +18,17 @@ class SignupFormDialog {
         context: context,
         builder: (BuildContext context) {
           return Dialog(
-            insetPadding: EdgeInsets.symmetric(horizontal:10),
+            insetPadding: const EdgeInsets.symmetric(horizontal:10),
 
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             child: Container(
-              padding: EdgeInsets.all(20),
-              margin: EdgeInsets.symmetric(horizontal: 10.0),
+              padding: const EdgeInsets.all(20),
+              margin: const EdgeInsets.symmetric(horizontal: 10.0),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  Text(title, style: TextStyle(fontSize: 20.0, color: Colors.blue),),
+                  Text(title, style: const TextStyle(fontSize: 20.0, color: Colors.blue),),
                   Container(height: 10.0,),
                   TextInputField(
                     onSubmit: onSubmit,
@@ -55,7 +54,7 @@ class TextInputField extends StatefulWidget {
   final TextCapitalization textCapitalization;
   final String? initialValue;
   final bool noSpace;
-  TextInputField({
+  const TextInputField({super.key, 
     required this.onSubmit,
     required this.title,
     this.textInputType = TextInputType.text,
@@ -84,7 +83,7 @@ class _TextInputFieldState extends State<TextInputField> {
   @override
   Widget build(BuildContext context) {
     final Size size=MediaQuery.of(context).size;
-    return Container(
+    return SizedBox(
       width: size.width,
       child: Row(
         //mainAxisSize: MainAxisSize.min,
@@ -111,9 +110,9 @@ class _TextInputFieldState extends State<TextInputField> {
                 errorText: err,
                 hintText: widget.title,
                 isCollapsed: true,
-                contentPadding: EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+                contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
 
-                border: OutlineInputBorder(
+                border: const OutlineInputBorder(
                   borderRadius: BorderRadius.all(
                     Radius.circular(10),
                   ),
@@ -125,7 +124,7 @@ class _TextInputFieldState extends State<TextInputField> {
               ),
             ),
           ),
-                IconButton(icon:Icon(Icons.check_circle_outline, size:30), onPressed:()=> submitField(),),
+                IconButton(icon:const Icon(Icons.check_circle_outline, size:30), onPressed:()=> submitField(),),
         ],
       ),
     );

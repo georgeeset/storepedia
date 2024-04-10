@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:store_pedia/cubit/exhausted_items_manager_cubit/cubit/exhausteditemsmanager_cubit.dart';
-import 'package:store_pedia/widgets/loading_layout.dart';
-import 'package:store_pedia/widgets/one_part.dart';
-import 'package:store_pedia/widgets/page_layout.dart';
+import 'package:storepedia/cubit/exhausted_items_manager_cubit/cubit/exhausteditemsmanager_cubit.dart';
+import 'package:storepedia/widgets/loading_layout.dart';
+import 'package:storepedia/widgets/one_part.dart';
+import 'package:storepedia/widgets/page_layout.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ExhaustedItemsPage extends StatelessWidget {
   static String routName = '/exhausted_items_page';
 
-  const ExhaustedItemsPage({Key? key}) : super(key: key);
+  const ExhaustedItemsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -21,15 +21,17 @@ class ExhaustedItemsPage extends StatelessWidget {
           'Exhausted Items',
           style: Theme.of(context)
               .textTheme
-              .headline6
+              .titleLarge
               ?.copyWith(color: Colors.white),
         ),
         hasBackButton: true,
-        body: ExhaustedBody());
+        body: const ExhaustedBody());
   }
 }
 
 class ExhaustedBody extends StatefulWidget {
+  const ExhaustedBody({super.key});
+
   @override
   State<ExhaustedBody> createState() => _ExhaustedBodyState();
 }
@@ -74,10 +76,10 @@ class _ExhaustedBodyState extends State<ExhaustedBody> {
             if (index >= state.response.length) {
               return state.hasReachedMax == true
                   ? Container()
-                  : Shimmer(
-                      child: Card(color: Colors.blue),
+                  : const Shimmer(
                       gradient:
-                          LinearGradient(colors: [Colors.green, Colors.teal]));
+                          LinearGradient(colors: [Colors.green, Colors.teal]),
+                      child: Card(color: Colors.blue));
             } else {
               return OnePart(part: state.response[index]);
             }
@@ -91,7 +93,7 @@ class _ExhaustedBodyState extends State<ExhaustedBody> {
       }
 
       if (state.queryStatus == QueryStatus.loading) {
-        return LoadingLayout();
+        return const LoadingLayout();
       }
 
       if (state.queryStatus == QueryStatus.noResult) {
@@ -99,14 +101,14 @@ class _ExhaustedBodyState extends State<ExhaustedBody> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              'Our Stock seems OK',
-              style: Theme.of(context).textTheme.subtitle1,
+              'Our Stock seem OK',
+              style: Theme.of(context).textTheme.titleMedium,
             ),
             Text(
-              'Kindly check physically to be double sure.',
+              'Kindly check physically to be souble sure.',
               style: Theme.of(context)
                   .textTheme
-                  .subtitle2
+                  .titleSmall
                   ?.copyWith(fontStyle: FontStyle.italic),
             ),
           ],

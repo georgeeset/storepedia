@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:store_pedia/model/part.dart';
-import 'package:store_pedia/repository/firestore_operaions.dart';
-import 'package:store_pedia/repository/string_processor.dart';
-import 'package:store_pedia/constants/string_constants.dart' as StringConstants;
-import 'package:store_pedia/constants/number_constants.dart' as NumberConstants;
+import 'package:storepedia/model/part.dart';
+import 'package:storepedia/repository/firestore_operaions.dart';
+import 'package:storepedia/repository/string_processor.dart';
+import 'package:storepedia/constants/string_constants.dart' as StringConstants;
+import 'package:storepedia/constants/number_constants.dart' as NumberConstants;
 
 class PartQuery {
   final FirestoreOperations _firestoreOperations = FirestoreOperations();
@@ -20,7 +20,7 @@ class PartQuery {
     //keywords form here...
     var keywords = _stringProcessor.searchKeywords(searchString);
 
-    if (keywords.length < 1) {
+    if (keywords.isEmpty) {
       print('No KEYWORD');
       return null;
     }

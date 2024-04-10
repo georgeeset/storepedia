@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../constants/string_constants.dart' as StringConstants;
+import '../constants/string_constants.dart' as string_constants;
 
 class Part {
   String? partName;
@@ -14,10 +14,6 @@ class Part {
   String? section;
   String? brand;
   int? likesCount;
-
-  ///if part is commonly used by department.
-  ///this will indicate so no need to search everytime
-  bool? commonlyUsed;
 
   ///if a part is almost finished,
   ///this field should be switched to true
@@ -59,7 +55,6 @@ class Part {
     this.partUid,
     this.isExhausted = false,
     this.markExhaustedTime,
-    this.commonlyUsed,
   });
 
   Part.fromMap({DocumentSnapshot? snapshot, Map<String, dynamic>? mapFormat}) {
@@ -73,49 +68,47 @@ class Part {
         throw ('No Valid Input');
       }
     }
-    partName = data[StringConstants.partName];
-    partDescription = data[StringConstants.partDescription];
-    partNumber = data[StringConstants.partNumber];
-    storeId = data[StringConstants.storeId];
-    storeLocation = data[StringConstants.storeLocation];
-    addedBy = data[StringConstants.addedBy];
-    addedById = data[StringConstants.addedById];
-    dateAdded = data[StringConstants.dateAdded];
-    lastEditedBy = data[StringConstants.lastEditedBy];
-    section = data[StringConstants.section];
-    brand = data[StringConstants.brand];
-    likesCount = data[StringConstants.likesCount];
-    isExhausted = data[StringConstants.isExhausted] ?? false;
-    markExhaustedTime = data[StringConstants.markExhaustedTime];
-    commonlyUsed = data[StringConstants.commonlyUsed] ?? false;
+    partName = data[string_constants.partName];
+    partDescription = data[string_constants.partDescription];
+    partNumber = data[string_constants.partNumber];
+    storeId = data[string_constants.storeId];
+    storeLocation = data[string_constants.storeLocation];
+    addedBy = data[string_constants.addedBy];
+    addedById = data[string_constants.addedById];
+    dateAdded = data[string_constants.dateAdded];
+    lastEditedBy = data[string_constants.lastEditedBy];
+    section = data[string_constants.section];
+    brand = data[string_constants.brand];
+    likesCount = data[string_constants.likesCount];
+    isExhausted = data[string_constants.isExhausted] ?? false;
+    markExhaustedTime = data[string_constants.markExhaustedTime];
     searchKeywords =
-        List<String>.from(data[StringConstants.searchKeywords] ?? []);
-    photo = data[StringConstants.photo];
-    markedBadByUid = data[StringConstants.markedBadByUid];
-    reasonForMarkingBad = data[StringConstants.reasonFormarkingBad];
+        List<String>.from(data[string_constants.searchKeywords] ?? []);
+    photo = data[string_constants.photo];
+    markedBadByUid = data[string_constants.markedBadByUid];
+    reasonForMarkingBad = data[string_constants.reasonFormarkingBad];
     partUid = snapshot?.id;
   }
 
   Map<String, dynamic> toMap() => {
-        StringConstants.partName: partName,
-        StringConstants.partDescription: partDescription,
-        StringConstants.partNumber: partNumber,
-        StringConstants.storeId: storeId,
-        StringConstants.storeLocation: storeLocation,
-        StringConstants.addedBy: addedBy,
-        StringConstants.dateAdded: dateAdded,
-        StringConstants.addedById: addedById,
-        StringConstants.lastEditedBy: lastEditedBy,
-        StringConstants.section: section,
-        StringConstants.brand: brand,
-        StringConstants.likesCount: likesCount,
-        StringConstants.isExhausted: isExhausted,
-        StringConstants.markExhaustedTime: markExhaustedTime,
-        StringConstants.searchKeywords: searchKeywords,
-        StringConstants.photo: photo,
-        StringConstants.markedBadByUid: markedBadByUid,
-        StringConstants.commonlyUsed: commonlyUsed,
-        StringConstants.reasonFormarkingBad: reasonForMarkingBad,
+        string_constants.partName: partName,
+        string_constants.partDescription: partDescription,
+        string_constants.partNumber: partNumber,
+        string_constants.storeId: storeId,
+        string_constants.storeLocation: storeLocation,
+        string_constants.addedBy: addedBy,
+        string_constants.dateAdded: dateAdded,
+        string_constants.addedById: addedById,
+        string_constants.lastEditedBy: lastEditedBy,
+        string_constants.section: section,
+        string_constants.brand: brand,
+        string_constants.likesCount: likesCount,
+        string_constants.isExhausted: isExhausted,
+        string_constants.markExhaustedTime: markExhaustedTime,
+        string_constants.searchKeywords: searchKeywords,
+        string_constants.photo: photo,
+        string_constants.markedBadByUid: markedBadByUid,
+        string_constants.reasonFormarkingBad: reasonForMarkingBad,
       };
 
   copyWith({
@@ -138,7 +131,6 @@ class Part {
     String? partUid,
     bool? isExhausted,
     int? markExhaustedTime,
-    bool? commonlyUsed,
   }) {
     return Part(
       partName: partName ?? this.partName,
@@ -160,7 +152,6 @@ class Part {
       partUid: partUid ?? this.partUid,
       isExhausted: isExhausted ?? this.isExhausted,
       markExhaustedTime: markExhaustedTime ?? this.markExhaustedTime,
-      commonlyUsed: commonlyUsed ?? this.commonlyUsed,
     );
   }
 

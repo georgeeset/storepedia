@@ -42,7 +42,7 @@ class PhotouploadedState extends PhotouploadState{
 
 class PhotouploadErrorState extends PhotouploadState{
   final String message;
-  PhotouploadErrorState({required this.message});
+  const PhotouploadErrorState({required this.message});
 
   @override
   String toString() {

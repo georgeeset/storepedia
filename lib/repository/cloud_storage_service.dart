@@ -4,7 +4,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 
 class CloudStorageService {
   late UploadTask _uploadTask;
-  FirebaseStorage _storage = FirebaseStorage.instance;
+  final FirebaseStorage _storage = FirebaseStorage.instance;
 
   UploadTask startUpload({
     /// reference to file you want to uppload
@@ -22,24 +22,23 @@ class CloudStorageService {
   }) {
     /// this holds the final path where the file will be stored
     /// based on other information like replaceFileName
-    var filePathLogical;
-    if(replaceFileName!=null){
+    String filePathLogical;
+    if (replaceFileName != null) {
       Reference storageReference = _storage.refFromURL(replaceFileName);
-      filePathLogical=storageReference.fullPath.toString();
-     // print(filePathLogical);
-    }else{
-      filePathLogical=filePath;
+      filePathLogical = storageReference.fullPath.toString();
+      // print(filePathLogical);
+    } else {
+      filePathLogical = filePath;
     }
-    if( file != null){
+    if (file != null) {
       return _storage.ref().child(filePathLogical).putFile(file);
-    }else{
-      if(data!=null){return _storage.ref().child(filePathLogical).putData(data);}
-      else{
-        return throw('Both data and file can\'t be null');
+    } else {
+      if (data != null) {
+        return _storage.ref().child(filePathLogical).putData(data);
+      } else {
+        return throw ('Both data and file can\'t be null');
       }
-    } 
-    
-        
+    }
   }
 
   Stream<TaskSnapshot> uploadTask() {

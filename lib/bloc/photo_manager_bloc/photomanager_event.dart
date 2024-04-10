@@ -7,22 +7,24 @@ abstract class PhotomanagerEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class SelectPhotoEvent extends PhotomanagerEvent {
-  final CroppedFile photo;
+class SelectPhotoEvent extends PhotomanagerEvent{
+  final File photo;
   const SelectPhotoEvent({required this.photo});
 
   @override
-  String toString() {
-    return 'SelectPhotoEvent';
+  String toString() {return 'SelectPhotoEvent';
   }
 
   @override
   List<Object> get props => [photo];
 }
 
-class RemovePhotoEvent extends PhotomanagerEvent {
+class RemovePhotoEvent extends PhotomanagerEvent{
   @override
   String toString() {
     return 'RemovePhotoEvent';
   }
 }
+
+
+

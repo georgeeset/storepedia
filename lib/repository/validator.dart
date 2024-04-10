@@ -1,17 +1,18 @@
-class Validator {
-  String? validateString(String value) {
-    if (value.length < 4) {
+class Validator{
+
+  String? validateString(String value){
+    if(value.length<3){
       return 'Data is too Short';
     }
     return null;
   }
 
-  String? validateStringWithoutSpace(String value) {
-    if (!RegExp(r"^[a-zA-Z0-9]+-[0-9]+-[0-9]").hasMatch(value)) {
-      return 'Format: IK12-19-05';
+  String? validateStringWithoutSpace(String value){
+    if(!RegExp(r"^[a-zA-Z0-9]+-[0-9]+-[0-9]").hasMatch(value)){
+      return'Format: GES12-19-05';
     }
-    if (value.contains(' ')) {
-      return 'White space not allowed';
+    if(value.contains(' ')){
+      return'White space not allowed';
     }
     return null;
   }

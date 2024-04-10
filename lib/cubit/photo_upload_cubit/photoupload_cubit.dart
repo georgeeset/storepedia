@@ -3,8 +3,7 @@ import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:image_cropper/image_cropper.dart';
-import 'package:store_pedia/repository/photo_manager_repository.dart';
+import 'package:storepedia/repository/photo_manager_repository.dart';
 
 part 'photoupload_state.dart';
 
@@ -14,15 +13,15 @@ class PhotouploadCubit extends Cubit<PhotouploadState> {
 
   PhotouploadCubit() : super(PhotouploadInitial());
 
-  attemptUpload({required CroppedFile photo, String? fileName}) {
+  attemptUpload({required File photo, String? fileName}) {
     //avoid uploading file multiple times. return void if already uploading
     if (state is PhotouploadingState) {
       return null;
     }
-    emit(PhotouploadingState(percentage: 0));
+    emit(const PhotouploadingState(percentage: 0));
 
     var upload = photoManagerRepository.uploadItemImage(
-        image: File(photo.path), fileName: fileName);
+        image: photo, fileName: fileName);
     upload.listen((taskSnapshot) async {
       if (taskSnapshot.state == TaskState.success) {
         await taskSnapshot.ref.getDownloadURL().then(

@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:store_pedia/cubit/part_query_manager.dart/cubit/partquerymanager_cubit.dart';
-import 'package:store_pedia/widgets/loading_layout.dart';
-import 'package:store_pedia/widgets/one_part.dart';
+import 'package:storepedia/cubit/part_query_manager.dart/cubit/partquerymanager_cubit.dart';
+import 'package:storepedia/widgets/loading_layout.dart';
+import 'package:storepedia/widgets/one_part.dart';
 
 class QueryBody extends StatefulWidget {
+  const QueryBody({super.key});
+
   @override
   State<QueryBody> createState() => _QueryBodyState();
 }
@@ -51,10 +53,10 @@ class _QueryBodyState extends State<QueryBody> {
             if (index >= state.response.length) {
               return state.hasReachedMax == true
                   ? Container()
-                  : Shimmer(
-                      child: Card(color: Colors.blue),
+                  : const Shimmer(
                       gradient:
-                          LinearGradient(colors: [Colors.green, Colors.teal]));
+                          LinearGradient(colors: [Colors.green, Colors.teal]),
+                      child: Card(color: Colors.blue));
             } else {
               return OnePart(part: state.response[index]);
             }
@@ -68,22 +70,22 @@ class _QueryBodyState extends State<QueryBody> {
       }
 
       if (state.queryStatus == QueryStatus.loading) {
-        return LoadingLayout();
+        return const LoadingLayout();
       }
 
       if (state.queryStatus == QueryStatus.noResult) {
         return Column(
           children: [
-            Image.asset('assets/gifs/animated_search.gif'),
+            //Image.asset('assets/gifs/animated_search.gif'),
             Text(
               'No Result Found...',
-              style: Theme.of(context).textTheme.subtitle1,
+              style: Theme.of(context).textTheme.titleMedium,
             ),
             Text(
               'Kindly add it when you find it.',
               style: Theme.of(context)
                   .textTheme
-                  .subtitle2
+                  .titleSmall
                   ?.copyWith(fontStyle: FontStyle.italic),
             ),
           ],

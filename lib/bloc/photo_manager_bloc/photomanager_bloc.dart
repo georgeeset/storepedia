@@ -1,6 +1,7 @@
+import 'dart:io';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:image_cropper/image_cropper.dart';
 
 part 'photomanager_event.dart';
 part 'photomanager_state.dart';

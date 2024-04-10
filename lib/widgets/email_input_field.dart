@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:store_pedia/cubit/email_field_cubit/email_textfield_cubit.dart';
+import 'package:storepedia/cubit/email_field_cubit/email_textfield_cubit.dart';
 
 class EmailInputField extends StatelessWidget {
-  const EmailInputField({Key? key}) : super(key: key);
+  const EmailInputField({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -31,11 +31,11 @@ class EmailInputField extends StatelessWidget {
             errorText: state is EmailTextfieldError ? state.message : null,
             hintText: 'youremail@domain.com',
             labelText: 'Email',
-           // isDense: true,
-            prefixIcon: Icon(
+            // isDense: true,
+            prefixIcon: const Icon(
               Icons.email,
             ),
-            border: OutlineInputBorder(
+            border: const OutlineInputBorder(
               borderRadius: BorderRadius.all(
                 Radius.circular(20),
               ),

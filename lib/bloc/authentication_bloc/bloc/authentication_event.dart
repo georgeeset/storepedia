@@ -10,7 +10,7 @@ abstract class AuthenticationEvent extends Equatable {
 class EmailPasswordSigninEvent extends AuthenticationEvent{
   final String email;
   final String password;
-  EmailPasswordSigninEvent({required this.email, required this.password});
+  const EmailPasswordSigninEvent({required this.email, required this.password});
   @override
   String toString() {
     return 'SigninEvent';

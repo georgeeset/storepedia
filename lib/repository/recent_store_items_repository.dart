@@ -1,9 +1,9 @@
-import 'package:store_pedia/model/part.dart';
-import 'package:store_pedia/repository/firestore_operaions.dart';
-import 'package:store_pedia/constants/string_constants.dart' as StringConstants;
+import 'package:storepedia/model/part.dart';
+import 'package:storepedia/repository/firestore_operaions.dart';
+import 'package:storepedia/constants/string_constants.dart' as StringConstants;
 
 class RecentStoreItemsRepository {
-  FirestoreOperations _firestoreOperations = FirestoreOperations();
+  final FirestoreOperations _firestoreOperations = FirestoreOperations();
 
   // Future<List<Part>> getRecentItems() {
   //   return _firestoreOperations

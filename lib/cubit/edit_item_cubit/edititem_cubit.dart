@@ -1,7 +1,7 @@
 import 'package:hydrated_bloc/hydrated_bloc.dart';
-import 'package:store_pedia/model/part.dart';
-import 'package:store_pedia/model/user_model.dart';
-import 'package:store_pedia/repository/string_processor.dart';
+import 'package:storepedia/model/part.dart';
+import 'package:storepedia/model/user_model.dart';
+import 'package:storepedia/repository/string_processor.dart';
 
 class EditItemCubit extends HydratedCubit<Part> {
   late Part part;
@@ -36,10 +36,6 @@ class EditItemCubit extends HydratedCubit<Part> {
 
   editBrand(String brand) {
     emit(state.copyWith(brand: brand));
-  }
-
-  editCommonlyUsed(bool choice) {
-    emit(state.copyWith(commonlyUsed: choice));
   }
 
   editPhoto(String photo) {
@@ -79,7 +75,7 @@ class EditItemCubit extends HydratedCubit<Part> {
     //  required String dateAdded,
     //  required searchKeywords,
     var combinedString =
-        '${state.partDescription ?? ''} ${state.partName ?? ''}  ${state.partNumber ?? ''} ${state.partNumber?.substring(0, 3)} ${state.storeId ?? ''} ${state.storeLocation ?? ''}';
+        '${state.partDescription ?? ''} ${state.partName ?? ''}  ${state.partNumber ?? ''} ${state.storeId ?? ''} ${state.storeLocation ?? ''}';
     StringProcessor stringProcessor = StringProcessor();
     print(state.partUid);
     if (state.partUid == null) {

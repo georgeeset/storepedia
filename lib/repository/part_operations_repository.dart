@@ -1,6 +1,6 @@
-import 'package:store_pedia/model/part.dart';
-import 'package:store_pedia/repository/firestore_operaions.dart';
-import 'package:store_pedia/constants/string_constants.dart' as StringConstants;
+import 'package:storepedia/model/part.dart';
+import 'package:storepedia/repository/firestore_operaions.dart';
+import 'package:storepedia/constants/string_constants.dart' as StringConstants;
 
 class PartOperationsRepository extends FirestoreOperations {
   PartOperationsRepository();
@@ -10,7 +10,9 @@ class PartOperationsRepository extends FirestoreOperations {
   }
 
   Future<void> editPart(Part part) async {
-    return editDocument(StringConstants.partsCollection, part.partUid!, part.toMap()).onError(
+    return editDocument(
+            StringConstants.partsCollection, part.partUid!, part.toMap())
+        .onError(
       (error, stackTrace) => Future.error(error.toString(), stackTrace),
     );
   }
@@ -21,7 +23,9 @@ class PartOperationsRepository extends FirestoreOperations {
     );
   }
 
-  Future<void> deletePart({required partId}){
-    return deleteDocumentLevel1(StringConstants.partsCollection, partId).onError((error, stackTrace) => Future.error(error.toString(),stackTrace));
+  Future<void> deletePart({required partId}) {
+    return deleteDocumentLevel1(StringConstants.partsCollection, partId)
+        .onError(
+            (error, stackTrace) => Future.error(error.toString(), stackTrace));
   }
 }

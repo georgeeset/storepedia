@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:store_pedia/constants/number_constants.dart' as NumberConstants;
-import 'package:store_pedia/widgets/back_button.dart';
+import 'package:storepedia/constants/number_constants.dart' as NumberConstants;
 
 class PageLayout extends StatelessWidget {
   const PageLayout(
-      {required this.body,
+      {super.key, required this.body,
       required this.title,
       this.hasBackButton = false,
       this.levelIndicator});
@@ -30,13 +29,33 @@ class PageLayout extends StatelessWidget {
                 color: Colors.blue,
               ),
             ),
-            hasBackButton
-                ? Positioned(top: 10, left: 10, child: BackButtonWidget())
-                : Container(),
+            Positioned(
+              top: 10,
+              left: 10,
+              child: hasBackButton
+                  ? InkWell(
+                      splashColor: Colors.purple,
+                      onTap: () {
+                        if (Navigator.of(context).canPop()) {
+                          Navigator.pop(context);
+                        }
+                      },
+                      child: const CircleAvatar(
+                        radius: 15,
+                        backgroundColor: Colors.white,
+                        child: Icon(
+                          Icons.arrow_back,
+                          size: 32,
+                          color: Colors.blue,
+                        ),
+                      ),
+                    )
+                  : Container(),
+            ),
 
             Positioned(
               top: 20,
-              child: Container(
+              child: SizedBox(
                 width: sizeData.width,
                 child: Center(child: title),
               ),
@@ -44,9 +63,9 @@ class PageLayout extends StatelessWidget {
             Positioned(
               top: NumberConstants.appbarHeight,
               child: Container(
-                padding: EdgeInsets.only(bottom: 60),
+                padding: const EdgeInsets.only(bottom: 60),
                 clipBehavior: Clip.antiAliasWithSaveLayer,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(20),

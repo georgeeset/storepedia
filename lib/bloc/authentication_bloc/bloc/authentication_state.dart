@@ -38,7 +38,7 @@ class AuthenticatingState extends AuthenticationState{
 class AuthenticationFailedState extends AuthenticationState{
   final String errorMessage;
   final StackTrace? moreInfo;
-  AuthenticationFailedState({required this.errorMessage, this.moreInfo});
+  const AuthenticationFailedState({required this.errorMessage, this.moreInfo});
 
   @override
   String toString() {
@@ -50,7 +50,7 @@ class AuthenticationFailedState extends AuthenticationState{
 
 class AuthenticatedState extends AuthenticationState{
   final User user;
-  AuthenticatedState({required this.user});
+  const AuthenticatedState({required this.user});
   @override
   List<Object> get props => [user];
 }

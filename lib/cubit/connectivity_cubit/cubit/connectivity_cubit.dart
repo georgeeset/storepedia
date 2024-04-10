@@ -1,14 +1,13 @@
-
-import 'package:bloc/bloc.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'connectivity_state.dart';
 
 class ConnectivityCubit extends Cubit<ConnectivityState> {
-  ConnectivityCubit() : super(ConnectivityInitial()){
+  ConnectivityCubit() : super(ConnectivityInitial()) {
     Connectivity().onConnectivityChanged.listen((ConnectivityResult status) {
-       _networkStatus(status);
+      _networkStatus(status);
     });
   }
 
@@ -35,5 +34,4 @@ class ConnectivityCubit extends Cubit<ConnectivityState> {
     print(change.nextState);
     super.onChange(change);
   }
-  
 }

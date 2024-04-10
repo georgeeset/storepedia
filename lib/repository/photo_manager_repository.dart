@@ -1,9 +1,9 @@
 import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:path/path.dart' as Path;
-import 'package:store_pedia/constants/firebase_constants.dart'
+import 'package:storepedia/constants/firebase_constants.dart'
     as FirebaseConstants;
-import 'package:store_pedia/repository/cloud_storage_service.dart';
+import 'package:storepedia/repository/cloud_storage_service.dart';
 
 class PhotoManagerRepository {
   CloudStorageService cloudStorageService = CloudStorageService();

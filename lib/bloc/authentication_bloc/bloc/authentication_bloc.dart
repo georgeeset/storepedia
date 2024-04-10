@@ -1,7 +1,6 @@
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 
 part 'authentication_event.dart';
 part 'authentication_state.dart';
@@ -12,7 +11,7 @@ class AuthenticationBloc
   late User? _user;
 
   AuthenticationBloc() : super(AuthenticationInitial()) {
-    void _onAuthStateChanged(User? firebaseUser) {
+    void onAuthStateChanged(User? firebaseUser) {
       _user = firebaseUser;
       if (_user == null) {
         emit(UnauthenticatedState());
@@ -21,10 +20,8 @@ class AuthenticationBloc
       }
     }
 
-    Firebase.initializeApp().then((_) {
-      _auth = FirebaseAuth.instance;
-      _auth.authStateChanges().listen((user) => _onAuthStateChanged(user));
-    });
+    _auth = FirebaseAuth.instance;
+    _auth.authStateChanges().listen((user) => onAuthStateChanged(user));
 
     // @override
     // Stream<AuthenticationState> mapEventToState(
@@ -43,7 +40,7 @@ class AuthenticationBloc
     });
 
     on<RegisterEvent>((event, emit) async {
-      var password;
+      String password;
       if (event.password1 == event.password2) {
         password = event.password1;
 
@@ -58,7 +55,7 @@ class AuthenticationBloc
           emit(AuthenticationFailedState(errorMessage: err.message.toString()));
         }
       } else {
-        emit(AuthenticationFailedState(
+        emit(const AuthenticationFailedState(
             errorMessage: 'Passwords not consistent'));
       }
     });

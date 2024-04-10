@@ -1,24 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:store_pedia/bloc/part_upload_wizard/bloc/partuploadwizard_bloc.dart';
+import 'package:storepedia/bloc/part_upload_wizard/bloc/partuploadwizard_bloc.dart';
 
-import 'package:store_pedia/cubit/edit_item_cubit/edititem_cubit.dart';
-import 'package:store_pedia/cubit/mark_bad_part/cubit/mark_bad_part_cubit.dart';
-import 'package:store_pedia/cubit/mark_commonly_used_parts/mark_commonly_used_cubit.dart';
-import 'package:store_pedia/cubit/mark_exhausted_part_cubit/cubit/markexhaustedpart_cubit.dart';
-import 'package:store_pedia/cubit/user_manager_cubit/cubit/usermanager_cubit.dart';
-import 'package:store_pedia/model/part.dart';
-import 'package:store_pedia/model/screenargs.dart';
-import 'package:store_pedia/screens/add_item_page/add_item_page.dart';
-import 'package:store_pedia/widgets/input_editor.dart';
-import 'package:store_pedia/widgets/online_pinch_zoom.dart';
-import 'package:store_pedia/widgets/page_layout.dart';
-import 'package:store_pedia/constants/string_constants.dart' as StringConstants;
-import 'package:store_pedia/constants/number_constants.dart' as NumberConstants;
+import 'package:storepedia/cubit/edit_item_cubit/edititem_cubit.dart';
+import 'package:storepedia/cubit/mark_bad_part/cubit/mark_bad_part_cubit.dart';
+import 'package:storepedia/cubit/mark_exhausted_part_cubit/cubit/markexhaustedpart_cubit.dart';
+import 'package:storepedia/cubit/user_manager_cubit/cubit/usermanager_cubit.dart';
+import 'package:storepedia/model/part.dart';
+import 'package:storepedia/screens/add_item_page/add_item_page.dart';
+import 'package:storepedia/widgets/input_editor.dart';
+import 'package:storepedia/widgets/online_pinch_zoom.dart';
+import 'package:storepedia/widgets/page_layout.dart';
+import 'package:storepedia/constants/string_constants.dart' as string_constants;
+import 'package:storepedia/constants/number_constants.dart' as number_constants;
 
 class PartDetailPage extends StatelessWidget {
   static String routeName = '/part_detail_page';
-  const PartDetailPage({Key? key}) : super(key: key);
+  const PartDetailPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +31,7 @@ class PartDetailPage extends StatelessWidget {
         part.partName!,
         style: Theme.of(context)
             .textTheme
-            .headline6!
+            .titleLarge!
             .copyWith(color: Colors.white),
         textAlign: TextAlign.center,
         softWrap: true,
@@ -43,7 +41,7 @@ class PartDetailPage extends StatelessWidget {
 }
 
 class PartBody extends StatefulWidget {
-  const PartBody({required this.part, Key? key}) : super(key: key);
+  const PartBody({required this.part, super.key});
   final Part part;
 
   @override
@@ -81,32 +79,32 @@ class _PartBodyState extends State<PartBody> {
         //     ],
         //   ),
         // ),
-
         space(),
         widget.part.partDescription == null
             ? Container()
-            : textCard(StringConstants.partDescriptionTitle,
+            : textCard(string_constants.partDescriptionTitle,
                 widget.part.partDescription!, context),
         widget.part.brand == null
             ? Container()
-            : textCard(StringConstants.brandTitle, widget.part.brand!, context),
+            : textCard(
+                string_constants.brandTitle, widget.part.brand!, context),
 
         widget.part.partNumber == null
             ? Container()
-            : textCard(StringConstants.partNumberTitle, widget.part.partNumber!,
-                context),
+            : textCard(string_constants.partNumberTitle,
+                widget.part.partNumber!, context),
         widget.part.storeId == null
             ? Container()
             : textCard(
-                StringConstants.storeIdTitle, widget.part.storeId!, context),
+                string_constants.storeIdTitle, widget.part.storeId!, context),
         widget.part.storeLocation == null
             ? Container()
-            : textCard(StringConstants.storeLocationTitle,
+            : textCard(string_constants.storeLocationTitle,
                 widget.part.storeLocation!, context),
         widget.part.section == null
             ? Container()
             : textCard(
-                StringConstants.sectionTitle, widget.part.section!, context),
+                string_constants.sectionTitle, widget.part.section!, context),
         widget.part.reasonForMarkingBad == null
             ? Container()
             : textCard('Deleted', widget.part.reasonForMarkingBad!, context),
@@ -136,15 +134,14 @@ class _PartBodyState extends State<PartBody> {
                 color: widget.part.isExhausted
                     ? Colors.orange
                     : Theme.of(context).primaryColor,
-                margin: EdgeInsets.symmetric(vertical: 5.0),
+                margin: const EdgeInsets.symmetric(vertical: 5.0),
                 child: Container(
-                  height: 40.0,
                   padding:
-                      EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+                      const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Expanded(
+                      const Expanded(
                         child: Text(
                           'THIS PART HAVE BEEN EXHAUSTED',
                           softWrap: true,
@@ -158,7 +155,7 @@ class _PartBodyState extends State<PartBody> {
                           MarkexhaustedpartState>(
                         builder: (context, state) {
                           return state == MarkexhaustedpartState.loading
-                              ? Container(
+                              ? const SizedBox(
                                   width: 15,
                                   height: 15,
                                   child: Center(
@@ -183,71 +180,21 @@ class _PartBodyState extends State<PartBody> {
               )
             : Container(),
 
-        widget.part.commonlyUsed != null
-            ? Card(
-                // color: widget.part.isExhausted
-                //     ? Colors.orange
-                //     : Theme.of(context).primaryColor,
-                margin: EdgeInsets.symmetric(vertical: 5.0),
-                child: Container(
-                  height: 40.0,
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: Text(
-                            'MARK AS COMMONLY USED PART',
-                            softWrap: true,
-                          ),
-                        ),
-                        BlocBuilder<MarkCommonlyusedCubit,
-                            MarkCommonlyUsedState>(
-                          builder: (context, state) {
-                            return state == MarkCommonlyUsedState.loading
-                                ? Container(
-                                    width: 15,
-                                    height: 15,
-                                    child: Center(
-                                        child: CircularProgressIndicator()),
-                                  )
-                                : Switch(
-                                    value: widget.part.commonlyUsed ?? false,
-                                    onChanged: (newValue) {
-                                      setState(() {
-                                        widget.part.commonlyUsed = newValue;
-                                      });
-                                      context
-                                          .read<MarkCommonlyusedCubit>()
-                                          .makrCommonlyused(
-                                              data: newValue,
-                                              part: widget.part);
-                                    });
-                          },
-                        )
-                      ]),
-                ),
-              )
-            : Container(),
-
         widget.part.markedBadByUid == null
             ? BlocBuilder<UserManagerCubit, UserManagerState>(
                 builder: (context, state) {
                 if (state is UserLoadedState &&
                     state.userData.accessLevel >=
-                        NumberConstants.minimumAccessLevelForPartEdit) {
+                        number_constants.minimumAccessLevelForPartEdit) {
                   return Row(
                     children: [
                       IconButton(
                         onPressed: () {
                           context.read<EditItemCubit>().jumpEdit(widget.part);
-                          Navigator.of(context).popAndPushNamed(
-                              AddItemPage.routName,
-                              arguments:
-                                  ScreenArguments('Edit', Reason.editPart));
+                          Navigator.of(context)
+                              .popAndPushNamed(AddItemPage.routName);
                         },
-                        icon: Icon(Icons.edit),
+                        icon: const Icon(Icons.edit),
                         tooltip: 'Edit',
                       ),
 
@@ -274,7 +221,7 @@ class _PartBodyState extends State<PartBody> {
                                   title: 'State reason for Deleting this part',
                                 );
                               },
-                              icon: Icon(
+                              icon: const Icon(
                                 Icons.delete,
                               ),
                               tooltip: 'Delete',
@@ -282,7 +229,7 @@ class _PartBodyState extends State<PartBody> {
                           } else {
                             // indicate loading if mark bad delete button has been peressed.
                             if (markState == MarkpartState.loading) {
-                              return Container(
+                              return const SizedBox(
                                 width: 15,
                                 height: 15,
                                 child: CircularProgressIndicator(),
@@ -306,27 +253,26 @@ class _PartBodyState extends State<PartBody> {
                 builder: (context, state) {
                 if (state is UserLoadedState &&
                     state.userData.accessLevel >=
-                        NumberConstants.minimunAccessLevelForDeletingPart) {
+                        number_constants.minimunAccessLevelForDeletingPart) {
                   return BlocConsumer<PartuploadwizardBloc,
                       PartuploadwizardState>(
                     listener: (context, state) {
+                      Navigator.of(context).pop();
                       if (state is PartuploadwizardErrorState) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             backgroundColor: Colors.blue,
-                            duration: Duration(
-                                seconds: NumberConstants.errorSnackBarDelay),
+                            duration: const Duration(
+                                seconds: number_constants.errorSnackBarDelay),
                             content: Text(
                                 'Delete not successful:\n${state.message}'),
                           ),
                         );
-                      } else {
-                        Navigator.of(context).pop();
                       }
                     },
                     builder: (context, partState) {
                       return partState is PartuploadwizardLoadingState
-                          ? Container(
+                          ? const SizedBox(
                               width: 10,
                               height: 10,
                               child: CircularProgressIndicator())
@@ -336,7 +282,7 @@ class _PartBodyState extends State<PartBody> {
                                     DeletePartEvent(
                                         partId: widget.part.partUid!));
                               },
-                              icon: Icon(
+                              icon: const Icon(
                                 Icons.delete_forever,
                                 color: Colors.redAccent,
                               ),
@@ -362,14 +308,14 @@ class _PartBodyState extends State<PartBody> {
   ) {
     return Card(
       color: Colors.blue[50],
-      margin: EdgeInsets.symmetric(vertical: 5.0),
+      margin: const EdgeInsets.symmetric(vertical: 5.0),
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+        padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
         child: Row(
           children: [
             Text(
               '$field: ',
-              style: Theme.of(context).textTheme.subtitle1,
+              style: Theme.of(context).textTheme.titleMedium,
             ),
             Expanded(
               child: SelectableText(

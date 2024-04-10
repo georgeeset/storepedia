@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:store_pedia/model/part.dart';
-import 'package:store_pedia/repository/part_operations_repository.dart';
-import 'package:store_pedia/constants/number_constants.dart' as NumberConstants;
+import 'package:storepedia/model/part.dart';
+import 'package:storepedia/repository/part_operations_repository.dart';
+import 'package:storepedia/constants/number_constants.dart' as NumberConstants;
 
 part 'partuploadwizard_event.dart';
 part 'partuploadwizard_state.dart';
@@ -51,7 +51,7 @@ class PartuploadwizardBloc
     on<DeletePartEvent>((event, emit) async {
       emit(PartuploadwizardLoadingState());
 
-      await partOperationsRepository
+      partOperationsRepository
           .deletePart(partId: event.partId)
           .then((value) => emit(PartuploadwizardLoadedState()))
           .onError((error, stackTrace) =>

@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:store_pedia/cubit/repeat_password_textfield_cubit/cubit/repeatpasswordtextfield_cubit.dart';
+import 'package:storepedia/cubit/repeat_password_textfield_cubit/cubit/repeatpasswordtextfield_cubit.dart';
 
 class RepeatPasswordInputField extends StatelessWidget {
-  const RepeatPasswordInputField({ Key? key }) : super(key: key);
- 
+  const RepeatPasswordInputField({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<RepeatPasswordTextfieldCubit, RepeatPasswordTextfieldState>(
+    return BlocBuilder<RepeatPasswordTextfieldCubit,
+        RepeatPasswordTextfieldState>(
       builder: (context, state) {
         return TextField(
           keyboardType: TextInputType.text,
@@ -17,7 +18,7 @@ class RepeatPasswordInputField extends StatelessWidget {
           textInputAction: TextInputAction.done,
           onChanged: (val) {
             final cubitHandle = context.read<RepeatPasswordTextfieldCubit>();
-            cubitHandle.updateText(password:val);
+            cubitHandle.updateText(password: val);
           },
           // onSubmitted: (val) async {
           //   final cubitHandle = context.read<PasswordTextfieldCubit>();
@@ -30,13 +31,14 @@ class RepeatPasswordInputField extends StatelessWidget {
             filled: true,
             fillColor: Colors.white,
             //enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.zero),
-            errorText: state is RepeatPasswordTextfieldError ? state.message : null,
+            errorText:
+                state is RepeatPasswordTextfieldError ? state.message : null,
             hintText: '*******',
             labelText: 'Repeat Password',
-            prefixIcon: Icon(
+            prefixIcon: const Icon(
               Icons.lock,
             ),
-            border: OutlineInputBorder(
+            border: const OutlineInputBorder(
               borderRadius: BorderRadius.all(
                 Radius.circular(20),
               ),

@@ -26,7 +26,7 @@ class WarningDialog {
   }) async {
     return showGeneralDialog(
       barrierColor: Colors.black38,
-      transitionDuration: Duration(milliseconds: 300),
+      transitionDuration: const Duration(milliseconds: 300),
       barrierDismissible: isDismissible,
       barrierLabel: '',
       context: context,

@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:store_pedia/model/user_model.dart';
+import 'package:storepedia/model/user_model.dart';
 
 class FirestoreOperations {
   FirestoreOperations() {
@@ -106,28 +106,6 @@ class FirestoreOperations {
             (error, stackTrace) => Future.error(error.toString(), stackTrace));
   }
 
-  Future<List<DocumentSnapshot>> paginateQueryWithTwoValues(
-    String collection,
-    String field1,
-    String field2,
-    bool fieldValue1,
-    String fieldValue2,
-    int limit,
-    String orderBy,
-    DocumentSnapshot startAfter,
-  ) {
-    return _firebaseFirestore
-        .collection(collection)
-        .where(field1, isEqualTo: fieldValue1)
-        .where(field2, isEqualTo: fieldValue2)
-        .limit(limit)
-        .startAfterDocument(startAfter)
-        .get()
-        .then((value) => value.docs)
-        .onError(
-            (error, stackTrace) => Future.error(error.toString(), stackTrace));
-  }
-
   Future<List<DocumentSnapshot>> queryWithValue(
     String collection,
     String field,
@@ -144,27 +122,6 @@ class FirestoreOperations {
         .then((value) => value.docs)
         .onError(
             (error, stackTrace) => Future.error(error.toString(), stackTrace));
-  }
-
-  Future<List<DocumentSnapshot>> qaueryWithTwoValues(
-    String collection,
-    String field1,
-    String field2,
-    bool fieldValue1,
-    String fieldValue2,
-    int limit,
-    String orderBy,
-  ) {
-    return _firebaseFirestore
-        .collection(collection)
-        .where(field1, isEqualTo: fieldValue1)
-        .where(field2, isEqualTo: fieldValue2)
-        .limit(limit)
-        .get()
-        .then((value) => value.docs)
-        .onError(
-          (error, stackTrace) => Future.error(error.toString(), stackTrace),
-        );
   }
 
   Stream<List<DocumentSnapshot>> streamRecentDocs(

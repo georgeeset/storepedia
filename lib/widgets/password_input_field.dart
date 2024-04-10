@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:store_pedia/cubit/password_field_cubit/password_textfield_cubit.dart';
+import 'package:storepedia/cubit/password_field_cubit/password_textfield_cubit.dart';
 
 class PasswordInputField extends StatelessWidget {
-  const PasswordInputField({Key? key, this.labelText='Password'}) : super(key: key);
+  const PasswordInputField({super.key, this.labelText = 'Password'});
   final String labelText;
 
   @override
@@ -34,10 +34,10 @@ class PasswordInputField extends StatelessWidget {
             errorText: state is PasswordTextfieldError ? state.message : null,
             hintText: '*******',
             labelText: labelText,
-            prefixIcon: Icon(
+            prefixIcon: const Icon(
               Icons.lock,
             ),
-            border: OutlineInputBorder(
+            border: const OutlineInputBorder(
               borderRadius: BorderRadius.all(
                 Radius.circular(20),
               ),

@@ -2,21 +2,21 @@ import 'package:flutter/material.dart';
 
 class LoadingIndicator extends StatelessWidget {
   const LoadingIndicator({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width:50.0,
       height: 50.0,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           shape: BoxShape.circle,
           color:Colors.blue,
           boxShadow: [
             BoxShadow(
               color: Colors.blueGrey,
-              offset: const Offset(
+              offset: Offset(
                 0.0,
                 0.0,
               ),
@@ -25,7 +25,7 @@ class LoadingIndicator extends StatelessWidget {
             ),
           ],
         ),
-        child: CircularProgressIndicator(
+        child: const CircularProgressIndicator(
           backgroundColor: Colors.white,
         ),
       );

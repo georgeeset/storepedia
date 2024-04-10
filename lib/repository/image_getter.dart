@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:image_picker/image_picker.dart';
 
 class ImageGetter {
@@ -17,7 +16,7 @@ class ImageGetter {
   }
 
   static Future<File> getSelfie() async {
-    final PickedFile? selfie = await ImagePicker().getImage(
+    final XFile? selfie = await ImagePicker().pickImage(
         source: ImageSource.camera, preferredCameraDevice: CameraDevice.front);
     if (selfie != null) {
       return File(selfie.path);
@@ -28,9 +27,9 @@ class ImageGetter {
   }
 
   static Future<File> getVideo(ImageSource source) async {
-    final PickedFile? video = await ImagePicker().getVideo(
+    final XFile? video = await ImagePicker().pickVideo(
       source: source,
-      maxDuration: Duration(minutes: 5),
+      maxDuration: const Duration(minutes: 5),
     );
     if (video != null) {
       return File(video.path);

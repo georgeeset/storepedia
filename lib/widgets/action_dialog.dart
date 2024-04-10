@@ -16,31 +16,31 @@ class ActionDialog extends StatelessWidget {
   final String? badOption;
 
 
-  ActionDialog(
-      {required this.titleText, required this.bodyText, required this.goodOption,this.badOption,});
+  const ActionDialog(
+      {super.key, required this.titleText, required this.bodyText, required this.goodOption,this.badOption,});
 
   @override
   Widget build(BuildContext context) {
     final Size pageSize= MediaQuery.of(context).size;
     return AlertDialog(
       shape: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-      title: Container(
+      title: SizedBox(
         width:pageSize.width,
         child: Row(mainAxisAlignment: MainAxisAlignment.start, mainAxisSize: MainAxisSize.min, children: <Widget>[
-          Icon(
+          const Icon(
             Icons.warning,
             color: Colors.red,
             size: 20,
           ),
-          Container(padding: EdgeInsets.symmetric(horizontal: 10), child: Text(titleText,softWrap: true,))
+          Container(padding: const EdgeInsets.symmetric(horizontal: 10), child: Text(titleText,softWrap: true,))
         ]),
       ),
-      titleTextStyle: TextStyle(
+      titleTextStyle: const TextStyle(
         color: Colors.black,
         fontWeight: FontWeight.bold,
       ),
       content: Container(
-        padding: EdgeInsets.all(10),
+        padding: const EdgeInsets.all(10),
         child: Text(bodyText, softWrap: true,),
       ),
       actions: <Widget>[
@@ -62,7 +62,7 @@ class ActionDialog extends StatelessWidget {
         )
         :Container(),
       ],
-      contentTextStyle: TextStyle(
+      contentTextStyle: const TextStyle(
         color: Colors.black,
       ),
     );

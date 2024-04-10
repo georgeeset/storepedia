@@ -1,9 +1,9 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:store_pedia/model/part.dart';
-import 'package:store_pedia/repository/part_query.dart';
+import 'package:storepedia/model/part.dart';
+import 'package:storepedia/repository/part_query.dart';
 
-import 'package:store_pedia/constants/number_constants.dart' as NumberConstants;
+import 'package:storepedia/constants/number_constants.dart' as NumberConstants;
 
 part 'partquerymanager_state.dart';
 

@@ -1,13 +1,12 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:store_pedia/cubit/part_query_manager.dart/cubit/partquerymanager_cubit.dart';
-import 'package:store_pedia/widgets/page_layout.dart';
-import 'package:store_pedia/widgets/search_result.dart';
+import 'package:storepedia/cubit/part_query_manager.dart/cubit/partquerymanager_cubit.dart';
+import 'package:storepedia/widgets/page_layout.dart';
+import 'package:storepedia/widgets/search_result.dart';
 
 class SearchPage extends StatefulWidget {
   static String routName = '/search_page';
-  const SearchPage({Key? key}) : super(key: key);
+  const SearchPage({super.key});
 
   @override
   State<SearchPage> createState() => _SearchPageState();
@@ -19,17 +18,17 @@ class _SearchPageState extends State<SearchPage> {
     Size pageSize = MediaQuery.of(context).size;
     return PageLayout(
       title: Container(
-          margin: EdgeInsets.only(left: 10),
+          margin: const EdgeInsets.only(left: 10),
           width: pageSize.width / 1.3,
-          child: SearchDon()),
+          child: const SearchDon()),
       hasBackButton: true,
-      body: QueryBody(),
+      body: const QueryBody(),
     );
   }
 }
 
 class SearchDon extends StatefulWidget {
-  const SearchDon({Key? key}) : super(key: key);
+  const SearchDon({super.key});
 
   @override
   State<SearchDon> createState() => _SearchDonState();
@@ -51,7 +50,7 @@ class _SearchDonState extends State<SearchDon> {
     return TextField(
       controller: controller,
       textInputAction: TextInputAction.search,
-      decoration: InputDecoration(
+      decoration: const InputDecoration(
         filled: true,
         fillColor: Colors.white,
         isCollapsed: true,
