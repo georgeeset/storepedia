@@ -22,6 +22,8 @@ const String partsCollection = 'parts';
 const String userCollection = 'users';
 const String company = 'company';
 const String branch = 'branch';
+const String price = 'price';
+const String quantity = 'quantity';
 
 const String dialogTitleAddPart = 'Uncompleted Form';
 const String dialogBodyAddPart =

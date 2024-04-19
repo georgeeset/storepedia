@@ -35,27 +35,35 @@ class Part {
   String? markedBadByUid;
   String? reasonForMarkingBad;
 
-  Part({
-    this.partName,
-    this.partDescription,
-    this.partNumber,
-    this.storeId,
-    this.storeLocation,
-    this.addedBy,
-    this.addedById,
-    this.dateAdded,
-    this.lastEditedBy,
-    this.section,
-    this.brand,
-    this.likesCount,
-    this.searchKeywords,
-    this.photo,
-    this.markedBadByUid,
-    this.reasonForMarkingBad,
-    this.partUid,
-    this.isExhausted = false,
-    this.markExhaustedTime,
-  });
+  String? price;
+  int? quantity;
+  String? company;
+  String? branch;
+
+  Part(
+      {this.partName,
+      this.partDescription,
+      this.partNumber,
+      this.storeId,
+      this.storeLocation,
+      this.addedBy,
+      this.addedById,
+      this.dateAdded,
+      this.lastEditedBy,
+      this.section,
+      this.brand,
+      this.likesCount,
+      this.searchKeywords,
+      this.photo,
+      this.markedBadByUid,
+      this.reasonForMarkingBad,
+      this.partUid,
+      this.isExhausted = false,
+      this.markExhaustedTime,
+      this.price,
+      this.quantity,
+      this.company,
+      this.branch});
 
   Part.fromMap({DocumentSnapshot? snapshot, Map<String, dynamic>? mapFormat}) {
     Map<String, dynamic> data;
@@ -68,6 +76,7 @@ class Part {
         throw ('No Valid Input');
       }
     }
+
     partName = data[string_constants.partName];
     partDescription = data[string_constants.partDescription];
     partNumber = data[string_constants.partNumber];
@@ -88,6 +97,11 @@ class Part {
     markedBadByUid = data[string_constants.markedBadByUid];
     reasonForMarkingBad = data[string_constants.reasonFormarkingBad];
     partUid = snapshot?.id;
+
+    price = data[string_constants.price];
+    quantity = data[string_constants.quantity];
+    company = data[string_constants.company];
+    branch = data[string_constants.branch];
   }
 
   Map<String, dynamic> toMap() => {
@@ -109,50 +123,60 @@ class Part {
         string_constants.photo: photo,
         string_constants.markedBadByUid: markedBadByUid,
         string_constants.reasonFormarkingBad: reasonForMarkingBad,
+        string_constants.price: price,
+        string_constants.quantity: quantity,
+        string_constants.company: company,
+        string_constants.branch: branch
       };
 
-  copyWith({
-    String? partName,
-    String? partDescription,
-    String? partNumber,
-    String? storeId,
-    String? storeLocation,
-    String? addedBy,
-    String? addedById,
-    int? dateAdded,
-    String? lastEditedBy,
-    String? section,
-    String? brand,
-    int? likesCount,
-    List<String>? searchKeywords,
-    String? photo,
-    String? markedBadByUid,
-    String? reasonForMarkingBad,
-    String? partUid,
-    bool? isExhausted,
-    int? markExhaustedTime,
-  }) {
+  copyWith(
+      {String? partName,
+      String? partDescription,
+      String? partNumber,
+      String? storeId,
+      String? storeLocation,
+      String? addedBy,
+      String? addedById,
+      int? dateAdded,
+      String? lastEditedBy,
+      String? section,
+      String? brand,
+      int? likesCount,
+      List<String>? searchKeywords,
+      String? photo,
+      String? markedBadByUid,
+      String? reasonForMarkingBad,
+      String? partUid,
+      bool? isExhausted,
+      int? markExhaustedTime,
+      String? price,
+      int? quantity,
+      String? company,
+      String? branch}) {
     return Part(
-      partName: partName ?? this.partName,
-      partDescription: partDescription ?? this.partDescription,
-      partNumber: partNumber ?? this.partNumber,
-      storeId: storeId ?? this.storeId,
-      storeLocation: storeLocation ?? this.storeLocation,
-      addedBy: addedBy ?? this.addedBy,
-      addedById: addedById ?? this.addedById,
-      dateAdded: dateAdded ?? this.dateAdded,
-      lastEditedBy: lastEditedBy ?? this.lastEditedBy,
-      section: section ?? this.section,
-      brand: brand ?? this.brand,
-      likesCount: likesCount ?? this.likesCount,
-      searchKeywords: searchKeywords ?? this.searchKeywords,
-      photo: photo ?? this.photo,
-      markedBadByUid: markedBadByUid ?? this.markedBadByUid,
-      reasonForMarkingBad: reasonForMarkingBad ?? this.reasonForMarkingBad,
-      partUid: partUid ?? this.partUid,
-      isExhausted: isExhausted ?? this.isExhausted,
-      markExhaustedTime: markExhaustedTime ?? this.markExhaustedTime,
-    );
+        partName: partName ?? this.partName,
+        partDescription: partDescription ?? this.partDescription,
+        partNumber: partNumber ?? this.partNumber,
+        storeId: storeId ?? this.storeId,
+        storeLocation: storeLocation ?? this.storeLocation,
+        addedBy: addedBy ?? this.addedBy,
+        addedById: addedById ?? this.addedById,
+        dateAdded: dateAdded ?? this.dateAdded,
+        lastEditedBy: lastEditedBy ?? this.lastEditedBy,
+        section: section ?? this.section,
+        brand: brand ?? this.brand,
+        likesCount: likesCount ?? this.likesCount,
+        searchKeywords: searchKeywords ?? this.searchKeywords,
+        photo: photo ?? this.photo,
+        markedBadByUid: markedBadByUid ?? this.markedBadByUid,
+        reasonForMarkingBad: reasonForMarkingBad ?? this.reasonForMarkingBad,
+        partUid: partUid ?? this.partUid,
+        isExhausted: isExhausted ?? this.isExhausted,
+        markExhaustedTime: markExhaustedTime ?? this.markExhaustedTime,
+        price: price ?? this.price,
+        quantity: quantity ?? this.quantity,
+        company: company ?? this.company,
+        branch: branch ?? this.branch);
   }
 
   clear() {
