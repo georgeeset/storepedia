@@ -20,6 +20,8 @@ const String markedBadByUid = 'markedbadbyuid';
 const String reasonFormarkingBad = 'reasonformarkingbad';
 const String partsCollection = 'parts';
 const String userCollection = 'users';
+const String company = 'company';
+const String branch = 'branch';
 
 const String dialogTitleAddPart = 'Uncompleted Form';
 const String dialogBodyAddPart =

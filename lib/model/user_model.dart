@@ -18,27 +18,32 @@ class UserModel {
 
   /// With access level you can control
   /// who has access to do some tasks
-  int accessLevel=0;
+  int accessLevel = 0;
 
-  UserModel({
-    this.userName,
-    this.deviceId,
-    this.email,
-    this.userId,
-    this.partsAddedCount,
-    this.accessLevel=0,
-  });
+  String? company;
+  String? branch;
+
+  UserModel(
+      {this.userName,
+      this.deviceId,
+      this.email,
+      this.userId,
+      this.partsAddedCount,
+      this.accessLevel = 0,
+      this.company,
+      this.branch});
 
   UserModel.fromMap({required DocumentSnapshot snapshot}) {
-    Map<String,dynamic> data=snapshot.data()as Map<String,dynamic>;
-     
-      userName= data[StringConstants.userName];
-      deviceId= data[StringConstants.deviceId];
-      email= data[StringConstants.email];
-      userId= data[StringConstants.userId];
-      partsAddedCount= data[StringConstants.partsAddedCount];
-      accessLevel= data[StringConstants.accessLevel]??0;
-    
+    Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
+
+    userName = data[StringConstants.userName];
+    deviceId = data[StringConstants.deviceId];
+    email = data[StringConstants.email];
+    userId = data[StringConstants.userId];
+    partsAddedCount = data[StringConstants.partsAddedCount];
+    accessLevel = data[StringConstants.accessLevel] ?? 0;
+    company = data[StringConstants.company];
+    branch = data[StringConstants.branch];
   }
 
   Map<String, dynamic> get toMap => {
@@ -48,23 +53,28 @@ class UserModel {
         StringConstants.userId: userId,
         StringConstants.partsAddedCount: partsAddedCount,
         StringConstants.accessLevel: accessLevel,
+        StringConstants.company: company,
+        StringConstants.branch: branch
       };
 
-  copyWith({
-    String? userName,
-    String? deviceId,
-    String? email,
-    String? userId,
-    int? partsAddedCount,
-    int? accessLevel,
-  }) {
+  copyWith(
+      {String? userName,
+      String? deviceId,
+      String? email,
+      String? userId,
+      int? partsAddedCount,
+      int? accessLevel,
+      String? company,
+      String? branch}) {
     return UserModel(
         userName: userName ?? this.userName,
         deviceId: deviceId ?? this.deviceId,
         email: email ?? this.email,
         userId: userId ?? this.userId,
         partsAddedCount: partsAddedCount ?? this.partsAddedCount,
-        accessLevel: accessLevel ?? this.accessLevel);
+        accessLevel: accessLevel ?? this.accessLevel,
+        company: company ?? this.company,
+        branch: branch ?? this.branch);
   }
 
   bool hasName() => userName != null;
