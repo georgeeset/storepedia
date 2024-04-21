@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../constants/string_constants.dart' as StringConstants;
+import '../constants/string_constants.dart' as string_constants;
 
 class UserModel {
   String? userName;
@@ -23,6 +23,8 @@ class UserModel {
   String? company;
   String? branch;
 
+  bool isAdmin = false;
+
   UserModel(
       {this.userName,
       this.deviceId,
@@ -31,30 +33,33 @@ class UserModel {
       this.partsAddedCount,
       this.accessLevel = 0,
       this.company,
-      this.branch});
+      this.branch,
+      this.isAdmin = false});
 
   UserModel.fromMap({required DocumentSnapshot snapshot}) {
     Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
 
-    userName = data[StringConstants.userName];
-    deviceId = data[StringConstants.deviceId];
-    email = data[StringConstants.email];
-    userId = data[StringConstants.userId];
-    partsAddedCount = data[StringConstants.partsAddedCount];
-    accessLevel = data[StringConstants.accessLevel] ?? 0;
-    company = data[StringConstants.company];
-    branch = data[StringConstants.branch];
+    userName = data[string_constants.userName];
+    deviceId = data[string_constants.deviceId];
+    email = data[string_constants.email];
+    userId = data[string_constants.userId];
+    partsAddedCount = data[string_constants.partsAddedCount];
+    accessLevel = data[string_constants.accessLevel] ?? 0;
+    company = data[string_constants.company];
+    branch = data[string_constants.branch];
+    isAdmin = data[string_constants.isAdmin] ?? false;
   }
 
   Map<String, dynamic> get toMap => {
-        StringConstants.userName: userName,
-        StringConstants.deviceId: deviceId,
-        StringConstants.email: email,
-        StringConstants.userId: userId,
-        StringConstants.partsAddedCount: partsAddedCount,
-        StringConstants.accessLevel: accessLevel,
-        StringConstants.company: company,
-        StringConstants.branch: branch
+        string_constants.userName: userName,
+        string_constants.deviceId: deviceId,
+        string_constants.email: email,
+        string_constants.userId: userId,
+        string_constants.partsAddedCount: partsAddedCount,
+        string_constants.accessLevel: accessLevel,
+        string_constants.company: company,
+        string_constants.branch: branch,
+        string_constants.isAdmin: isAdmin
       };
 
   copyWith(
@@ -65,7 +70,8 @@ class UserModel {
       int? partsAddedCount,
       int? accessLevel,
       String? company,
-      String? branch}) {
+      String? branch,
+      bool? isAdmin}) {
     return UserModel(
         userName: userName ?? this.userName,
         deviceId: deviceId ?? this.deviceId,
@@ -74,7 +80,8 @@ class UserModel {
         partsAddedCount: partsAddedCount ?? this.partsAddedCount,
         accessLevel: accessLevel ?? this.accessLevel,
         company: company ?? this.company,
-        branch: branch ?? this.branch);
+        branch: branch ?? this.branch,
+        isAdmin: isAdmin ?? this.isAdmin);
   }
 
   bool hasName() => userName != null;

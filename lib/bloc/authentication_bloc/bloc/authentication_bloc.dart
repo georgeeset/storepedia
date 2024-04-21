@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -58,6 +60,18 @@ class AuthenticationBloc
         emit(const AuthenticationFailedState(
             errorMessage: 'Passwords not consistent'));
       }
+    });
+
+    on<ResetPasswordEvent>((event, emit) async {
+      String email = event.email;
+      emit(AuthenticatingState());
+
+      try {
+        await _auth.sendPasswordResetEmail(email: email);
+      } on FirebaseAuthException catch (err) {
+        emit(AuthenticationFailedState(errorMessage: err.message.toString()));
+      }
+      emit(AuthEmailSentState());
     });
 
     on<SignOutEvent>((event, emit) {

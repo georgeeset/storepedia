@@ -8,7 +8,6 @@ import 'package:storepedia/bloc/authentication_bloc/bloc/authentication_bloc.dar
 import 'package:storepedia/bloc/part_upload_wizard/bloc/partuploadwizard_bloc.dart';
 import 'package:storepedia/bloc/photo_manager_bloc/photomanager_bloc.dart';
 import 'package:storepedia/bloc/signin_option_bloc/bloc/signinoption_bloc.dart';
-import 'package:storepedia/cubit/connectivity_cubit/cubit/connectivity_cubit.dart';
 import 'package:storepedia/cubit/exhausted_items_manager_cubit/cubit/exhausteditemsmanager_cubit.dart';
 import 'package:storepedia/cubit/form_level_cubit/formlevel_cubit.dart';
 import 'package:storepedia/cubit/recent_item_cubit/cubit/recentitems_cubit.dart';
@@ -62,9 +61,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider<ConnectivityCubit>(
-          create: (context) => ConnectivityCubit(),
-        ),
         BlocProvider<AuthenticationBloc>(
           create: (context) => AuthenticationBloc(),
         ),
@@ -168,7 +164,7 @@ class MyApp extends StatelessWidget {
                   backgroundColor: Colors.pink,
                   duration: const Duration(
                       seconds: number_constants.errorSnackBarDelay),
-                  content: Text('Login Failed !\n${authState.errorMessage}'),
+                  content: Text('Failed !\n${authState.errorMessage}'),
                 ),
               );
             }

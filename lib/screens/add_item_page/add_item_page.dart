@@ -6,7 +6,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:pinch_zoom_image_last/pinch_zoom_image_last.dart';
 import 'package:storepedia/bloc/part_upload_wizard/bloc/partuploadwizard_bloc.dart';
 import 'package:storepedia/bloc/photo_manager_bloc/photomanager_bloc.dart';
-import 'package:storepedia/cubit/connectivity_cubit/cubit/connectivity_cubit.dart';
 import 'package:storepedia/cubit/edit_item_cubit/edititem_cubit.dart';
 import 'package:storepedia/cubit/form_level_cubit/formlevel_cubit.dart';
 import 'package:storepedia/cubit/photo_upload_cubit/photoupload_cubit.dart';
@@ -283,35 +282,21 @@ class AddItemPage extends StatelessWidget {
                                     context.read<FormLevelCubit>().state;
                                 var userInfo =
                                     context.read<UserManagerCubit>().state;
-                                var network =
-                                    context.read<ConnectivityCubit>().state;
                                 if (userInfo is UserLoadedState) {
                                   context
                                       .read<EditItemCubit>()
                                       .updateTheRestInfo(userInfo.userData);
                                 }
 
-                                if (network is ConnectivityOffline) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      backgroundColor: Colors.pink,
-                                      duration: Duration(
-                                          seconds: number_constants
-                                              .errorSnackBarDelay),
-                                      content: Text('Your Device is Offline!'),
-                                    ),
-                                  );
-                                } else {
-                                  Future.delayed(
-                                      const Duration(seconds: 1),
-                                      () => context
-                                          .read<PartuploadwizardBloc>()
-                                          .add(UploadPartEvent(
-                                              part: context
-                                                  .read<EditItemCubit>()
-                                                  .state,
-                                              score: score)));
-                                }
+                                Future.delayed(
+                                    const Duration(seconds: 1),
+                                    () => context
+                                        .read<PartuploadwizardBloc>()
+                                        .add(UploadPartEvent(
+                                            part: context
+                                                .read<EditItemCubit>()
+                                                .state,
+                                            score: score)));
                               },
                               child: Text(state.partUid == null
                                   ? 'Add Part'

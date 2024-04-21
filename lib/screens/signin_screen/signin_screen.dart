@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:storepedia/bloc/authentication_bloc/bloc/authentication_bloc.dart';
 import 'package:storepedia/bloc/signin_option_bloc/bloc/signinoption_bloc.dart';
-import 'package:storepedia/cubit/connectivity_cubit/cubit/connectivity_cubit.dart';
 import 'package:storepedia/cubit/email_field_cubit/email_textfield_cubit.dart';
 import 'package:storepedia/cubit/password_field_cubit/password_textfield_cubit.dart';
 import 'package:storepedia/cubit/repeat_password_textfield_cubit/cubit/repeatpasswordtextfield_cubit.dart';
@@ -29,11 +28,102 @@ class SigninScreen extends StatelessWidget {
               if (state is RegisterState) {
                 return const RegisterWidget();
               } else {
-                return const SigninWidget();
+                if (state is SigninState) {
+                  return const SigninWidget();
+                } else {
+                  return BlocListener<AuthenticationBloc, AuthenticationState>(
+                    listener: (context, state) {
+                      if (state is AuthEmailSentState) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            backgroundColor: Colors.purpleAccent,
+                            duration: Duration(
+                                seconds: number_constants.errorSnackBarDelay),
+                            content: Text('Reset Email Sent !'),
+                          ),
+                        );
+
+                        context.read<SigninoptionBloc>().add(SigninEvent());
+                      }
+                    },
+                    child: const ForgotPasswordWidget(),
+                  );
+                }
               }
             },
           ),
         ),
+      ),
+    );
+  }
+}
+
+class ForgotPasswordWidget extends StatelessWidget {
+  const ForgotPasswordWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<EmailTextfieldCubit>(
+          create: (context) => EmailTextfieldCubit(),
+        ),
+      ],
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          const EmailInputField(),
+          Container(
+            height: 10.0,
+          ),
+          Container(
+            height: 20.0,
+          ),
+          const ButtonSwitcher(
+            commandButton: ForgotPasswordActionButtons(),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class ForgotPasswordActionButtons extends StatelessWidget {
+  const ForgotPasswordActionButtons({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ConstrainedBox(
+      constraints:
+          const BoxConstraints(maxWidth: number_constants.maxTextFieldWidth),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          OutlinedButton(
+            onPressed: () {
+              context.read<SigninoptionBloc>().add(SigninEvent());
+            },
+            child: const Text('Signin'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              final emailCubit = context.read<EmailTextfieldCubit>().state;
+
+              FocusScopeNode currentFocus = FocusScope.of(context);
+              if (!currentFocus.hasPrimaryFocus) {
+                currentFocus.unfocus();
+              }
+
+              if (emailCubit is EmailTextfieldOk) {
+                context
+                    .read<AuthenticationBloc>()
+                    .add(ResetPasswordEvent(email: emailCubit.email));
+              }
+            },
+            child: const Text('Reset'),
+          ),
+        ],
       ),
     );
   }
@@ -59,25 +149,23 @@ class RegisterWidget extends StatelessWidget {
               firstPassword: context.read<PasswordTextfieldCubit>()),
         ),
       ],
-      child: Container(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const EmailInputField(),
-            Container(height: 15.0),
-            const PasswordInputField(),
-            Container(
-              height: 15.0,
-            ),
-            const RepeatPasswordInputField(),
-            Container(
-              height: 15.0,
-            ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const EmailInputField(),
+          Container(height: 15.0),
+          const PasswordInputField(),
+          Container(
+            height: 15.0,
+          ),
+          const RepeatPasswordInputField(),
+          Container(
+            height: 15.0,
+          ),
 
-            const ButtonSwitcher(commandButton: SignupSigninButton())
-            //SignupSigninButton()
-          ],
-        ),
+          const ButtonSwitcher(commandButton: SignupSigninButton())
+          //SignupSigninButton()
+        ],
       ),
     );
   }
@@ -186,57 +274,48 @@ class SigninSignupButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ConnectivityCubit, ConnectivityState>(
-      builder: (context, state) {
-        return ConstrainedBox(
-          constraints: const BoxConstraints(
-              maxWidth: number_constants.maxTextFieldWidth),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              // TextButton(
-              //   onPressed: () {
-              //     context.read<SigninoptionBloc>().add(ForgotPasswordEvent());
-              //   },
-              //   child: Text('Forgot Password'),
-              // ),
-              OutlinedButton(
-                onPressed: () {
-                  context.read<SigninoptionBloc>().add(RegisterOptionEvent());
-                },
-                child: const Text('Register'),
-              ),
-              ElevatedButton(
-                onPressed: state is ConnectivityOffline
-                    ? null
-                    : () {
-                        final emailCubit =
-                            context.read<EmailTextfieldCubit>().state;
-                        final passwordCubit =
-                            context.read<PasswordTextfieldCubit>().state;
-                        FocusScopeNode currentFocus = FocusScope.of(context);
-                        if (!currentFocus.hasPrimaryFocus) {
-                          currentFocus.unfocus();
-                        }
-
-                        if (emailCubit is EmailTextfieldOk &&
-                            passwordCubit is PasswordTextfieldOk) {
-                          context.read<AuthenticationBloc>().add(
-                                EmailPasswordSigninEvent(
-                                  email: emailCubit.email,
-                                  password: passwordCubit.password,
-                                ),
-                              );
-                        } else {
-                          print('signin Failed');
-                        }
-                      },
-                child: const Text('Sign in'),
-              ),
-            ],
+    return ConstrainedBox(
+      constraints:
+          const BoxConstraints(maxWidth: number_constants.maxTextFieldWidth),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          TextButton(
+            onPressed: () {
+              context.read<SigninoptionBloc>().add(ForgotPasswordEvent());
+            },
+            child: const Text('Forgot Password'),
           ),
-        );
-      },
+          OutlinedButton(
+            onPressed: () {
+              context.read<SigninoptionBloc>().add(RegisterOptionEvent());
+            },
+            child: const Text('Register'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              final emailCubit = context.read<EmailTextfieldCubit>().state;
+              final passwordCubit =
+                  context.read<PasswordTextfieldCubit>().state;
+              FocusScopeNode currentFocus = FocusScope.of(context);
+              if (!currentFocus.hasPrimaryFocus) {
+                currentFocus.unfocus();
+              }
+
+              if (emailCubit is EmailTextfieldOk &&
+                  passwordCubit is PasswordTextfieldOk) {
+                context.read<AuthenticationBloc>().add(
+                      EmailPasswordSigninEvent(
+                        email: emailCubit.email,
+                        password: passwordCubit.password,
+                      ),
+                    );
+              }
+            },
+            child: const Text('Sign in'),
+          ),
+        ],
+      ),
     );
   }
 }

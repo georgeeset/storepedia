@@ -20,6 +20,9 @@ class PasswordInputField extends StatelessWidget {
             enabled: true,
             textAlign: TextAlign.justify,
             textInputAction: TextInputAction.done,
+            autocorrect: true,
+            enableSuggestions: true,
+            autofillHints: const [],
             onChanged: (val) {
               final cubitHandle = context.read<PasswordTextfieldCubit>();
               cubitHandle.updateText(val);

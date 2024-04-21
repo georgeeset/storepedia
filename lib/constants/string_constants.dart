@@ -22,6 +22,7 @@ const String partsCollection = 'parts';
 const String userCollection = 'users';
 const String company = 'company';
 const String branch = 'branch';
+const String isAdmin = 'isadmin';
 const String price = 'price';
 const String quantity = 'quantity';
 
