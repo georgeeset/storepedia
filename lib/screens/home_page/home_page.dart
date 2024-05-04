@@ -96,17 +96,22 @@ class HomePage extends StatelessWidget {
                   decoration: const BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(30.0),
-                        topRight: Radius.circular(30.0)),
+                        topLeft: Radius.circular(5.0),
+                        topRight: Radius.circular(50.0)),
                   ),
-                  child: ListView(
-                    children: [
-                      const Divider(),
-                      Container(
-                        height: sizeData.height / 2.5,
-                        color: Colors.black12,
-                        child: ListView(
-                          scrollDirection: Axis.horizontal,
+
+                  //TODO Add scrollbar on webview
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const Divider(),
+                        Wrap(
+                          direction: Axis.horizontal,
+                          // gridDelegate:
+                          //     const SliverGridDelegateWithFixedCrossAxisCount(
+                          //         crossAxisCount: 3),
                           children: [
                             Card(
                               child: InkWell(
@@ -115,9 +120,16 @@ class HomePage extends StatelessWidget {
                                   Navigator.pushNamed(
                                       context, SearchPage.routName);
                                 },
-                                child: SizedBox(
-                                  width: horizontalListWidth,
-                                  height: horizontalListWidth,
+                                child: Container(
+                                  width: sizeData.width / 5,
+                                  height: sizeData.width / 5,
+                                  constraints: const BoxConstraints(
+                                    minWidth: 120,
+                                    minHeight: 120,
+                                    maxHeight: 200,
+                                    maxWidth: 200,
+                                  ),
+                                  padding: const EdgeInsets.all(5.0),
                                   child: const Center(
                                     child: Column(
                                       mainAxisAlignment:
@@ -226,8 +238,14 @@ class HomePage extends StatelessWidget {
                                   //loading indicatior if loading
                                   if (state is UserLoadingState) {
                                     return Container(
-                                      width: horizontalListWidth,
-                                      height: horizontalListWidth,
+                                      width: sizeData.width / 5,
+                                      height: sizeData.width / 5,
+                                      constraints: const BoxConstraints(
+                                        minWidth: 120,
+                                        minHeight: 120,
+                                        maxHeight: 200,
+                                        maxWidth: 200,
+                                      ),
                                       padding: const EdgeInsets.symmetric(
                                           horizontal: 10.0),
                                       child: const Center(
@@ -319,28 +337,24 @@ class HomePage extends StatelessWidget {
                             Card(child: ExhaustedItems(sizeData: sizeData)),
                           ],
                         ),
-                      ),
-                      const Divider(),
-                      const Align(
-                          alignment: Alignment.topCenter,
-                          child: Text('Recently Added Store Items')),
-                      Container(
-                        width: sizeData.width,
-                        height: sizeData.height / 3,
-                        color: Colors.black12,
-                        child: BlocBuilder<RecentItemsCubit, List<Part>>(
+                        const Divider(),
+                        const Text('Recently Added Store Items'),
+                        BlocBuilder<RecentItemsCubit, List<Part>>(
                           builder: (context, recentItemState) {
-                            return ListView(
-                              scrollDirection: Axis.horizontal,
+                            return Wrap(
+                              direction: Axis.horizontal,
                               children: recentItemState
                                   .map((e) => SizedBox(
-                                      width: 150, child: OnePart(part: e)))
+                                        width: 150,
+                                        height: 200,
+                                        child: OnePart(part: e),
+                                      ))
                                   .toList(),
                             );
                           },
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   )
                   //child: TextField(),
                   ),
@@ -364,9 +378,16 @@ class AddStoreItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       splashColor: Colors.blue,
-      child: SizedBox(
-        width: sizeData.width / 2.1,
-        height: sizeData.width / 2.1,
+      child: Container(
+        width: sizeData.width / 5,
+        height: sizeData.width / 5,
+        constraints: const BoxConstraints(
+          minWidth: 120,
+          minHeight: 120,
+          maxHeight: 200,
+          maxWidth: 200,
+        ),
+        padding: const EdgeInsets.all(5.0),
         child: const Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -390,6 +411,8 @@ class AddStoreItem extends StatelessWidget {
             goodOption: string_constants.yes, //false
             badOption: string_constants.no, //true
           );
+
+          if (!context.mounted) return;
 
           if (dialogResult == true) {
             context.read<EditItemCubit>().clearPart();
@@ -416,9 +439,15 @@ class EditProfileOption extends StatelessWidget {
     return InkWell(
       splashColor: Colors.blue,
       child: Container(
-        width: sizeData.width / 2.1,
-        height: sizeData.width / 2.1,
-        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+        width: sizeData.width / 5,
+        height: sizeData.width / 5,
+        constraints: const BoxConstraints(
+          minWidth: 120,
+          minHeight: 120,
+          maxHeight: 200,
+          maxWidth: 200,
+        ),
+        padding: const EdgeInsets.all(5.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -466,9 +495,16 @@ class ExhaustedItems extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       splashColor: Colors.blue,
-      child: SizedBox(
-        width: sizeData.width / 2.1,
-        height: sizeData.width / 2.1,
+      child: Container(
+        width: sizeData.width / 5,
+        height: sizeData.width / 5,
+        constraints: const BoxConstraints(
+          minWidth: 120,
+          minHeight: 120,
+          maxHeight: 200,
+          maxWidth: 200,
+        ),
+        padding: const EdgeInsets.all(5.0),
         child: const Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

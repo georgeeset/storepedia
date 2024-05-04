@@ -41,7 +41,7 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  // SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+  // SystemChrome.setSystemUIOverlayS`tyle(const SystemUiOverlayStyle(
   //   systemNavigationBarColor: Colors.white, // navigation bar color
   //   statusBarColor: Colors.blue, // status bar color
   //   statusBarBrightness: Brightness.dark, //status bar brigtness
