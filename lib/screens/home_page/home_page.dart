@@ -1,5 +1,4 @@
 import 'package:about/about.dart';
-import 'package:storepedia/bloc/authentication_bloc/bloc/authentication_bloc.dart';
 import 'package:storepedia/bloc/photo_manager_bloc/photomanager_bloc.dart';
 import 'package:storepedia/cubit/edit_item_cubit/edititem_cubit.dart';
 import 'package:storepedia/cubit/form_level_cubit/formlevel_cubit.dart';
@@ -7,10 +6,8 @@ import 'package:storepedia/cubit/recent_item_cubit/cubit/recentitems_cubit.dart'
 import 'package:storepedia/cubit/user_manager_cubit/cubit/usermanager_cubit.dart';
 import 'package:storepedia/model/part.dart';
 import 'package:storepedia/screens/add_item_page/add_item_page.dart';
-import 'package:storepedia/screens/exhausted_items_page/exhausted_items_page.dart';
-import 'package:storepedia/screens/search_page/search_page.dart';
 import 'package:storepedia/widgets/input_editor.dart';
-import 'package:storepedia/widgets/loading_indicator.dart';
+import 'package:storepedia/widgets/menu_tiles.dart';
 import 'package:storepedia/widgets/one_part.dart';
 import 'package:storepedia/widgets/warining_dialog.dart';
 
@@ -96,336 +93,84 @@ class HomePage extends StatelessWidget {
                   decoration: const BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(5.0),
+                        topLeft: Radius.circular(50.0),
                         topRight: Radius.circular(50.0)),
                   ),
 
                   //TODO Add scrollbar on webview
-                  child: SingleChildScrollView(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        const Divider(),
-                        Wrap(
-                          direction: Axis.horizontal,
-                          // gridDelegate:
-                          //     const SliverGridDelegateWithFixedCrossAxisCount(
-                          //         crossAxisCount: 3),
+                  child: LayoutBuilder(builder: (context, constraints) {
+                    if (constraints.maxWidth < 700) {
+                      return SingleChildScrollView(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Card(
-                              child: InkWell(
-                                splashColor: Colors.blue,
-                                onTap: () {
-                                  Navigator.pushNamed(
-                                      context, SearchPage.routName);
-                                },
-                                child: Container(
-                                  width: sizeData.width / 5,
-                                  height: sizeData.width / 5,
-                                  constraints: const BoxConstraints(
-                                    minWidth: 120,
-                                    minHeight: 120,
-                                    maxHeight: 200,
-                                    maxWidth: 200,
-                                  ),
-                                  padding: const EdgeInsets.all(5.0),
-                                  child: const Center(
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Icon(
-                                          Icons.search,
-                                          size: 54,
-                                        ),
-                                        Text(
-                                          'Search Store Item',
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
+                            const Divider(),
+                            MenuTiles(
+                                sizeData: sizeData,
+                                horizontalListWidth: horizontalListWidth,
+                                horizontalListHeight: horizontalListHeight),
+                            const Divider(),
+                            const Text('Recently Added Store Items'),
+                            BlocBuilder<RecentItemsCubit, List<Part>>(
+                              builder: (context, recentItemState) {
+                                return Wrap(
+                                  direction: Axis.horizontal,
+                                  children: recentItemState
+                                      .map((e) => SizedBox(
+                                            width: 150,
+                                            height: 200,
+                                            child: OnePart(part: e),
+                                          ))
+                                      .toList(),
+                                );
+                              },
                             ),
-                            Card(
-                              child: BlocConsumer<UserManagerCubit,
-                                  UserManagerState>(
-                                listener: (context, state) {
-                                  // check if UserManager has loaded and give option for reloading
-                                  // if failed, reload option will be provided.
-                                  var authSample =
-                                      context.read<AuthenticationBloc>().state;
-
-                                  if (state is UserLoadingErrorState) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                          backgroundColor: Colors.pink,
-                                          duration: const Duration(
-                                              seconds: number_constants
-                                                  .errorSnackBarDelay),
-                                          content: const Text(string_constants
-                                              .errorLoadingProfile),
-                                          action: SnackBarAction(
-                                            label: 'Reload',
-                                            onPressed: () {
-                                              context
-                                                  .read<UserManagerCubit>()
-                                                  .retryLoading();
-                                            },
-                                          )),
-                                    );
-                                  }
-
-                                  // if usermanagerState is loaded,
-                                  // if loaded, go adhead and display
-                                  //recent parts added to db
-
-                                  if (state is UserLoadedState) {
-                                    context
-                                        .read<RecentItemsCubit>()
-                                        .listenForRecentParts();
-                                  }
-
-                                  /// this check should be the last one so we confirm how serious the
-                                  /// user is before app access is checked.
-
-                                  if (state is UserLoadedState &&
-                                      state.userData.accessLevel == 0 &&
-                                      state.userData.hasName() &&
-                                      authSample is AuthenticatedState &&
-                                      authSample.user.emailVerified) {
-                                    WarningDialog.boolActionsDialog(
-                                            context: context,
-                                            titleText: string_constants
-                                                .noPermisionTitle,
-                                            bodyText: string_constants
-                                                .noPermisionBody,
-                                            goodOption: 'OK',
-                                            isDismissible: false)
-                                        .then(
-                                      (result) =>
-                                          context.read<AuthenticationBloc>()
-                                            ..add(SignOutEvent()),
-                                    );
-                                  }
-
-                                  // if you observe device info change,
-                                  // just display snackbar to inform for now.
-
-                                  if (state is UserLoadedState) {
-                                    SnackBar(
-                                      backgroundColor: Theme.of(context)
-                                          .colorScheme
-                                          .secondary,
-                                      duration: const Duration(
-                                          seconds: number_constants
-                                              .errorSnackBarDelay),
-                                      content: const Text(
-                                          string_constants.deviceChanged),
-                                      // action: SnackBarAction(
-                                      //   label: 'Reload',
-                                      //   onPressed: () {
-                                      //     context
-                                      //         .read<UserManagerCubit>()
-                                      //         .retryLoading();
-                                      //   },
-                                      // ),
-                                    );
-                                  }
-                                },
-                                builder: (context, state) {
-                                  //loading indicatior if loading
-                                  if (state is UserLoadingState) {
-                                    return Container(
-                                      width: sizeData.width / 5,
-                                      height: sizeData.width / 5,
-                                      constraints: const BoxConstraints(
-                                        minWidth: 120,
-                                        minHeight: 120,
-                                        maxHeight: 200,
-                                        maxWidth: 200,
-                                      ),
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 10.0),
-                                      child: const Center(
-                                          child: LoadingIndicator()),
-                                    );
-                                  }
-
-                                  // deside what to display if user is loaded
-                                  // and level of user's registeration
-                                  if (state is UserLoadedState) {
-                                    var user = context
-                                        .read<AuthenticationBloc>()
-                                        .state;
-
-                                    if (state.userData.hasName()) {
-                                      if (user is AuthenticatedState) {
-                                        if (user.user.emailVerified) {
-                                          return AddStoreItem(
-                                              sizeData: sizeData);
-                                        } else {
-                                          return Container(
-                                            width: horizontalListWidth,
-                                            height: horizontalListHeight,
-                                            padding: const EdgeInsets.all(10.0),
-                                            child: InkWell(
-                                              child: const Center(
-                                                child: Text(
-                                                  string_constants
-                                                      .emailVerificationMessage,
-                                                  softWrap: true,
-                                                ),
-                                              ),
-                                              onTap: () {
-                                                context
-                                                    .read<UserManagerCubit>()
-                                                    .verifyEmail();
-                                              },
-                                            ),
-                                          );
-                                        }
-                                      }
-                                    } else {
-                                      return EditProfileOption(
-                                        sizeData: sizeData,
-                                      );
-                                    }
-                                  }
-                                  if (state is EmailVerificationSentState) {
-                                    return Container(
-                                        width: horizontalListWidth,
-                                        height: horizontalListHeight,
-                                        padding: const EdgeInsets.all(10.0),
-                                        child: InkWell(
-                                          child: Center(
-                                            child: Text(
-                                              '${string_constants.emailVerificationSentMessage} ${state.email}',
-                                              softWrap: true,
-                                            ),
-                                          ),
-                                          onTap: () {
-                                            context
-                                                .read<AuthenticationBloc>()
-                                                .add(SignOutEvent());
-                                          },
-                                        ));
-                                  }
-                                  return SizedBox(
-                                    width: horizontalListWidth,
-                                    height: horizontalListHeight,
-                                    child: Center(
-                                      child: IconButton(
-                                        onPressed: () {
-                                          context
-                                              .read<UserManagerCubit>()
-                                              .retryLoading();
-                                        },
-                                        icon: const Icon(Icons.error, size: 42),
-                                      ),
-                                    ),
-                                  );
-                                },
-                              ),
-                            ),
-                            // ElevatedButton(
-                            //     onPressed: () => context
-                            //         .read<AuthenticationBloc>()
-                            //         .add(SignOutEvent()),
-                            //     child: Text('Signout'))
-                            Card(child: ExhaustedItems(sizeData: sizeData)),
                           ],
                         ),
-                        const Divider(),
-                        const Text('Recently Added Store Items'),
-                        BlocBuilder<RecentItemsCubit, List<Part>>(
-                          builder: (context, recentItemState) {
-                            return Wrap(
-                              direction: Axis.horizontal,
-                              children: recentItemState
-                                  .map((e) => SizedBox(
-                                        width: 150,
-                                        height: 200,
-                                        child: OnePart(part: e),
-                                      ))
-                                  .toList(),
-                            );
-                          },
-                        ),
-                      ],
-                    ),
-                  )
+                      );
+                    } else {
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          MenuTiles(
+                            sizeData: sizeData,
+                            horizontalListWidth: horizontalListWidth,
+                            horizontalListHeight: horizontalListHeight,
+                            itemsDirection: Axis.vertical,
+                          ),
+                          const SizedBox(
+                            width: 50,
+                          ),
+                          Container(
+                            width: sizeData.width / 1.3,
+                            constraints: const BoxConstraints(maxWidth: 600),
+                            child: BlocBuilder<RecentItemsCubit, List<Part>>(
+                              builder: (context, recentItemState) {
+                                return Wrap(
+                                  direction: Axis.horizontal,
+                                  children: recentItemState
+                                      .map((e) => SizedBox(
+                                            width: 150,
+                                            height: 200,
+                                            child: OnePart(part: e),
+                                          ))
+                                      .toList(),
+                                );
+                              },
+                            ),
+                          ),
+                        ],
+                      );
+                    }
+                  })
                   //child: TextField(),
                   ),
             ),
           ],
         ),
       ),
-    );
-  }
-}
-
-class AddStoreItem extends StatelessWidget {
-  const AddStoreItem({
-    super.key,
-    required this.sizeData,
-  });
-
-  final Size sizeData;
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      splashColor: Colors.blue,
-      child: Container(
-        width: sizeData.width / 5,
-        height: sizeData.width / 5,
-        constraints: const BoxConstraints(
-          minWidth: 120,
-          minHeight: 120,
-          maxHeight: 200,
-          maxWidth: 200,
-        ),
-        padding: const EdgeInsets.all(5.0),
-        child: const Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.add,
-              size: 54,
-            ),
-            Text(
-              'Add Item',
-            ),
-          ],
-        ),
-      ),
-      onTap: () async {
-        var score = context.read<FormLevelCubit>().state;
-        if (score > 0) {
-          var dialogResult = await WarningDialog.boolActionsDialog(
-            context: context,
-            titleText: string_constants.dialogTitleAddPart,
-            bodyText: string_constants.dialogBodyAddPart,
-            goodOption: string_constants.yes, //false
-            badOption: string_constants.no, //true
-          );
-
-          if (!context.mounted) return;
-
-          if (dialogResult == true) {
-            context.read<EditItemCubit>().clearPart();
-            context.read<PhotomanagerBloc>().add(RemovePhotoEvent());
-            context.read<FormLevelCubit>().clearScore();
-            Navigator.pushNamed(context, AddItemPage.routName);
-          } else {
-            Navigator.pushNamed(context, AddItemPage.routName);
-          }
-        } else {
-          Navigator.pushNamed(context, AddItemPage.routName);
-        }
-      },
     );
   }
 }
@@ -442,10 +187,10 @@ class EditProfileOption extends StatelessWidget {
         width: sizeData.width / 5,
         height: sizeData.width / 5,
         constraints: const BoxConstraints(
-          minWidth: 120,
-          minHeight: 120,
-          maxHeight: 200,
-          maxWidth: 200,
+          minWidth: 80,
+          minHeight: 80,
+          maxHeight: 120,
+          maxWidth: 120,
         ),
         padding: const EdgeInsets.all(5.0),
         child: Column(
@@ -478,48 +223,6 @@ class EditProfileOption extends StatelessWidget {
           },
           title: 'Your Name In Full \n This cannot be edited',
         );
-      },
-    );
-  }
-}
-
-class ExhaustedItems extends StatelessWidget {
-  const ExhaustedItems({
-    super.key,
-    required this.sizeData,
-  });
-
-  final Size sizeData;
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      splashColor: Colors.blue,
-      child: Container(
-        width: sizeData.width / 5,
-        height: sizeData.width / 5,
-        constraints: const BoxConstraints(
-          minWidth: 120,
-          minHeight: 120,
-          maxHeight: 200,
-          maxWidth: 200,
-        ),
-        padding: const EdgeInsets.all(5.0),
-        child: const Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.hourglass_empty,
-              size: 54,
-            ),
-            Text(
-              'Exhausted Items',
-            ),
-          ],
-        ),
-      ),
-      onTap: () async {
-        Navigator.pushNamed(context, ExhaustedItemsPage.routName);
       },
     );
   }
