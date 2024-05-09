@@ -25,6 +25,7 @@ const String branch = 'branch';
 const String isAdmin = 'isadmin';
 const String price = 'price';
 const String quantity = 'quantity';
+const String profilePhoto = 'profilephoto';
 
 const String dialogTitleAddPart = 'Uncompleted Form';
 const String dialogBodyAddPart =

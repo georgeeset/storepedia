@@ -24,17 +24,20 @@ class UserModel {
   String? branch;
 
   bool isAdmin = false;
+  String? profilePhoto;
 
-  UserModel(
-      {this.userName,
-      this.deviceId,
-      this.email,
-      this.userId,
-      this.partsAddedCount,
-      this.accessLevel = 0,
-      this.company,
-      this.branch,
-      this.isAdmin = false});
+  UserModel({
+    this.userName,
+    this.deviceId,
+    this.email,
+    this.userId,
+    this.partsAddedCount,
+    this.accessLevel = 0,
+    this.company,
+    this.branch,
+    this.isAdmin = false,
+    this.profilePhoto,
+  });
 
   UserModel.fromMap({required DocumentSnapshot snapshot}) {
     Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
@@ -48,6 +51,7 @@ class UserModel {
     company = data[string_constants.company];
     branch = data[string_constants.branch];
     isAdmin = data[string_constants.isAdmin] ?? false;
+    profilePhoto = data[string_constants.profilePhoto];
   }
 
   Map<String, dynamic> get toMap => {
@@ -59,29 +63,34 @@ class UserModel {
         string_constants.accessLevel: accessLevel,
         string_constants.company: company,
         string_constants.branch: branch,
-        string_constants.isAdmin: isAdmin
+        string_constants.isAdmin: isAdmin,
+        string_constants.profilePhoto: profilePhoto,
       };
 
-  copyWith(
-      {String? userName,
-      String? deviceId,
-      String? email,
-      String? userId,
-      int? partsAddedCount,
-      int? accessLevel,
-      String? company,
-      String? branch,
-      bool? isAdmin}) {
+  copyWith({
+    String? userName,
+    String? deviceId,
+    String? email,
+    String? userId,
+    int? partsAddedCount,
+    int? accessLevel,
+    String? company,
+    String? branch,
+    bool? isAdmin,
+    String? profilePhoto,
+  }) {
     return UserModel(
-        userName: userName ?? this.userName,
-        deviceId: deviceId ?? this.deviceId,
-        email: email ?? this.email,
-        userId: userId ?? this.userId,
-        partsAddedCount: partsAddedCount ?? this.partsAddedCount,
-        accessLevel: accessLevel ?? this.accessLevel,
-        company: company ?? this.company,
-        branch: branch ?? this.branch,
-        isAdmin: isAdmin ?? this.isAdmin);
+      userName: userName ?? this.userName,
+      deviceId: deviceId ?? this.deviceId,
+      email: email ?? this.email,
+      userId: userId ?? this.userId,
+      partsAddedCount: partsAddedCount ?? this.partsAddedCount,
+      accessLevel: accessLevel ?? this.accessLevel,
+      company: company ?? this.company,
+      branch: branch ?? this.branch,
+      isAdmin: isAdmin ?? this.isAdmin,
+      profilePhoto: profilePhoto ?? this.profilePhoto,
+    );
   }
 
   bool hasName() => userName != null;
