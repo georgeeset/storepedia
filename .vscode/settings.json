@@ -1,0 +1,5 @@
+{
+    "CodeGPT.Autocomplete.provider": "Ollama - deepseek-coder:base",
+    "CodeGPT.apiKey": "LM Studio",
+    "CodeGPT.Autocomplete.enabled": true
+}

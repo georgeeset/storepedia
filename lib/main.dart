@@ -27,6 +27,7 @@ import 'cubit/mark_exhausted_part_cubit/cubit/markexhaustedpart_cubit.dart';
 import 'cubit/part_query_manager.dart/cubit/partquerymanager_cubit.dart';
 import 'cubit/photo_upload_cubit/photoupload_cubit.dart';
 import 'cubit/repitition_cubit/cubit/repitition_cubit.dart';
+import 'screens/Profile_page/profile_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -122,7 +123,7 @@ class MyApp extends StatelessWidget {
                 ),
             // IntroductionPage.routName: (context) => IntroductionPage(),
             // UserTypeSelectionPage.routName: (context) => UserTypeSelectionPage(),
-            // ProfilePage.routName: (context) => ProfilePage(),
+            ProfilePage.routName: (context) => const ProfilePage(),
             // UserSignUpPage.routName: (context) => UserSignUpPage(),
             // ImageShower.routeName:(context)=>ImageShower(),
           },

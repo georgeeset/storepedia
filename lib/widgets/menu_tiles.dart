@@ -6,6 +6,7 @@ import 'package:storepedia/cubit/edit_item_cubit/edititem_cubit.dart';
 import 'package:storepedia/cubit/form_level_cubit/formlevel_cubit.dart';
 import 'package:storepedia/cubit/recent_item_cubit/cubit/recentitems_cubit.dart';
 import 'package:storepedia/cubit/user_manager_cubit/cubit/usermanager_cubit.dart';
+import 'package:storepedia/screens/Profile_page/profile_page.dart';
 import 'package:storepedia/screens/add_item_page/add_item_page.dart';
 import 'package:storepedia/screens/exhausted_items_page/exhausted_items_page.dart';
 import 'package:storepedia/screens/home_page/home_page.dart';
@@ -57,7 +58,6 @@ class MenuTiles extends StatelessWidget {
       }
     }
 
-    ;
     return Wrap(
       direction: itemsDirection,
       // gridDelegate:
@@ -150,10 +150,10 @@ class MenuTiles extends StatelessWidget {
                 width: sizeData.width / 5,
                 height: sizeData.width / 5,
                 constraints: const BoxConstraints(
-                  minWidth: 80,
-                  minHeight: 80,
-                  maxHeight: 120,
-                  maxWidth: 120,
+                  minWidth: 90,
+                  minHeight: 90,
+                  maxHeight: 130,
+                  maxWidth: 130,
                 ),
                 padding: const EdgeInsets.symmetric(horizontal: 10.0),
                 child: const Center(child: LoadingIndicator()),
@@ -242,7 +242,16 @@ class MenuTiles extends StatelessWidget {
             itemText: 'Exhausted Items',
             onTapAction: () {
               Navigator.pushNamed(context, ExhaustedItemsPage.routName);
-            })
+            }),
+
+        MenuItem(
+          sizeData: sizeData,
+          itemIcon: Icons.person,
+          itemText: 'Profile',
+          onTapAction: () async {
+            Navigator.pushNamed(context, ProfilePage.routName);
+          },
+        ),
       ],
     );
   }
@@ -271,10 +280,10 @@ class MenuItem extends StatelessWidget {
             width: sizeData.width / 5,
             height: sizeData.width / 5,
             constraints: const BoxConstraints(
-              minWidth: 80,
-              minHeight: 80,
-              maxHeight: 120,
-              maxWidth: 120,
+              minWidth: 90,
+              minHeight: 90,
+              maxHeight: 130,
+              maxWidth: 130,
             ),
             padding: const EdgeInsets.all(5.0),
             child: Column(
@@ -282,10 +291,13 @@ class MenuItem extends StatelessWidget {
               children: [
                 Icon(
                   itemIcon,
-                  size: 40,
+                  size: 30,
                 ),
                 Text(
                   itemText,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle().copyWith(fontSize: 10),
+                  softWrap: true,
                 ),
               ],
             ),

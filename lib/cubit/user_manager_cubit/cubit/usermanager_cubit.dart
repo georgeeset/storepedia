@@ -17,10 +17,10 @@ class UserManagerCubit extends Cubit<UserManagerState> {
     // call user managerRepository and ask for user with the information gotten from Auth
     emit(UserLoadingState());
     userRepository.getUser(user.uid).then((value) {
-      print(value.hasName());
+      // print(value.hasName());
       emit(UserLoadedState(userData: value));
     }).catchError(((error, stackTrace) {
-      print('error observed from getUser... $error');
+      // print('error observed from getUser... $error');
       emit(UserLoadingErrorState(error: error));
     }));
     // emit user loading

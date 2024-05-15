@@ -1,15 +1,10 @@
 import 'package:about/about.dart';
-import 'package:storepedia/bloc/photo_manager_bloc/photomanager_bloc.dart';
-import 'package:storepedia/cubit/edit_item_cubit/edititem_cubit.dart';
-import 'package:storepedia/cubit/form_level_cubit/formlevel_cubit.dart';
 import 'package:storepedia/cubit/recent_item_cubit/cubit/recentitems_cubit.dart';
 import 'package:storepedia/cubit/user_manager_cubit/cubit/usermanager_cubit.dart';
 import 'package:storepedia/model/part.dart';
-import 'package:storepedia/screens/add_item_page/add_item_page.dart';
 import 'package:storepedia/widgets/input_editor.dart';
 import 'package:storepedia/widgets/menu_tiles.dart';
 import 'package:storepedia/widgets/one_part.dart';
-import 'package:storepedia/widgets/warining_dialog.dart';
 
 import '../../constants/number_constants.dart' as number_constants;
 import '../../constants/string_constants.dart' as string_constants;
@@ -96,8 +91,6 @@ class HomePage extends StatelessWidget {
                         topLeft: Radius.circular(50.0),
                         topRight: Radius.circular(50.0)),
                   ),
-
-                  //TODO Add scrollbar on webview
                   child: LayoutBuilder(builder: (context, constraints) {
                     if (constraints.maxWidth < 700) {
                       return SingleChildScrollView(
@@ -105,7 +98,6 @@ class HomePage extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            const Divider(),
                             MenuTiles(
                                 sizeData: sizeData,
                                 horizontalListWidth: horizontalListWidth,
@@ -134,31 +126,48 @@ class HomePage extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          MenuTiles(
-                            sizeData: sizeData,
-                            horizontalListWidth: horizontalListWidth,
-                            horizontalListHeight: horizontalListHeight,
-                            itemsDirection: Axis.vertical,
+                          SingleChildScrollView(
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 50,
+                                vertical: 10,
+                              ),
+                              child: MenuTiles(
+                                sizeData: sizeData,
+                                horizontalListWidth: horizontalListWidth,
+                                horizontalListHeight: horizontalListHeight,
+                                itemsDirection: Axis.vertical,
+                              ),
+                            ),
                           ),
-                          const SizedBox(
-                            width: 50,
-                          ),
-                          Container(
-                            width: sizeData.width / 1.3,
-                            constraints: const BoxConstraints(maxWidth: 600),
-                            child: BlocBuilder<RecentItemsCubit, List<Part>>(
-                              builder: (context, recentItemState) {
-                                return Wrap(
-                                  direction: Axis.horizontal,
-                                  children: recentItemState
-                                      .map((e) => SizedBox(
-                                            width: 150,
-                                            height: 200,
-                                            child: OnePart(part: e),
-                                          ))
-                                      .toList(),
-                                );
-                              },
+                          SingleChildScrollView(
+                            child: Container(
+                              width: sizeData.width / 1.7,
+                              constraints: const BoxConstraints(maxWidth: 1000),
+                              alignment: Alignment.topRight,
+                              padding: const EdgeInsetsDirectional.symmetric(
+                                horizontal: 10.0,
+                                vertical: 10.0,
+                              ),
+                              child: BlocBuilder<RecentItemsCubit, List<Part>>(
+                                builder: (context, recentItemState) {
+                                  return Wrap(
+                                    direction: Axis.horizontal,
+                                    children: recentItemState
+                                        .map((e) => Container(
+                                            width: sizeData.width / 4,
+                                            height: sizeData.width / 2.8,
+                                            constraints: const BoxConstraints(
+                                              maxHeight: 360,
+                                              maxWidth: 250,
+                                              minHeight: 200,
+                                              minWidth: 150,
+                                            ),
+                                            child: OnePart(part: e)))
+                                        .toList(),
+                                  );
+                                },
+                              ),
                             ),
                           ),
                         ],
