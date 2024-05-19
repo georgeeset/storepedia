@@ -9,6 +9,7 @@ import 'package:storepedia/bloc/part_upload_wizard/bloc/partuploadwizard_bloc.da
 import 'package:storepedia/bloc/photo_manager_bloc/photomanager_bloc.dart';
 import 'package:storepedia/bloc/signin_option_bloc/bloc/signinoption_bloc.dart';
 import 'package:storepedia/cubit/exhausted_items_manager_cubit/cubit/exhausteditemsmanager_cubit.dart';
+import 'package:storepedia/cubit/fellow_users_cubit/fellow_users_cubit.dart';
 import 'package:storepedia/cubit/form_level_cubit/formlevel_cubit.dart';
 import 'package:storepedia/cubit/recent_item_cubit/cubit/recentitems_cubit.dart';
 import 'package:storepedia/cubit/user_manager_cubit/cubit/usermanager_cubit.dart';
@@ -17,11 +18,11 @@ import 'package:storepedia/screens/add_item_page/add_item_page.dart';
 import 'package:storepedia/screens/exhausted_items_page/exhausted_items_page.dart';
 import 'package:storepedia/screens/home_page/home_page.dart';
 import 'package:storepedia/screens/part_detail_page/part_detail_page.dart';
+import 'package:storepedia/screens/profile_edit_page/profile_edit_page.dart';
 import 'package:storepedia/screens/search_page/search_page.dart';
 import 'package:storepedia/screens/signin_screen/signin_screen.dart';
 import 'cubit/edit_item_cubit/edititem_cubit.dart';
 import 'package:storepedia/constants/number_constants.dart' as number_constants;
-
 import 'cubit/mark_bad_part/cubit/mark_bad_part_cubit.dart';
 import 'cubit/mark_exhausted_part_cubit/cubit/markexhaustedpart_cubit.dart';
 import 'cubit/part_query_manager.dart/cubit/partquerymanager_cubit.dart';
@@ -123,9 +124,14 @@ class MyApp extends StatelessWidget {
                 ),
             // IntroductionPage.routName: (context) => IntroductionPage(),
             // UserTypeSelectionPage.routName: (context) => UserTypeSelectionPage(),
-            ProfilePage.routName: (context) => const ProfilePage(),
+            ProfilePage.routName: (context) => BlocProvider(
+                  create: (context) => FellowUsersCubit(),
+                  child: const ProfilePage(),
+                ),
             // UserSignUpPage.routName: (context) => UserSignUpPage(),
             // ImageShower.routeName:(context)=>ImageShower(),
+
+            ProfileEditPage.routName: (context) => const ProfileEditPage()
           },
           home: BlocConsumer<AuthenticationBloc, AuthenticationState>(
               builder: ((context, state) {

@@ -94,4 +94,6 @@ class UserModel {
   }
 
   bool hasName() => userName != null;
+  bool hasCompany() => company != null;
+  bool hasBranch() => branch != null;
 }

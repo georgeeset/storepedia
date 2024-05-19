@@ -5,6 +5,8 @@ import 'package:storepedia/model/user_model.dart';
 import 'package:storepedia/widgets/onliine_avatar.dart';
 import 'package:storepedia/widgets/page_layout.dart';
 
+import '../../cubit/fellow_users_cubit/fellow_users_cubit.dart';
+
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
   static String routName = '/profile_page';
@@ -23,6 +25,7 @@ class ProfilePage extends StatelessWidget {
           child: BlocConsumer<UserManagerCubit, UserManagerState>(
             builder: (context, state) {
               if (state is UserLoadedState) {
+                context.read<FellowUsersCubit>().getFellowUsers(state.userData);
                 return ProfileData(data: state.userData, sizeData: sizeData);
               } else {
                 return Container();
@@ -84,7 +87,29 @@ class ProfileData extends StatelessWidget {
         DataRow(
           rowKey: 'Parts Added:',
           rowValue: data.partsAddedCount?.toString(),
-        )
+        ),
+        const SizedBox(
+          height: 20.0,
+        ),
+        BlocBuilder<FellowUsersCubit, FellowUsersState>(
+          builder: (context, state) {
+            if (state.queryStatus == QueryStatus.loaded) {
+              return Column(
+                children: state.response
+                    .map(
+                      (user) => FellowUserCard(
+                        user: user,
+                      ),
+                    )
+                    .toList(),
+              );
+            } else if (state.queryStatus == QueryStatus.error) {
+              return Text(state.errorMessage);
+            } else {
+              return const CircularProgressIndicator();
+            }
+          },
+        ),
       ],
     );
   }
@@ -114,5 +139,36 @@ class DataRow extends StatelessWidget {
     } else {
       return const SizedBox();
     }
+  }
+}
+
+class FellowUserCard extends StatelessWidget {
+  const FellowUserCard({super.key, required this.user});
+
+  final UserModel user;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              user.userName ?? '',
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(user.email ?? ''),
+            // const SizedBox(height: 8),
+            // Text(user.bio),
+          ],
+        ),
+      ),
+    );
   }
 }

@@ -2,8 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:storepedia/model/part.dart';
 import 'package:storepedia/repository/firestore_operaions.dart';
 
-import 'package:storepedia/constants/string_constants.dart' as StringConstants;
-import 'package:storepedia/constants/number_constants.dart' as NumberConstants;
+import 'package:storepedia/constants/string_constants.dart' as string_constants;
+import 'package:storepedia/constants/number_constants.dart' as number_constants;
 
 class ExhaustedItemsRepository {
   final FirestoreOperations _firestoreOperations = FirestoreOperations();
@@ -15,11 +15,11 @@ class ExhaustedItemsRepository {
     if (lastDoc != null) {
       queryResult = await _firestoreOperations
           .paginateQueryWithValue(
-            StringConstants.partsCollection,
-            StringConstants.isExhausted,
+            string_constants.partsCollection,
+            string_constants.isExhausted,
             true,
-            NumberConstants.maximumSearchResult,
-            StringConstants.markExhaustedTime,
+            number_constants.maximumSearchResult,
+            string_constants.markExhaustedTime,
             lastDoc!,
           )
           .onError(
@@ -28,11 +28,11 @@ class ExhaustedItemsRepository {
     } else {
       queryResult = await _firestoreOperations
           .queryWithValue(
-            StringConstants.partsCollection,
-            StringConstants.isExhausted,
+            string_constants.partsCollection,
+            string_constants.isExhausted,
             true,
-            NumberConstants.maximumSearchResult,
-            StringConstants.markExhaustedTime,
+            number_constants.maximumSearchResult,
+            string_constants.markExhaustedTime,
           )
           .onError(
             (error, stackTrace) => Future.error(error.toString(), stackTrace),

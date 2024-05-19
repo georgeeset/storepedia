@@ -13,6 +13,7 @@ import 'package:storepedia/screens/home_page/home_page.dart';
 
 import 'package:storepedia/constants/string_constants.dart' as string_constants;
 import 'package:storepedia/constants/number_constants.dart' as number_constants;
+import 'package:storepedia/screens/profile_edit_page/profile_edit_page.dart';
 import 'package:storepedia/screens/search_page/search_page.dart';
 import 'package:storepedia/widgets/loading_indicator.dart';
 import 'package:storepedia/widgets/warining_dialog.dart';
@@ -93,6 +94,11 @@ class MenuTiles extends StatelessWidget {
                       },
                     )),
               );
+            }
+
+            if (state is UserLoadedState && !state.userData.hasName()) {
+              Navigator.pushNamed(context, ProfileEditPage.routName,
+                  arguments: {'user_data': state.userData});
             }
 
             // if usermanagerState is loaded,

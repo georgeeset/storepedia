@@ -10,7 +10,6 @@ class FirestoreOperations {
 
   Future<DocumentSnapshot> readDocument(
       String collection, String userId) async {
-    print(userId);
     return _firebaseFirestore.collection(collection).doc(userId).get();
   }
 
@@ -122,6 +121,39 @@ class FirestoreOperations {
         .then((value) => value.docs)
         .onError(
             (error, stackTrace) => Future.error(error.toString(), stackTrace));
+  }
+
+  Future<List<DocumentSnapshot>> paginateQueryWithStringValue(
+      String collection,
+      String field,
+      String fieldValue,
+      String field2,
+      String field2Value,
+      int limit,
+      String orderBy,
+      {DocumentSnapshot? startAfter}) {
+    return startAfter == null
+        ? _firebaseFirestore
+            .collection(collection)
+            .where(field, isEqualTo: fieldValue)
+            .where(field2, isEqualTo: field2Value)
+            // .orderBy(orderBy)
+            .limit(limit)
+            .get()
+            .then((value) => value.docs)
+            .onError((error, stackTrace) =>
+                Future.error(error.toString(), stackTrace))
+        : _firebaseFirestore
+            .collection(collection)
+            .where(field, isEqualTo: fieldValue)
+            .where(field2, isEqualTo: field2Value)
+            // .orderBy(orderBy)
+            .limit(limit)
+            .startAfterDocument(startAfter)
+            .get()
+            .then((value) => value.docs)
+            .onError((error, stackTrace) =>
+                Future.error(error.toString(), stackTrace));
   }
 
   Stream<List<DocumentSnapshot>> streamRecentDocs(
