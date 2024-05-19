@@ -39,8 +39,17 @@ class UserModel {
     this.profilePhoto,
   });
 
-  UserModel.fromMap({required DocumentSnapshot snapshot}) {
-    Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
+  /// This function is used to create a UserModel object from a DocumentSnapshot or a Map<String, dynamic>
+  UserModel.fromMap(
+      {DocumentSnapshot? snapshot, Map<String, dynamic>? userData}) {
+    late Map<String, dynamic> data;
+    if (snapshot != null) {
+      data = snapshot.data() as Map<String, dynamic>;
+    } else {
+      if (userData != null) {
+        data = userData;
+      }
+    }
 
     userName = data[string_constants.userName];
     deviceId = data[string_constants.deviceId];
@@ -54,6 +63,7 @@ class UserModel {
     profilePhoto = data[string_constants.profilePhoto];
   }
 
+  /// Converts the user data to a map
   Map<String, dynamic> get toMap => {
         string_constants.userName: userName,
         string_constants.deviceId: deviceId,
