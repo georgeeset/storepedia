@@ -20,7 +20,10 @@ class UserModel {
   /// who has access to do some tasks
   int accessLevel = 0;
 
+  /// Company name should be stored in all caps without spaces
   String? company;
+
+  /// Branch name should be stored in all caps without spaces
   String? branch;
 
   bool isAdmin = false;

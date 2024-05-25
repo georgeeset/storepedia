@@ -129,24 +129,13 @@ class MenuTiles extends StatelessWidget {
               );
             }
 
-            // if you observe device info change,
-            // just display snackbar to inform for now.
-
             if (state is UserLoadedState) {
-              SnackBar(
-                backgroundColor: Theme.of(context).colorScheme.secondary,
-                duration: const Duration(
-                    seconds: number_constants.errorSnackBarDelay),
-                content: const Text(string_constants.deviceChanged),
-                // action: SnackBarAction(
-                //   label: 'Reload',
-                //   onPressed: () {
-                //     context
-                //         .read<UserManagerCubit>()
-                //         .retryLoading();
-                //   },
-                // ),
-              );
+              if (!state.userData.hasBranch() ||
+                  !state.userData.hasCompany() ||
+                  !state.userData.hasBranch() ||
+                  !state.userData.hasName()) {
+                print("you are doing well");
+              }
             }
           },
           builder: (context, state) {
