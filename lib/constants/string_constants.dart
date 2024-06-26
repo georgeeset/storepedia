@@ -63,8 +63,7 @@ const String sectionTitle = 'Section';
 const String isMachineSpecific =
     'Indicate the department where it is commonly used. e.g Cable ties are used by Electrial Department';
 
-const String completeYourProfile =
-    'Complete your Profile, so that we can tell who you are';
+const String completeYourProfile = 'Complete your Profile';
 const String emailVerificationMessage =
     'Your Email is not Yet verified \nClick Here to send Email Verification';
 const String emailVerificationSentMessage =

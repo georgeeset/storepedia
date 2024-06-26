@@ -210,7 +210,7 @@ class MenuItem extends StatelessWidget {
                 ),
                 Text(
                   itemText,
-                  overflow: TextOverflow.ellipsis,
+                  // overflow: TextOverflow.ellipsis,
                   style: const TextStyle().copyWith(fontSize: 10),
                   softWrap: true,
                 ),
