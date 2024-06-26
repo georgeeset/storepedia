@@ -22,13 +22,6 @@ class EmailInputField extends StatelessWidget {
               final cubitHandle = context.read<EmailTextfieldCubit>();
               cubitHandle.updateEmail(email: val);
             },
-            // onSubmitted: (val) async {
-            //   final cubitHandle = context.read<PhoneTextfieldCubit>();
-            //   if (cubitHandle.state is PhoneTextfieldOk) {
-            //     // call the correct function and padd val
-            //     context.read<AuthenticationCubit>().verifyPhoneNumber(val);
-            //   }
-            // },
             decoration: InputDecoration(
               filled: true,
               fillColor: Colors.white,

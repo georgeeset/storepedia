@@ -60,6 +60,50 @@ class UserManagerCubit extends Cubit<UserManagerState> {
         );
   }
 
+  updateCompanyName({
+    required UserModel userData,
+    required String companyName,
+  }) async {
+    emit(UserLoadingState());
+    UserModel companyAdded = userData.copyWith(company: companyName);
+
+    await userRepository
+        .addUserProfile(user.uid, companyAdded)
+        .then(
+          (value) => emit(
+            UserLoadedState(userData: companyAdded),
+          ),
+        )
+        .onError(
+          (error, stackTrace) => emit(
+            UserLoadingErrorState(
+                error: error.toString(), stackTrace: stackTrace),
+          ),
+        );
+  }
+
+  updateCompanyBranch({
+    required UserModel userData,
+    required String companyBranch,
+  }) async {
+    emit(UserLoadingState());
+    UserModel companyBranched = userData.copyWith(branch: companyBranch);
+
+    await userRepository
+        .addUserProfile(user.uid, companyBranched)
+        .then(
+          (value) => emit(
+            UserLoadedState(userData: companyBranched),
+          ),
+        )
+        .onError(
+          (error, stackTrace) => emit(
+            UserLoadingErrorState(
+                error: error.toString(), stackTrace: stackTrace),
+          ),
+        );
+  }
+
   verifyEmail() async {
     emit(UserLoadingState());
     await user

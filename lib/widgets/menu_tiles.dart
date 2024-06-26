@@ -115,6 +115,52 @@ class MenuTiles extends StatelessWidget {
             );
           }
 
+          if (state is UserLoadedState && !state.userData.hasCompany()) {
+            return MenuItem(
+              sizeData: sizeData,
+              itemIcon: Icons.business,
+              itemText: string_constants.completeYourProfile,
+              onTapAction: () {
+                SignupFormDialog.formDialog(
+                  context: context,
+                  onSubmit: (value) {
+                    var userData = context.read<UserManagerCubit>().state;
+                    if (userData is UserLoadedState) {
+                      context.read<UserManagerCubit>().updateCompanyName(
+                            companyName: value,
+                            userData: userData.userData,
+                          );
+                    }
+                  },
+                  title: 'Company Name\nGet this info from your colleagues',
+                );
+              },
+            );
+          }
+
+          if (state is UserLoadedState && !state.userData.hasBranch()) {
+            return MenuItem(
+              sizeData: sizeData,
+              itemIcon: Icons.business,
+              itemText: string_constants.completeYourProfile,
+              onTapAction: () {
+                SignupFormDialog.formDialog(
+                  context: context,
+                  onSubmit: (value) {
+                    var userData = context.read<UserManagerCubit>().state;
+                    if (userData is UserLoadedState) {
+                      context.read<UserManagerCubit>().updateCompanyBranch(
+                            companyBranch: value,
+                            userData: userData.userData,
+                          );
+                    }
+                  },
+                  title: 'Company Branch\nGet this info from your colleagues',
+                );
+              },
+            );
+          }
+
           return MenuItem(
               sizeData: sizeData,
               itemIcon: Icons.add,

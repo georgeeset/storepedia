@@ -24,13 +24,6 @@ class RepeatPasswordInputField extends StatelessWidget {
               final cubitHandle = context.read<RepeatPasswordTextfieldCubit>();
               cubitHandle.updateText(password: val);
             },
-            // onSubmitted: (val) async {
-            //   final cubitHandle = context.read<PasswordTextfieldCubit>();
-            //   if (cubitHandle.state is PasswordTextfieldOk) {
-            //     // call the correct function and padd val
-            //     context.read<AuthenticationCubit>().verifyPhoneNumber(val);
-            //   }
-            // },
             decoration: InputDecoration(
               filled: true,
               fillColor: Colors.white,
