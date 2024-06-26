@@ -1,21 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:storepedia/bloc/authentication_bloc/bloc/authentication_bloc.dart';
 import 'package:storepedia/bloc/photo_manager_bloc/photomanager_bloc.dart';
 import 'package:storepedia/cubit/edit_item_cubit/edititem_cubit.dart';
 import 'package:storepedia/cubit/form_level_cubit/formlevel_cubit.dart';
-import 'package:storepedia/cubit/recent_item_cubit/cubit/recentitems_cubit.dart';
-import 'package:storepedia/cubit/user_manager_cubit/cubit/usermanager_cubit.dart';
+import 'package:storepedia/cubit/user_manager_cubit/usermanager_cubit.dart';
 import 'package:storepedia/screens/Profile_page/profile_page.dart';
 import 'package:storepedia/screens/add_item_page/add_item_page.dart';
 import 'package:storepedia/screens/exhausted_items_page/exhausted_items_page.dart';
-import 'package:storepedia/screens/home_page/home_page.dart';
 
 import 'package:storepedia/constants/string_constants.dart' as string_constants;
 import 'package:storepedia/constants/number_constants.dart' as number_constants;
-import 'package:storepedia/screens/profile_edit_page/profile_edit_page.dart';
 import 'package:storepedia/screens/search_page/search_page.dart';
-import 'package:storepedia/widgets/loading_indicator.dart';
+import 'package:storepedia/widgets/input_editor.dart';
 import 'package:storepedia/widgets/warining_dialog.dart';
 
 class MenuTiles extends StatelessWidget {
@@ -75,156 +71,80 @@ class MenuTiles extends StatelessWidget {
         ),
 
         BlocConsumer<UserManagerCubit, UserManagerState>(
-          listener: (context, state) {
-            // check if UserManager has loaded and give option for reloading
-            // if failed, reload option will be provided.
-            var authSample = context.read<AuthenticationBloc>().state;
+            builder: (context, state) {
+          if (state is UserManagerInitial || state is UserLoadingState) {
+            return MenuItem(
+                sizeData: sizeData,
+                itemIcon: Icons.timelapse,
+                itemText: 'Loading',
+                onTapAction: () async {
+                  context.read<UserManagerCubit>().retryLoading();
+                });
+          }
 
-            if (state is UserLoadingErrorState) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                    backgroundColor: Colors.pink,
-                    duration: const Duration(
-                        seconds: number_constants.errorSnackBarDelay),
-                    content: const Text(string_constants.errorLoadingProfile),
-                    action: SnackBarAction(
-                      label: 'Reload',
-                      onPressed: () {
-                        context.read<UserManagerCubit>().retryLoading();
-                      },
-                    )),
-              );
-            }
+          if (state is UserLoadingErrorState) {
+            return MenuItem(
+                sizeData: sizeData,
+                itemIcon: Icons.error,
+                itemText: 'Error',
+                onTapAction: () async {
+                  context.read<UserManagerCubit>().retryLoading();
+                });
+          }
 
-            if (state is UserLoadedState && !state.userData.hasName()) {
-              Navigator.pushNamed(context, ProfileEditPage.routName,
-                  arguments: {'user_data': state.userData});
-            }
-
-            // if usermanagerState is loaded,
-            // if loaded, go adhead and display
-            //recent parts added to db
-
-            if (state is UserLoadedState) {
-              context.read<RecentItemsCubit>().listenForRecentParts();
-            }
-
-            /// this check should be the last one so we confirm how serious the
-            /// user is before app access is checked.
-
-            if (state is UserLoadedState &&
-                state.userData.accessLevel == 0 &&
-                state.userData.hasName() &&
-                authSample is AuthenticatedState &&
-                authSample.user.emailVerified) {
-              WarningDialog.boolActionsDialog(
-                      context: context,
-                      titleText: string_constants.noPermisionTitle,
-                      bodyText: string_constants.noPermisionBody,
-                      goodOption: 'OK',
-                      isDismissible: false)
-                  .then(
-                (result) =>
-                    context.read<AuthenticationBloc>()..add(SignOutEvent()),
-              );
-            }
-
-            if (state is UserLoadedState) {
-              if (!state.userData.hasBranch() ||
-                  !state.userData.hasCompany() ||
-                  !state.userData.hasBranch() ||
-                  !state.userData.hasName()) {
-                print("you are doing well");
-              }
-            }
-          },
-          builder: (context, state) {
-            //loading indicatior if loading
-            if (state is UserLoadingState) {
-              return Container(
-                width: sizeData.width / 5,
-                height: sizeData.width / 5,
-                constraints: const BoxConstraints(
-                  minWidth: 90,
-                  minHeight: 90,
-                  maxHeight: 130,
-                  maxWidth: 130,
-                ),
-                padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                child: const Center(child: LoadingIndicator()),
-              );
-            }
-
-            // deside what to display if user is loaded
-            // and level of user's registeration
-            if (state is UserLoadedState) {
-              var user = context.read<AuthenticationBloc>().state;
-
-              if (state.userData.hasName()) {
-                if (user is AuthenticatedState) {
-                  if (user.user.emailVerified) {
-                    return MenuItem(
-                      sizeData: sizeData,
-                      itemIcon: Icons.add,
-                      itemText: 'Add Item',
-                      onTapAction: addItemFunction,
-                    );
-                  } else {
-                    return Container(
-                      width: horizontalListWidth,
-                      height: horizontalListHeight,
-                      padding: const EdgeInsets.all(10.0),
-                      child: InkWell(
-                        child: const Center(
-                          child: Text(
-                            string_constants.emailVerificationMessage,
-                            softWrap: true,
-                          ),
-                        ),
-                        onTap: () {
-                          context.read<UserManagerCubit>().verifyEmail();
-                        },
-                      ),
-                    );
-                  }
-                }
-              } else {
-                return EditProfileOption(
-                  sizeData: sizeData,
-                );
-              }
-            }
-            if (state is EmailVerificationSentState) {
-              return Container(
-                  width: horizontalListWidth,
-                  height: horizontalListHeight,
-                  padding: const EdgeInsets.all(10.0),
-                  child: InkWell(
-                    child: Center(
-                      child: Text(
-                        '${string_constants.emailVerificationSentMessage} ${state.email}',
-                        softWrap: true,
-                      ),
-                    ),
-                    onTap: () {
-                      context.read<AuthenticationBloc>().add(SignOutEvent());
-                    },
-                  ));
-            }
-            return SizedBox(
-              width: horizontalListWidth,
-              height: horizontalListHeight,
-              child: Center(
-                child: IconButton(
-                  onPressed: () {
-                    context.read<UserManagerCubit>().retryLoading();
+          if (state is UserLoadedState && !state.userData.hasName()) {
+            return MenuItem(
+              sizeData: sizeData,
+              itemIcon: Icons.call_to_action,
+              itemText: string_constants.completeYourProfile,
+              onTapAction: () {
+                SignupFormDialog.formDialog(
+                  context: context,
+                  onSubmit: (value) {
+                    var userData = context.read<UserManagerCubit>().state;
+                    if (userData is UserLoadedState) {
+                      context.read<UserManagerCubit>().updateUserName(
+                            fullName: value,
+                            userData: userData.userData,
+                          );
+                    }
                   },
-                  icon: const Icon(Icons.error, size: 40),
-                ),
-              ),
+                  title: 'Your Name In Full \n This cannot be edited',
+                );
+              },
             );
-          },
-        ),
+          }
+
+          return MenuItem(
+              sizeData: sizeData,
+              itemIcon: Icons.add,
+              itemText: 'Add Item',
+              onTapAction: () async {
+                addItemFunction();
+              });
+        }, listener: (BuildContext context, UserManagerState state) {
+          // display dialog for user name if user has no name
+          // next display dialog if user has name but has no company name
+          // display dialog if user has not verified his email
+          // ...
+
+          if (state is UserLoadedState) {
+            if (!state.userData.hasBranch() ||
+                !state.userData.hasCompany() ||
+                !state.userData.hasBranch() ||
+                !state.userData.hasName()) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  backgroundColor: Colors.redAccent,
+                  duration:
+                      Duration(seconds: number_constants.errorSnackBarDelay),
+                  content: Text('Your Profile is not complete yet !'),
+                ),
+              );
+            }
+          }
+        }),
+
         // ElevatedButton(
         //     onPressed: () => context
         //         .read<AuthenticationBloc>()

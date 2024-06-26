@@ -8,12 +8,14 @@ import 'package:storepedia/bloc/authentication_bloc/bloc/authentication_bloc.dar
 import 'package:storepedia/bloc/part_upload_wizard/bloc/partuploadwizard_bloc.dart';
 import 'package:storepedia/bloc/photo_manager_bloc/photomanager_bloc.dart';
 import 'package:storepedia/bloc/signin_option_bloc/bloc/signinoption_bloc.dart';
+import 'package:storepedia/cubit/edit_profile_cubit/edit_profile_cubit.dart';
 import 'package:storepedia/cubit/exhausted_items_manager_cubit/cubit/exhausteditemsmanager_cubit.dart';
 import 'package:storepedia/cubit/fellow_users_cubit/fellow_users_cubit.dart';
 import 'package:storepedia/cubit/form_level_cubit/formlevel_cubit.dart';
-import 'package:storepedia/cubit/recent_item_cubit/cubit/recentitems_cubit.dart';
-import 'package:storepedia/cubit/user_manager_cubit/cubit/usermanager_cubit.dart';
+import 'package:storepedia/cubit/recent_item_cubit/recentitems_cubit.dart';
+import 'package:storepedia/cubit/user_manager_cubit/usermanager_cubit.dart';
 import 'package:storepedia/firebase_options.dart';
+import 'package:storepedia/model/user_model.dart';
 import 'package:storepedia/screens/add_item_page/add_item_page.dart';
 import 'package:storepedia/screens/exhausted_items_page/exhausted_items_page.dart';
 import 'package:storepedia/screens/home_page/home_page.dart';
@@ -89,6 +91,7 @@ class MyApp extends StatelessWidget {
         BlocProvider<PartqueryManagerCubit>(
           create: (context) => PartqueryManagerCubit(),
         ),
+        BlocProvider<EditProfileCubit>(create: (context) => EditProfileCubit())
       ],
       child: MaterialApp(
           title: 'Store Pedia',

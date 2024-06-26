@@ -1,6 +1,6 @@
 import 'package:about/about.dart';
-import 'package:storepedia/cubit/recent_item_cubit/cubit/recentitems_cubit.dart';
-import 'package:storepedia/cubit/user_manager_cubit/cubit/usermanager_cubit.dart';
+import 'package:storepedia/cubit/recent_item_cubit/recentitems_cubit.dart';
+import 'package:storepedia/cubit/user_manager_cubit/usermanager_cubit.dart';
 import 'package:storepedia/model/part.dart';
 import 'package:storepedia/widgets/input_editor.dart';
 import 'package:storepedia/widgets/menu_tiles.dart';

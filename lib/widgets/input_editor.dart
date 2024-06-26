@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 import '../repository/validator.dart';
 
@@ -11,15 +9,13 @@ class SignupFormDialog {
     TextInputType? textInputType,
     TextCapitalization textCapitalization = TextCapitalization.sentences,
     String? initialValue,
-    bool noSpace=false,
+    bool noSpace = false,
   }) {
-    
     showDialog(
         context: context,
         builder: (BuildContext context) {
           return Dialog(
-            insetPadding: const EdgeInsets.symmetric(horizontal:10),
-
+            insetPadding: const EdgeInsets.symmetric(horizontal: 10),
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             child: Container(
@@ -28,15 +24,20 @@ class SignupFormDialog {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  Text(title, style: const TextStyle(fontSize: 20.0, color: Colors.blue),),
-                  Container(height: 10.0,),
+                  Text(
+                    title,
+                    style: const TextStyle(fontSize: 20.0, color: Colors.blue),
+                  ),
+                  Container(
+                    height: 10.0,
+                  ),
                   TextInputField(
                     onSubmit: onSubmit,
                     title: title,
                     textInputType: textInputType,
                     textCapitalization: textCapitalization,
                     initialValue: initialValue,
-                    noSpace:noSpace,
+                    noSpace: noSpace,
                   ),
                 ],
               ),
@@ -54,7 +55,8 @@ class TextInputField extends StatefulWidget {
   final TextCapitalization textCapitalization;
   final String? initialValue;
   final bool noSpace;
-  const TextInputField({super.key, 
+  const TextInputField({
+    super.key,
     required this.onSubmit,
     required this.title,
     this.textInputType = TextInputType.text,
@@ -76,13 +78,13 @@ class _TextInputFieldState extends State<TextInputField> {
   @override
   void initState() {
     super.initState();
-   textEditingController= TextEditingController(text: widget.initialValue);
+    textEditingController = TextEditingController(text: widget.initialValue);
     validator = Validator();
   }
 
   @override
   Widget build(BuildContext context) {
-    final Size size=MediaQuery.of(context).size;
+    final Size size = MediaQuery.of(context).size;
     return SizedBox(
       width: size.width,
       child: Row(
@@ -99,42 +101,46 @@ class _TextInputFieldState extends State<TextInputField> {
               textCapitalization: widget.textCapitalization,
               onChanged: (val) {
                 setState(() {
-                  print(widget.noSpace);
-                  err = widget.noSpace==false? validator.validateString(val): validator.validateStringWithoutSpace(val);
+                  // print(widget.noSpace);
+                  err = widget.noSpace == false
+                      ? validator.validateString(val)
+                      : validator.validateStringWithoutSpace(val);
                 });
               },
               onSubmitted: (val) async {
-               submitField();
+                submitField();
               },
               decoration: InputDecoration(
                 errorText: err,
                 hintText: widget.title,
                 isCollapsed: true,
-                contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+                contentPadding:
+                    const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
 
                 border: const OutlineInputBorder(
                   borderRadius: BorderRadius.all(
                     Radius.circular(10),
                   ),
                 ),
-          
+
                 //fillColor:Theme.of(context).primaryColor,
                 //filled: true
-              
               ),
             ),
           ),
-                IconButton(icon:const Icon(Icons.check_circle_outline, size:30), onPressed:()=> submitField(),),
+          IconButton(
+            icon: const Icon(Icons.check_circle_outline, size: 30),
+            onPressed: () => submitField(),
+          ),
         ],
       ),
     );
   }
 
-  void submitField(){
-     if (err == null && textEditingController!.text.isNotEmpty) {
-          widget.onSubmit(textEditingController!.text);
-          Navigator.pop(context);
-        }
+  void submitField() {
+    if (err == null && textEditingController!.text.isNotEmpty) {
+      widget.onSubmit(textEditingController!.text);
+      Navigator.pop(context);
+    }
   }
 }
-

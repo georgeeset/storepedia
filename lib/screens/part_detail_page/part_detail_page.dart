@@ -5,7 +5,7 @@ import 'package:storepedia/bloc/part_upload_wizard/bloc/partuploadwizard_bloc.da
 import 'package:storepedia/cubit/edit_item_cubit/edititem_cubit.dart';
 import 'package:storepedia/cubit/mark_bad_part/cubit/mark_bad_part_cubit.dart';
 import 'package:storepedia/cubit/mark_exhausted_part_cubit/cubit/markexhaustedpart_cubit.dart';
-import 'package:storepedia/cubit/user_manager_cubit/cubit/usermanager_cubit.dart';
+import 'package:storepedia/cubit/user_manager_cubit/usermanager_cubit.dart';
 import 'package:storepedia/model/part.dart';
 import 'package:storepedia/screens/add_item_page/add_item_page.dart';
 import 'package:storepedia/widgets/input_editor.dart';
@@ -136,8 +136,8 @@ class _PartBodyState extends State<PartBody> {
                     : Theme.of(context).primaryColor,
                 margin: const EdgeInsets.symmetric(vertical: 5.0),
                 child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 10.0, vertical: 5.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [

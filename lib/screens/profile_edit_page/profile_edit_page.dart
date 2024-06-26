@@ -34,10 +34,8 @@ class ProfileEditForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Size sizeData = MediaQuery.of(context).size;
-
-    return Form(
-        child: BlocConsumer<EditProfileCubit, UserModel>(
-      listener: (context, state) {},
+    // context.read<EditProfileCubit>().updateUser(user);
+    return BlocBuilder<EditProfileCubit, UserModel>(
       builder: (context, state) => Column(
         children: [
           CircleAvatar(
@@ -48,7 +46,7 @@ class ProfileEditForm extends StatelessWidget {
           ),
           ElevatedButton(
             onPressed: () {
-              Future<void> _showImagePickerDialog(BuildContext context) async {
+              Future<void> showImagePickerDialog(BuildContext context) async {
                 final picker = ImagePicker();
                 final pickedFile = await picker.pickImage(
                   source: Platform.isAndroid
@@ -66,6 +64,7 @@ class ProfileEditForm extends StatelessWidget {
           FormListItem(
             sizeData: sizeData,
             title: string_constants.fullName,
+            initialValue: state.userName,
             info: 'This Can not be changed',
             onSubmit: (value) {
               context.read<EditProfileCubit>().editFullName(value);
@@ -74,6 +73,7 @@ class ProfileEditForm extends StatelessWidget {
           FormListItem(
             sizeData: sizeData,
             title: string_constants.company,
+            initialValue: state.company,
             info:
                 'Update Your Company Name, ask your coliques if they already have one created, so you can join them',
             onSubmit: (value) {
@@ -83,6 +83,7 @@ class ProfileEditForm extends StatelessWidget {
           FormListItem(
             sizeData: sizeData,
             title: string_constants.branch,
+            initialValue: state.branch,
             info: 'State your company branch or location',
             onSubmit: (value) {
               context.read<EditProfileCubit>().editBranch(value);
@@ -90,6 +91,6 @@ class ProfileEditForm extends StatelessWidget {
           ),
         ],
       ),
-    ));
+    );
   }
 }

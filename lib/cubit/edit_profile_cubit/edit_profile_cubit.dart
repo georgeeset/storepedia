@@ -1,9 +1,14 @@
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:storepedia/model/user_model.dart';
 
-class EditProfileCubit extends HydratedCubit<UserModel> {
+class EditProfileCubit extends Cubit<UserModel> {
   late UserModel user;
   EditProfileCubit() : super(UserModel());
+
+  updateUser(UserModel user) {
+    this.user = user;
+    emit(user);
+  }
 
   editFullName(String fullName) {
     emit(state.copyWith(userName: fullName));
@@ -25,5 +30,12 @@ class EditProfileCubit extends HydratedCubit<UserModel> {
   @override
   Map<String, dynamic>? toJson(UserModel state) {
     return state.toMap;
+  }
+
+  @override
+  void onChange(Change<UserModel> change) {
+    // TODO: implement onChange
+    print("new state: => ${change.nextState.userName}");
+    super.onChange(change);
   }
 }
