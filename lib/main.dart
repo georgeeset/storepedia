@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -23,6 +25,7 @@ import 'package:storepedia/screens/part_detail_page/part_detail_page.dart';
 import 'package:storepedia/screens/profile_edit_page/profile_edit_page.dart';
 import 'package:storepedia/screens/search_page/search_page.dart';
 import 'package:storepedia/screens/signin_screen/signin_screen.dart';
+import 'package:storepedia/widgets/email_verification.dart';
 import 'cubit/edit_item_cubit/edititem_cubit.dart';
 import 'package:storepedia/constants/number_constants.dart' as number_constants;
 import 'cubit/mark_bad_part/cubit/mark_bad_part_cubit.dart';
@@ -139,6 +142,9 @@ class MyApp extends StatelessWidget {
           home: BlocConsumer<AuthenticationBloc, AuthenticationState>(
               builder: ((context, state) {
             if (state is AuthenticatedState) {
+              if (!state.user.emailVerified) {
+                return EmailVerification(email: state.user.email!);
+              }
               return BlocProvider<RecentItemsCubit>(
                 create: (context) => RecentItemsCubit(),
                 child: const HomePage(),
@@ -170,11 +176,12 @@ class MyApp extends StatelessWidget {
             }
             if (authState is AuthenticationFailedState) {
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
+                const SnackBar(
                   backgroundColor: Colors.pink,
-                  duration: const Duration(
-                      seconds: number_constants.errorSnackBarDelay),
-                  content: Text('Failed !\n${authState.errorMessage}'),
+                  duration:
+                      Duration(seconds: number_constants.errorSnackBarDelay),
+                  // content: Text('Failed !\n${authState.errorMessage}'),
+                  content: Text('Invalid Email or Password'),
                 ),
               );
             }

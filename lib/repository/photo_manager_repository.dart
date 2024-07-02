@@ -1,8 +1,8 @@
 import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:path/path.dart' as Path;
+import 'package:path/path.dart' as p;
 import 'package:storepedia/constants/firebase_constants.dart'
-    as FirebaseConstants;
+    as firebase_constants;
 import 'package:storepedia/repository/cloud_storage_service.dart';
 
 class PhotoManagerRepository {
@@ -16,9 +16,9 @@ class PhotoManagerRepository {
     String? fileName,
   }) {
     String name = DateTime.now().millisecondsSinceEpoch.toString();
-    String extension = Path.basename(image.path);
+    String extension = p.basename(image.path);
     UploadTask task = cloudStorageService.startUpload(
-        filePath: '${FirebaseConstants.storageLocation}/$name.$extension',
+        filePath: '${firebase_constants.storageLocation}/$name.$extension',
         file: image,
         replaceFileName: fileName);
     return task.snapshotEvents;

@@ -1,3 +1,5 @@
+import 'dart:js_interop';
+
 import 'package:about/about.dart';
 import 'package:storepedia/cubit/recent_item_cubit/recentitems_cubit.dart';
 import 'package:storepedia/cubit/user_manager_cubit/usermanager_cubit.dart';
@@ -19,6 +21,8 @@ class HomePage extends StatelessWidget {
     final sizeData = MediaQuery.of(context).size;
     final double horizontalListWidth = sizeData.width / 2.1;
     final double horizontalListHeight = sizeData.width / 2.1;
+
+    context.read<RecentItemsCubit>().listenForRecentParts();
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -47,9 +51,9 @@ class HomePage extends StatelessWidget {
                     onTap: () {
                       showAboutPage(
                         context: context,
-                        values: {'version': '1.0', 'year': '2021'},
+                        values: {'version': '3.0.1', 'year': '2021'},
                         applicationLegalese:
-                            'Copyright © Flex-Automation, {{ year }}',
+                            'Copyright © CXG Technologies, {{ year }}',
                         applicationDescription: const Text(
                           string_constants.aboutApp,
                           softWrap: true,
