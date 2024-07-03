@@ -21,6 +21,7 @@ class SignupFormDialog {
             child: Container(
               padding: const EdgeInsets.all(20),
               margin: const EdgeInsets.symmetric(horizontal: 10.0),
+              constraints: const BoxConstraints(maxWidth: 600),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[

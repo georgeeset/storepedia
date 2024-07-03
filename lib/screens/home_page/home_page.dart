@@ -1,5 +1,3 @@
-import 'dart:js_interop';
-
 import 'package:about/about.dart';
 import 'package:storepedia/cubit/recent_item_cubit/recentitems_cubit.dart';
 import 'package:storepedia/cubit/user_manager_cubit/usermanager_cubit.dart';

@@ -231,11 +231,15 @@ class SigninWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          const EmailInputField(),
+          const EmailInputField(
+            doValidation: false,
+          ),
           Container(
             height: 10.0,
           ),
-          const PasswordInputField(),
+          const PasswordInputField(
+            doValidation: false,
+          ),
           Container(
             height: 20.0,
           ),

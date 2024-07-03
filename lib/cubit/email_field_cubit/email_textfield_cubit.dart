@@ -8,13 +8,17 @@ class EmailTextfieldCubit extends Cubit<EmailTextfieldState> {
   final Validator validator = Validator();
   EmailTextfieldCubit() : super(EmailTextfieldInitial());
 
-  updateEmail({required String email}) {
+  updateEmail({required String email, required bool doValidation}) {
     final String? result = validator.validateEmail(email);
 
-    if (result != null) {
-      emit(EmailTextfieldError(message: result));
-    } else {
+    if (!doValidation) {
       emit(EmailTextfieldOk(email: email));
+    } else {
+      if (result != null) {
+        emit(EmailTextfieldError(message: result));
+      } else {
+        emit(EmailTextfieldOk(email: email));
+      }
     }
   }
 }

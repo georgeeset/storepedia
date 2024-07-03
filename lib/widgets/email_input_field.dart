@@ -3,7 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storepedia/cubit/email_field_cubit/email_textfield_cubit.dart';
 
 class EmailInputField extends StatelessWidget {
-  const EmailInputField({super.key});
+  final bool doValidation;
+  const EmailInputField({this.doValidation = true, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -20,13 +21,17 @@ class EmailInputField extends StatelessWidget {
             autofillHints: const [],
             onChanged: (val) {
               final cubitHandle = context.read<EmailTextfieldCubit>();
-              cubitHandle.updateEmail(email: val);
+              cubitHandle.updateEmail(email: val, doValidation: doValidation);
             },
             decoration: InputDecoration(
               filled: true,
               fillColor: Colors.white,
               //enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.zero),
-              errorText: state is EmailTextfieldError ? state.message : null,
+              errorText: doValidation
+                  ? state is EmailTextfieldError
+                      ? state.message
+                      : null
+                  : null,
               hintText: 'youremail@domain.com',
               labelText: 'Email',
               // isDense: true,

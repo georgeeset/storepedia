@@ -8,12 +8,16 @@ class PasswordTextfieldCubit extends Cubit<PasswordTextfieldState> {
   PasswordTextfieldCubit() : super(PasswordTextfieldInitial());
   final Validator validator = Validator();
 
-  updateText(String password) {
+  updateText(String password, bool doValidation) {
     String? result = validator.validatePassword(password);
-    if (result != null) {
-      emit(PasswordTextfieldError(message: result));
-    } else {
+    if (!doValidation) {
       emit(PasswordTextfieldOk(password: password));
+    } else {
+      if (result != null) {
+        emit(PasswordTextfieldError(message: result));
+      } else {
+        emit(PasswordTextfieldOk(password: password));
+      }
     }
   }
 }

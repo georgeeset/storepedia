@@ -4,8 +4,13 @@ import 'package:storepedia/cubit/password_field_cubit/password_textfield_cubit.d
 import 'package:storepedia/constants/number_constants.dart' as numberConstants;
 
 class PasswordInputField extends StatelessWidget {
-  const PasswordInputField({super.key, this.labelText = 'Password'});
+  const PasswordInputField({
+    super.key,
+    this.labelText = 'Password',
+    this.doValidation = true,
+  });
   final String labelText;
+  final bool doValidation;
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +30,7 @@ class PasswordInputField extends StatelessWidget {
             autofillHints: const [],
             onChanged: (val) {
               final cubitHandle = context.read<PasswordTextfieldCubit>();
-              cubitHandle.updateText(val);
+              cubitHandle.updateText(val, doValidation);
             },
             decoration: InputDecoration(
               filled: true,
