@@ -1,8 +1,10 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:pinch_zoom_image_last/pinch_zoom_image_last.dart';
 import 'package:storepedia/bloc/part_upload_wizard/bloc/partuploadwizard_bloc.dart';
 import 'package:storepedia/bloc/photo_manager_bloc/photomanager_bloc.dart';
@@ -46,7 +48,7 @@ class AddItemPage extends StatelessWidget {
           BlocListener<PhotomanagerBloc, PhotomanagerState>(
             listener: (context, state) {
               var scoreState = context.read<FormLevelCubit>().state;
-              print(scoreState);
+              // print(scoreState);
               if (state is ImageSelectedState &&
                   scoreState >= number_constants.minimumScore) {
                 context
@@ -332,7 +334,6 @@ class AddItemPage extends StatelessWidget {
 
 class PhotoManager extends StatefulWidget {
   const PhotoManager({super.key});
-
   @override
   PhotoManagerState createState() => PhotoManagerState();
 }
@@ -354,6 +355,9 @@ class PhotoManagerState extends State<PhotoManager> {
       child: BlocBuilder<PhotomanagerBloc, PhotomanagerState>(
         builder: ((context, state) {
           if (state is ImageSelectedState) {
+            if (kIsWeb) {
+              return DisplayOfflineImage(image: state.image, isWeb: true);
+            }
             return DisplayOfflineImage(image: state.image);
           }
 
@@ -514,6 +518,9 @@ class PhotoManagerState extends State<PhotoManager> {
 
   getImage(ImageSource source) async {
     await ImageGetter.getImage(source).then((value) async {
+      if (kIsWeb) {
+        context.read<PhotomanagerBloc>().add(SelectPhotoEvent(photo: value));
+      }
       await CropImage.getCroppedImage(context, image: value).then((value) {
         if (value != null) {
           //this will yield PhotoSelectedState
@@ -530,15 +537,29 @@ class DisplayOfflineImage extends StatelessWidget {
   const DisplayOfflineImage({
     super.key,
     required this.image,
+    this.isWeb = false,
   });
 
   final File image;
+  final bool isWeb;
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        PinchZoomImage(image: Image.file(image)),
+        isWeb
+            ? Center(
+                child: SizedBox(
+                  height: 100,
+                  child: Text(
+                    'File Selected:\n\n ${image.path}',
+                    style: const TextStyle(
+                      fontSize: 18.0,
+                    ),
+                  ),
+                ),
+              )
+            : PinchZoomImage(image: Image.file(image)),
         Positioned(
           top: 20,
           right: 20,
