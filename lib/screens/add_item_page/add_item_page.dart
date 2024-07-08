@@ -4,7 +4,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:image_cropper/image_cropper.dart';
 import 'package:pinch_zoom_image_last/pinch_zoom_image_last.dart';
 import 'package:storepedia/bloc/part_upload_wizard/bloc/partuploadwizard_bloc.dart';
 import 'package:storepedia/bloc/photo_manager_bloc/photomanager_bloc.dart';
@@ -356,7 +355,7 @@ class PhotoManagerState extends State<PhotoManager> {
         builder: ((context, state) {
           if (state is ImageSelectedState) {
             if (kIsWeb) {
-              return DisplayOfflineImage(image: state.image, isWeb: true);
+              return OfflineWebImage(image: state.image);
             }
             return DisplayOfflineImage(image: state.image);
           }
@@ -517,10 +516,15 @@ class PhotoManagerState extends State<PhotoManager> {
   // }
 
   getImage(ImageSource source) async {
-    await ImageGetter.getImage(source).then((value) async {
-      if (kIsWeb) {
+    ImageGetter imageGetter = ImageGetter();
+    if (kIsWeb) {
+      await imageGetter.getWebImage().then((value) {
         context.read<PhotomanagerBloc>().add(SelectPhotoEvent(photo: value));
-      }
+      });
+      return;
+    }
+
+    await ImageGetter.getImage(source).then((value) async {
       await CropImage.getCroppedImage(context, image: value).then((value) {
         if (value != null) {
           //this will yield PhotoSelectedState
@@ -533,33 +537,30 @@ class PhotoManagerState extends State<PhotoManager> {
   }
 }
 
+class OfflineWebImage extends StatelessWidget {
+  const OfflineWebImage({required this.image, super.key});
+  final Uint8List image;
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Image.memory(image),
+    );
+  }
+}
+
 class DisplayOfflineImage extends StatelessWidget {
   const DisplayOfflineImage({
     super.key,
     required this.image,
-    this.isWeb = false,
   });
 
   final File image;
-  final bool isWeb;
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        isWeb
-            ? Center(
-                child: SizedBox(
-                  height: 100,
-                  child: Text(
-                    'File Selected:\n\n ${image.path}',
-                    style: const TextStyle(
-                      fontSize: 18.0,
-                    ),
-                  ),
-                ),
-              )
-            : PinchZoomImage(image: Image.file(image)),
+        PinchZoomImage(image: Image.file(image)),
         Positioned(
           top: 20,
           right: 20,

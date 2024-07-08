@@ -15,7 +15,7 @@ class PhotomanagerEmptyState extends PhotomanagerState {
 }
 
 class ImageSelectedState extends PhotomanagerState {
-  final File image;
+  final dynamic image;
   const ImageSelectedState({required this.image});
 
   @override

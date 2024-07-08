@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:storepedia/model/part.dart';
 import 'package:storepedia/repository/part_operations_repository.dart';
-import 'package:storepedia/constants/number_constants.dart' as NumberConstants;
+import 'package:storepedia/constants/number_constants.dart' as number_constants;
 
 part 'partuploadwizard_event.dart';
 part 'partuploadwizard_state.dart';
@@ -21,7 +21,7 @@ class PartuploadwizardBloc
     on<UploadPartEvent>((event, emit) async {
       emit(PartuploadwizardLoadingState());
       if (event.part.photo != null &&
-          event.score > NumberConstants.minimumScore) {
+          event.score > number_constants.minimumScore) {
         print(event.part.partUid);
         if (event.part.partUid != null) {
           await partOperationsRepository
@@ -44,7 +44,8 @@ class PartuploadwizardBloc
               );
         }
       } else {
-        emit(const PartuploadwizardErrorState(message: 'Form is not yet complete!'));
+        emit(const PartuploadwizardErrorState(
+            message: 'Form is not yet complete!'));
       }
     });
 

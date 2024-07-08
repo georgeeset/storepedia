@@ -1,5 +1,7 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:image_picker_web/image_picker_web.dart';
 
 class ImageGetter {
   ImageGetter();
@@ -13,6 +15,15 @@ class ImageGetter {
     }
     return Future.error('No image');
     // print('no Image');
+  }
+
+  Future<Uint8List> getWebImage() async {
+    /// get image with imagepicker web for web palatform
+    final fromPicker = await ImagePickerWeb.getImageAsBytes();
+    if (fromPicker != null) {
+      return fromPicker;
+    }
+    return Future.error('No Image');
   }
 
   static Future<File> getSelfie() async {

@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -13,7 +11,7 @@ class PhotouploadCubit extends Cubit<PhotouploadState> {
 
   PhotouploadCubit() : super(PhotouploadInitial());
 
-  attemptUpload({required File photo, String? fileName}) {
+  attemptUpload({required dynamic photo, String? fileName}) async {
     //avoid uploading file multiple times. return void if already uploading
     if (state is PhotouploadingState) {
       return null;
