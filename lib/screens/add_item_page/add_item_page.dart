@@ -354,29 +354,11 @@ class PhotoManagerState extends State<PhotoManager> {
       child: BlocBuilder<PhotomanagerBloc, PhotomanagerState>(
         builder: ((context, state) {
           if (state is ImageSelectedState) {
-            if (kIsWeb) {
-              return OfflineWebImage(image: state.image);
-            }
+            // if (kIsWeb) {
+            //   return OfflineWebImage(image: state.image);
+            // }
             return DisplayOfflineImage(image: state.image);
           }
-
-          // if (state is ImageUploadingState) {
-          //   //indicate uploading with uploading widget
-          //   return StreamBuilder<TaskSnapshot>(
-          //       stream: state.uploadInfo,
-          //       builder: (context, snapshot) {
-          //         var value= (snapshot.data!.totalBytes -
-          //                             snapshot.data!.bytesTransferred) *
-          //                         (100 / snapshot.data!.totalBytes);
-          //         return snapshot.hasData
-          //             ? Container(
-          //                 width: 60,
-          //                 height: 60,
-          //                 child: CircularProgressIndicator(
-          //                     value: value),)
-          //             : Container();
-          //       });
-          // }
 
           return BlocBuilder<EditItemCubit, Part>(builder: ((context, state) {
             return state.photo != null
@@ -554,13 +536,14 @@ class DisplayOfflineImage extends StatelessWidget {
     required this.image,
   });
 
-  final File image;
+  final dynamic image;
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        PinchZoomImage(image: Image.file(image)),
+        PinchZoomImage(
+            image: image is File ? Image.file(image) : Image.memory(image)),
         Positioned(
           top: 20,
           right: 20,

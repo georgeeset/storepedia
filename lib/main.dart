@@ -17,7 +17,6 @@ import 'package:storepedia/cubit/form_level_cubit/formlevel_cubit.dart';
 import 'package:storepedia/cubit/recent_item_cubit/recentitems_cubit.dart';
 import 'package:storepedia/cubit/user_manager_cubit/usermanager_cubit.dart';
 import 'package:storepedia/firebase_options.dart';
-import 'package:storepedia/model/user_model.dart';
 import 'package:storepedia/screens/add_item_page/add_item_page.dart';
 import 'package:storepedia/screens/exhausted_items_page/exhausted_items_page.dart';
 import 'package:storepedia/screens/home_page/home_page.dart';
