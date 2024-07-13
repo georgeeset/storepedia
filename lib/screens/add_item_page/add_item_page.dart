@@ -16,6 +16,7 @@ import 'package:storepedia/model/part.dart';
 import 'package:storepedia/repository/crop_image.dart';
 import 'package:storepedia/repository/image_getter.dart';
 import 'package:storepedia/screens/search_page/search_page.dart';
+import 'package:storepedia/screens/camera_screen/camera_page.dart';
 import 'package:storepedia/widgets/form_list_item.dart';
 import 'package:storepedia/widgets/loading_indicator.dart';
 import 'package:storepedia/widgets/online_pinch_zoom.dart';
@@ -365,12 +366,6 @@ class PhotoManagerState extends State<PhotoManager> {
                 ? Stack(
                     alignment: Alignment.topCenter,
                     children: [
-                      // CachedNetworkImage(
-                      //   imageUrl: state.photo!,
-                      //   errorWidget: (context,_,__)=>Image.asset('assets/images/main_logo.jpg'),
-                      //   placeholder:(context,_)=> Center(child: LoadingIndicator()),
-
-                      // ),
                       OnlinePinchZoomImage(link: state.photo),
                       Positioned(
                           bottom: 10,
@@ -454,7 +449,7 @@ class PhotoManagerState extends State<PhotoManager> {
                         Expanded(
                           child: InkWell(
                             onTap: () {
-                              getImage(ImageSource.camera);
+                              Navigator.pushNamed(context, CameraPage.routName);
                             },
                             splashColor: Colors.white,
                             child: Container(
@@ -516,17 +511,6 @@ class PhotoManagerState extends State<PhotoManager> {
         }
       });
     });
-  }
-}
-
-class OfflineWebImage extends StatelessWidget {
-  const OfflineWebImage({required this.image, super.key});
-  final Uint8List image;
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Image.memory(image),
-    );
   }
 }
 

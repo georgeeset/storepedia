@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -33,6 +31,7 @@ import 'cubit/part_query_manager.dart/cubit/partquerymanager_cubit.dart';
 import 'cubit/photo_upload_cubit/photoupload_cubit.dart';
 import 'cubit/repitition_cubit/cubit/repitition_cubit.dart';
 import 'screens/Profile_page/profile_page.dart';
+import 'screens/camera_screen/camera_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -105,7 +104,8 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           initialRoute: '/',
           routes: <String, WidgetBuilder>{
-            //MyHomePage.routName : (context)=> MyHomePage(),
+            //MyHome
+            //``Page.routName : (context)=> MyHomePage(),
             SearchPage.routName: (context) => const SearchPage(),
             AddItemPage.routName: (context) => BlocProvider<RepititionCubit>(
                   create: (context) => RepititionCubit(),
@@ -136,7 +136,9 @@ class MyApp extends StatelessWidget {
             // UserSignUpPage.routName: (context) => UserSignUpPage(),
             // ImageShower.routeName:(context)=>ImageShower(),
 
-            ProfileEditPage.routName: (context) => const ProfileEditPage()
+            ProfileEditPage.routName: (context) => const ProfileEditPage(),
+
+            CameraPage.routName: (context) => const CameraPage(),
           },
           home: BlocConsumer<AuthenticationBloc, AuthenticationState>(
               builder: ((context, state) {
