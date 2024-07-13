@@ -20,7 +20,7 @@ class PartDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final part = ModalRoute.of(context)!.settings.arguments as Part;
+    final part = ModalRoute.of(context)?.settings.arguments as Part;
 
     return PageLayout(
       hasBackButton: true,

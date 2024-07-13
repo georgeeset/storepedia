@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -77,10 +75,11 @@ class _CameraButtons extends StatelessWidget {
     return BlocBuilder<CameraCubit, CameraModel>(builder: (context, camera) {
       return Container(
         margin: const EdgeInsets.all(10.0),
+        constraints: const BoxConstraints(maxWidth: 500),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            camera.image != null
+            camera.image != null && camera.image is! String
                 ? ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.green,
@@ -95,10 +94,13 @@ class _CameraButtons extends StatelessWidget {
                       Navigator.of(context).pop();
                     })
                 : const SizedBox(),
-            camera.cameraDescription.length > 1 && camera.image == null
+            const Spacer(),
+            (camera.cameraDescription.length > 1 && camera.image == null) ||
+                    (camera.cameraDescription.length > 1 &&
+                        camera.image is String)
                 ? ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green,
+                      backgroundColor: const Color.fromARGB(255, 76, 86, 175),
                       foregroundColor: Colors.white,
                     ),
                     child: const Text('Switch'),
@@ -108,7 +110,7 @@ class _CameraButtons extends StatelessWidget {
                           .changeActiveCamera(camera.activeCamera);
                     })
                 : const SizedBox(),
-            camera.image != null
+            camera.image != null && camera.image is! String
                 ? ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.green,

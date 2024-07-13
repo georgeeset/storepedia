@@ -58,6 +58,9 @@ class CameraCubit extends Cubit<CameraModel> {
   }
 
   void takePicture() async {
+    if (!cameraController.value.isInitialized) return;
+    if (cameraController.value.isTakingPicture) return;
+
     emit(state.copyWith(isTakingPicture: true));
 
     var picture = await cameraController.takePicture();
@@ -66,50 +69,18 @@ class CameraCubit extends Cubit<CameraModel> {
         isTakingPicture: false, image: await picture.readAsBytes()));
   }
 
-  void takeVideo() {
-    camera.isRecordingVideo = true;
-    emit(state.copyWith(isRecordingVideo: true));
-  }
-
-  void stopVideo() {
-    camera.isRecordingVideo = false;
-    emit(state.copyWith(isRecordingVideo: false));
-  }
-
   void retakePicture() async {
+    if (!cameraController.value.isInitialized) return;
+    if (cameraController.value.isTakingPicture) return;
+
     await cameraController.pausePreview();
-    emit(state.copyWith(image: null));
+    emit(state.copyWith(image: ''));
     await cameraController.resumePreview();
-  }
-
-  void stopPicture() {
-    camera.isTakingPicture = false;
-    emit(state.copyWith(isTakingPicture: false));
-  }
-
-  void streamCamera() {
-    camera.isStreaming = true;
-    emit(state.copyWith(isStreaming: true));
-  }
-
-  void stopStream() {
-    camera.isStreaming = false;
-    emit(state.copyWith(isStreaming: false));
   }
 
   void setImage(String image) {
     camera.image = image;
     emit(state.copyWith(image: image));
-  }
-
-  void setVideo(XFile video) {
-    camera.video = video;
-    emit(state.copyWith(video: video));
-  }
-
-  void setImageBytes(Uint8List imageBytes) {
-    camera.imageBytes = imageBytes;
-    emit(state.copyWith(imageBytes: imageBytes));
   }
 
   void setCameraController(CameraController cameraController) {
