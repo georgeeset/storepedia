@@ -60,10 +60,7 @@ class ProfileData extends StatelessWidget {
       children: [
         Row(mainAxisAlignment: MainAxisAlignment.end, children: [
           OnlineAvatar(
-            editable: true,
-            editClicked: () {
-              print('hello');
-            },
+            editable: false,
             radius: 60,
             ringColor: Theme.of(context).primaryColor,
             imageLink: data.profilePhoto,
@@ -91,10 +88,19 @@ class ProfileData extends StatelessWidget {
         const SizedBox(
           height: 20.0,
         ),
+        const Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text('Find your Co-Workers'),
+          ],
+        ),
+        const SizedBox(
+          height: 10.0,
+        ),
         BlocBuilder<FellowUsersCubit, FellowUsersState>(
           builder: (context, state) {
             if (state.queryStatus == QueryStatus.loaded) {
-              return Column(
+              return Wrap(
                 children: state.response
                     .map(
                       (user) => FellowUserCard(
@@ -106,7 +112,7 @@ class ProfileData extends StatelessWidget {
             } else if (state.queryStatus == QueryStatus.error) {
               return Text(state.errorMessage);
             } else {
-              return const CircularProgressIndicator();
+              return const LinearProgressIndicator();
             }
           },
         ),
@@ -152,20 +158,30 @@ class FellowUserCard extends StatelessWidget {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Text(
-              user.userName ?? '',
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
+            OnlineAvatar(
+              editable: false,
+              radius: 30,
+              ringColor: Theme.of(context).primaryColor,
+              heroTag: user.userId ?? 'One user With Big head',
             ),
-            const SizedBox(height: 8),
-            Text(user.email ?? ''),
-            // const SizedBox(height: 8),
-            // Text(user.bio),
+            Column(
+              children: [
+                Text(
+                  user.userName ?? '',
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(user.email ?? ''),
+                // const SizedBox(height: 8),
+                // Text(user.bio),
+              ],
+            ),
           ],
         ),
       ),

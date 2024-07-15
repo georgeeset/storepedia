@@ -6,7 +6,7 @@ class OnlineAvatar extends StatelessWidget {
   final double radius;
   final Color ringColor;
   final String? imageLink;
-  final Function editClicked;
+  final Function? editClicked;
   final bool enableEnlarge;
   final String heroTag;
 
@@ -16,7 +16,7 @@ class OnlineAvatar extends StatelessWidget {
       required this.radius,
       this.ringColor = Colors.purple,
       this.imageLink,
-      required this.editClicked,
+      this.editClicked,
       this.enableEnlarge = true,
       required this.heroTag});
 
@@ -58,9 +58,7 @@ class OnlineAvatar extends StatelessWidget {
                         size: 20,
                         color: Theme.of(context).primaryColor,
                       ),
-                      onPressed: () {
-                        editClicked();
-                      },
+                      onPressed: editClicked != null ? editClicked!() : null,
                     ),
                   ),
                 )

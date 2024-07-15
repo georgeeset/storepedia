@@ -190,6 +190,8 @@ class PhotoManagerState extends State<PhotoManager> {
     if (kIsWeb) {
       await imageGetter.getWebImage().then((value) {
         context.read<PhotomanagerBloc>().add(SelectPhotoEvent(photo: value));
+      }).onError((error, stackTrace) {
+        print('error loading file: ${error.toString()}');
       });
       return;
     }

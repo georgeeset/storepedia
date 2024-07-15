@@ -22,20 +22,18 @@ class EditProfileCubit extends Cubit<UserModel> {
     emit(state.copyWith(branch: branch));
   }
 
-  @override
-  UserModel? fromJson(Map<String, dynamic> json) {
+  UserModel fromJson(Map<String, dynamic> json) {
     return UserModel.fromMap(userData: json);
   }
 
-  @override
-  Map<String, dynamic>? toJson(UserModel state) {
+  Map<String, dynamic> toJson(UserModel state) {
     return state.toMap;
   }
 
   @override
   void onChange(Change<UserModel> change) {
     // TODO: implement onChange
-    print("new state: => ${change.nextState.userName}");
+    print("New Edit profile state: => ${change.nextState.userName}");
     super.onChange(change);
   }
 }
