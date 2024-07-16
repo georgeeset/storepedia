@@ -13,7 +13,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
-
+  static const String routeName = '/';
   @override
   Widget build(BuildContext context) {
     final sizeData = MediaQuery.of(context).size;

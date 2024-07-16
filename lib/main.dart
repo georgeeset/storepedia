@@ -106,7 +106,7 @@ class MyApp extends StatelessWidget {
           routes: <String, WidgetBuilder>{
             //MyHome
             //``Page.routName : (context)=> MyHomePage(),
-            SearchPage.routName: (context) => const SearchPage(),
+            SearchPage.routeName: (context) => const SearchPage(),
             AddItemPage.routName: (context) => BlocProvider<RepititionCubit>(
                   create: (context) => RepititionCubit(),
                   child: const AddItemPage(),
@@ -136,7 +136,7 @@ class MyApp extends StatelessWidget {
             // UserSignUpPage.routName: (context) => UserSignUpPage(),
             // ImageShower.routeName:(context)=>ImageShower(),
 
-            ProfileEditPage.routName: (context) => const ProfileEditPage(),
+            ProfileEditPage.routeName: (context) => const ProfileEditPage(),
 
             CameraPage.routName: (context) => const CameraPage(),
           },

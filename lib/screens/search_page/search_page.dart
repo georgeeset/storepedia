@@ -5,7 +5,7 @@ import 'package:storepedia/widgets/page_layout.dart';
 import 'package:storepedia/widgets/search_result.dart';
 
 class SearchPage extends StatefulWidget {
-  static String routName = '/search_page';
+  static const String routeName = '/search_page';
   const SearchPage({super.key});
 
   @override

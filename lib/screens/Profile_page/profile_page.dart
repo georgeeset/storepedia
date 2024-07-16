@@ -168,6 +168,7 @@ class FellowUserCard extends StatelessWidget {
               heroTag: user.userId ?? 'One user With Big head',
             ),
             Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   user.userName ?? '',
@@ -177,7 +178,11 @@ class FellowUserCard extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 8),
-                Text(user.email ?? ''),
+                SelectableText(user.email ?? ''),
+                const SizedBox(height: 8),
+                Text(user.branch ?? ''),
+                const SizedBox(height: 8),
+                Text("Access Level: ${user.accessLevel.toString()}"),
                 // const SizedBox(height: 8),
                 // Text(user.bio),
               ],

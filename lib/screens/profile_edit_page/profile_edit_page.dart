@@ -11,7 +11,7 @@ import 'package:storepedia/constants/string_constants.dart' as string_constants;
 
 class ProfileEditPage extends StatelessWidget {
   const ProfileEditPage({super.key});
-  static String routName = '/profile_edit_page';
+  static const String routeName = '/profile_edit_page';
   @override
   Widget build(BuildContext context) {
     final arguments =
