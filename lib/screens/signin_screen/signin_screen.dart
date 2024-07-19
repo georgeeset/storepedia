@@ -74,7 +74,9 @@ class ForgotPasswordWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          const EmailInputField(),
+          const EmailInputField(
+            doValidation: false,
+          ),
           Container(
             height: 10.0,
           ),
@@ -122,7 +124,7 @@ class ForgotPasswordActionButtons extends StatelessWidget {
                     .add(ResetPasswordEvent(email: emailCubit.email));
               }
             },
-            child: const Text('Reset'),
+            child: const Text('Reset Password'),
           ),
         ],
       ),

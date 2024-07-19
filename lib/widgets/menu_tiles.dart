@@ -66,7 +66,7 @@ class MenuTiles extends StatelessWidget {
           itemIcon: Icons.search,
           itemText: 'Search Store Item',
           onTapAction: () async {
-            Navigator.pushNamed(context, SearchPage.routName);
+            Navigator.pushNamed(context, SearchPage.routeName);
           },
         ),
 

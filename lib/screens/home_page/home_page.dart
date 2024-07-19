@@ -49,7 +49,7 @@ class HomePage extends StatelessWidget {
                     onTap: () {
                       showAboutPage(
                         context: context,
-                        values: {'version': '3.0.1', 'year': '2021'},
+                        values: {'version': '3.1.0', 'year': '2021'},
                         applicationLegalese:
                             'Copyright © CXG Technologies, {{ year }}',
                         applicationDescription: const Text(

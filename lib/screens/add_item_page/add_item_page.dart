@@ -241,7 +241,7 @@ class AddItemPage extends StatelessWidget {
                         return TextButton(
                           onPressed: () {
                             Navigator.of(context)
-                                .pushNamed(SearchPage.routName);
+                                .pushNamed(SearchPage.routeName);
                           },
                           child: Text(
                             'It seems the part already exist,\n Click Here to View,Edit or Delete the existing part.',
