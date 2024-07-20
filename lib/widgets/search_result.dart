@@ -76,7 +76,7 @@ class _QueryBodyState extends State<QueryBody> {
       if (state.queryStatus == QueryStatus.noResult) {
         return Column(
           children: [
-            //Image.asset('assets/gifs/animated_search.gif'),
+            Image.asset('assets/gifs/animated_search.gif'),
             Text(
               'No Result Found...',
               style: Theme.of(context).textTheme.titleMedium,

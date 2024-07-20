@@ -1,9 +1,9 @@
-import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storepedia/model/part.dart';
 import 'package:storepedia/repository/part_query.dart';
 
-import 'package:storepedia/constants/number_constants.dart' as NumberConstants;
+import 'package:storepedia/constants/number_constants.dart' as number_constants;
 
 part 'partquerymanager_state.dart';
 
@@ -23,7 +23,7 @@ class PartqueryManagerCubit extends Cubit<PartqueryManagerState> {
           // marked parts for delete are removed here if user level is Not admin
           // value.removeWhere((element) => element.markedBadByUid!=null);
 
-          if (value.length < NumberConstants.maximumSearchResult) {
+          if (value.length < number_constants.maximumSearchResult) {
             emit(state.copyWith(
               queryStatus: QueryStatus.loaded,
               paginationLoading: false,
@@ -64,7 +64,7 @@ class PartqueryManagerCubit extends Cubit<PartqueryManagerState> {
       if (value == null) {
         emit(state.copyWith(hasReachedMax: true, paginationLoading: false));
       } else {
-        if (value.length < NumberConstants.maximumSearchResult) {
+        if (value.length < number_constants.maximumSearchResult) {
           emit(state.copyWith(
             paginationLoading: false,
             hasReachedMax: true,

@@ -280,7 +280,9 @@ class _PartBodyState extends State<PartBody> {
                               onPressed: () {
                                 context.read<PartuploadwizardBloc>().add(
                                     DeletePartEvent(
-                                        partId: widget.part.partUid!));
+                                        partId: widget.part.partUid!,
+                                        companyName: widget.part.company ??
+                                            string_constants.partsCollection));
                               },
                               icon: const Icon(
                                 Icons.delete_forever,

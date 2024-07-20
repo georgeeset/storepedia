@@ -4,15 +4,11 @@ import 'package:storepedia/cubit/part_query_manager.dart/cubit/partquerymanager_
 import 'package:storepedia/widgets/page_layout.dart';
 import 'package:storepedia/widgets/search_result.dart';
 
-class SearchPage extends StatefulWidget {
+class SearchPage extends StatelessWidget {
   static String routName = '/search_page';
-  const SearchPage({super.key});
+  final String? searchQuery;
+  const SearchPage({this.searchQuery, super.key});
 
-  @override
-  State<SearchPage> createState() => _SearchPageState();
-}
-
-class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     Size pageSize = MediaQuery.of(context).size;
@@ -20,7 +16,7 @@ class _SearchPageState extends State<SearchPage> {
       title: Container(
           margin: const EdgeInsets.only(left: 10),
           width: pageSize.width / 1.3,
-          child: const SearchDon()),
+          child: SearchDon(searchString: searchQuery)),
       hasBackButton: true,
       body: const QueryBody(),
     );
@@ -28,7 +24,8 @@ class _SearchPageState extends State<SearchPage> {
 }
 
 class SearchDon extends StatefulWidget {
-  const SearchDon({super.key});
+  const SearchDon({this.searchString, super.key});
+  final String? searchString;
 
   @override
   State<SearchDon> createState() => _SearchDonState();
@@ -40,7 +37,12 @@ class _SearchDonState extends State<SearchDon> {
   @override
   void initState() {
     var searchState = context.read<PartqueryManagerCubit>().state;
+
     controller = TextEditingController(text: searchState.searchString);
+
+    if (widget.searchString != null) {
+      context.read<PartqueryManagerCubit>().attemptQuery(widget.searchString!);
+    }
 
     super.initState();
   }

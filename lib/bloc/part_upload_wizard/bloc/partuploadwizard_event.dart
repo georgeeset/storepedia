@@ -7,16 +7,20 @@ abstract class PartuploadwizardEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class UploadPartEvent extends PartuploadwizardEvent{
+class UploadPartEvent extends PartuploadwizardEvent {
   final Part part;
   final int score;
-  const UploadPartEvent({required this.part,required this.score});
-    
+  const UploadPartEvent({required this.part, required this.score});
+
   @override
-  List<Object> get props => [part,score];
+  List<Object> get props => [part, score];
 }
 
-class DeletePartEvent extends PartuploadwizardEvent{
+class DeletePartEvent extends PartuploadwizardEvent {
+  /// document id to be deleted
   final String partId;
-  const DeletePartEvent({required this.partId});
+
+  /// company collection where to find the document to delete
+  final String companyName;
+  const DeletePartEvent({required this.partId, required this.companyName});
 }

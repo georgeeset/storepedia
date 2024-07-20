@@ -12,19 +12,21 @@ part 'partuploadwizard_state.dart';
 class PartuploadwizardBloc
     extends Bloc<PartuploadwizardEvent, PartuploadwizardState> {
   PartuploadwizardBloc() : super(PartuploadwizardIdleState()) {
-    final PartOperationsRepository partOperationsRepository =
-        PartOperationsRepository();
+    late PartOperationsRepository? partOperationsRepository;
+
     // @override
     // Stream<PartuploadwizardState> mapEventToState(
     //   PartuploadwizardEvent event,
     // ) async* {
     on<UploadPartEvent>((event, emit) async {
       emit(PartuploadwizardLoadingState());
+      partOperationsRepository ??=
+          PartOperationsRepository(partsCollection: event.part.company!);
       if (event.part.photo != null &&
           event.score > number_constants.minimumScore) {
         print(event.part.partUid);
         if (event.part.partUid != null) {
-          await partOperationsRepository
+          await partOperationsRepository!
               .editPart(event.part)
               .then((value) => emit(PartuploadwizardLoadedState()))
               .onError(
@@ -34,7 +36,7 @@ class PartuploadwizardBloc
               );
         } else {
           print('New Part');
-          await partOperationsRepository
+          await partOperationsRepository!
               .addPart(event.part)
               .then((value) => emit(PartuploadwizardLoadedState()))
               .onError(
@@ -51,8 +53,9 @@ class PartuploadwizardBloc
 
     on<DeletePartEvent>((event, emit) async {
       emit(PartuploadwizardLoadingState());
-
-      partOperationsRepository
+      partOperationsRepository ??=
+          PartOperationsRepository(partsCollection: event.companyName);
+      partOperationsRepository!
           .deletePart(partId: event.partId)
           .then((value) => emit(PartuploadwizardLoadedState()))
           .onError((error, stackTrace) =>

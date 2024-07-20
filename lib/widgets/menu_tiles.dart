@@ -77,9 +77,7 @@ class MenuTiles extends StatelessWidget {
                 sizeData: sizeData,
                 itemIcon: Icons.timelapse,
                 itemText: 'Loading',
-                onTapAction: () async {
-                  context.read<UserManagerCubit>().retryLoading();
-                });
+                onTapAction: () {});
           }
 
           if (state is UserLoadingErrorState) {

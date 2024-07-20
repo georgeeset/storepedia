@@ -16,7 +16,10 @@ class PartQuery {
   ///returns List of parts if qurey yeild result.
   ///if newSearch is false, dont forget to add the last document
   Future<List<Part>?> searchPart(
-      {required String searchString, bool newSearch = true}) async {
+      {required String searchString,
+      bool newSearch = true,
+      String? company,
+      String? branch}) async {
     //keywords form here...
     var keywords = _stringProcessor.searchKeywords(searchString);
 

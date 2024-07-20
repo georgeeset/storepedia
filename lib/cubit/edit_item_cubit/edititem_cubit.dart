@@ -83,6 +83,8 @@ class EditItemCubit extends HydratedCubit<Part> {
         state.copyWith(
           addedBy: user.userName,
           addedById: user.userId,
+          company: user.company,
+          branch: user.branch,
           dateAdded: DateTime.now().millisecondsSinceEpoch,
           searchKeywords: stringProcessor.searchKeywords(combinedString),
         ),

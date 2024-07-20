@@ -1,31 +1,31 @@
 import 'package:storepedia/model/part.dart';
 import 'package:storepedia/repository/firestore_operaions.dart';
-import 'package:storepedia/constants/string_constants.dart' as StringConstants;
 
 class PartOperationsRepository extends FirestoreOperations {
-  PartOperationsRepository();
+  PartOperationsRepository({required this.partsCollection});
+  final String partsCollection;
 
   Future<void> storePart(Part part) async {
-    return addDocument(StringConstants.partsCollection, part.toMap());
+    return addDocument(partsCollection, part.toMap());
   }
 
   Future<void> editPart(Part part) async {
-    return editDocument(
-            StringConstants.partsCollection, part.partUid!, part.toMap())
-        .onError(
+    /// Update an existing part document
+    return editDocument(partsCollection, part.partUid!, part.toMap()).onError(
       (error, stackTrace) => Future.error(error.toString(), stackTrace),
     );
   }
 
   Future<void> addPart(Part part) async {
-    return addDocument(StringConstants.partsCollection, part.toMap()).onError(
+    /// Add new part document
+    return addDocument(partsCollection, part.toMap()).onError(
       (error, stackTrace) => Future.error(error.toString(), stackTrace),
     );
   }
 
   Future<void> deletePart({required partId}) {
-    return deleteDocumentLevel1(StringConstants.partsCollection, partId)
-        .onError(
-            (error, stackTrace) => Future.error(error.toString(), stackTrace));
+    /// Delete part document
+    return deleteDocumentLevel1(partsCollection, partId).onError(
+        (error, stackTrace) => Future.error(error.toString(), stackTrace));
   }
 }
