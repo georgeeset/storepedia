@@ -73,9 +73,13 @@ class MyApp extends StatelessWidget {
           create: (context) => AuthenticationBloc(),
         ),
 
+        BlocProvider(
+          create: (context) => UserManagerCubit(),
+        ),
+
         BlocProvider<NavigationBloc>(
           create: (context) => NavigationBloc('/splashscreen'),
-        )
+        ),
 
         // BlocProvider<EditItemCubit>(
         //   create: (context) => EditItemCubit(),

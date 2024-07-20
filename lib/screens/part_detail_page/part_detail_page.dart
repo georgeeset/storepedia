@@ -15,7 +15,7 @@ import 'package:storepedia/constants/string_constants.dart' as string_constants;
 import 'package:storepedia/constants/number_constants.dart' as number_constants;
 
 class PartDetailPage extends StatelessWidget {
-  static const String routeName = '/part_detail_page';
+  static const String routeName = '/part-detail';
   const PartDetailPage({super.key});
 
   @override

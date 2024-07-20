@@ -19,10 +19,12 @@ class UserManagerCubit extends Cubit<UserManagerState> {
     userRepository.getUser(user.uid).then((value) {
       // print(value.hasName());
       emit(UserLoadedState(userData: value));
-    }).catchError(((error, stackTrace) {
-      // print('error observed from getUser... $error');
-      emit(UserLoadingErrorState(error: error));
-    }));
+    }).catchError(
+      ((error, stackTrace) {
+        // print('error observed from getUser... $error');
+        emit(UserLoadingErrorState(error: error));
+      }),
+    );
     // emit user loading
 
     // emit user loaded when done

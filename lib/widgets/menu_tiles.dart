@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:storepedia/bloc/navigation_bloc/navigation_bloc.dart';
 import 'package:storepedia/bloc/photo_manager_bloc/photomanager_bloc.dart';
 import 'package:storepedia/cubit/edit_item_cubit/edititem_cubit.dart';
 import 'package:storepedia/cubit/form_level_cubit/formlevel_cubit.dart';
 import 'package:storepedia/cubit/user_manager_cubit/usermanager_cubit.dart';
-import 'package:storepedia/screens/Profile_page/profile_page.dart';
-import 'package:storepedia/screens/add_item_page/add_item_page.dart';
-import 'package:storepedia/screens/exhausted_items_page/exhausted_items_page.dart';
 
 import 'package:storepedia/constants/string_constants.dart' as string_constants;
 import 'package:storepedia/constants/number_constants.dart' as number_constants;
-import 'package:storepedia/screens/search_page/search_page.dart';
 import 'package:storepedia/widgets/input_editor.dart';
 import 'package:storepedia/widgets/warining_dialog.dart';
 
@@ -46,12 +43,9 @@ class MenuTiles extends StatelessWidget {
           context.read<EditItemCubit>().clearPart();
           context.read<PhotomanagerBloc>().add(RemovePhotoEvent());
           context.read<FormLevelCubit>().clearScore();
-          Navigator.pushNamed(context, AddItemPage.routName);
-        } else {
-          Navigator.pushNamed(context, AddItemPage.routName);
         }
       } else {
-        Navigator.pushNamed(context, AddItemPage.routName);
+        context.read<NavigationBloc>().add(const PushAddItemScreen());
       }
     }
 
@@ -66,7 +60,7 @@ class MenuTiles extends StatelessWidget {
           itemIcon: Icons.search,
           itemText: 'Search Store Item',
           onTapAction: () async {
-            Navigator.pushNamed(context, SearchPage.routeName);
+            context.read<NavigationBloc>().add(const PushSearchScreen());
           },
         ),
 
@@ -202,7 +196,9 @@ class MenuTiles extends StatelessWidget {
             itemIcon: Icons.hourglass_empty,
             itemText: 'Exhausted Items',
             onTapAction: () {
-              Navigator.pushNamed(context, ExhaustedItemsPage.routName);
+              context
+                  .read<NavigationBloc>()
+                  .add(const PushExhaustedPartScreen());
             }),
 
         MenuItem(
@@ -210,7 +206,7 @@ class MenuTiles extends StatelessWidget {
           itemIcon: Icons.person,
           itemText: 'Profile',
           onTapAction: () async {
-            Navigator.pushNamed(context, ProfilePage.routName);
+            context.read<NavigationBloc>().add(const PushProfileScreen());
           },
         ),
       ],

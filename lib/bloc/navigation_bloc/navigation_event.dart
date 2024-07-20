@@ -33,9 +33,6 @@ class PushHomeScreen extends NavigationEvent {
   String toString() {
     return 'PushHomeScreen';
   }
-
-  @override
-  List<Object> get props => [];
 }
 
 class PushAddItemScreen extends NavigationEvent {
@@ -62,7 +59,7 @@ class PushLoginSignupScreen extends NavigationEvent {
 }
 
 class PushPartDetailScreen extends NavigationEvent {
-  const PushPartDetailScreen(this.part);
+  const PushPartDetailScreen({this.part});
   final Part? part;
   @override
   String toString() {
@@ -74,7 +71,7 @@ class PushPartDetailScreen extends NavigationEvent {
 }
 
 class PushSearchScreen extends NavigationEvent {
-  const PushSearchScreen(this.searchString);
+  const PushSearchScreen({this.searchString});
   final String? searchString;
   @override
   String toString() {
@@ -103,6 +100,14 @@ class PushReplaceScreen extends NavigationEvent {
   @override
   String toString() {
     return 'PushReplaceScreen => $routName';
+  }
+}
+
+class PushExhaustedPartScreen extends NavigationEvent {
+  const PushExhaustedPartScreen();
+  @override
+  String toString() {
+    return 'PushExhaustedPartScreen';
   }
 }
 

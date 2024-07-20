@@ -9,7 +9,7 @@ import '../../cubit/fellow_users_cubit/fellow_users_cubit.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
-  static String routName = '/profile_page';
+  static const String routeName = '/profile';
 
   @override
   Widget build(BuildContext context) {
