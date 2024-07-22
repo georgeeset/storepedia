@@ -27,6 +27,7 @@ const String price = 'price';
 const String quantity = 'quantity';
 const String profilePhoto = 'profilephoto';
 const String fullName = 'Full Name';
+const String pictures = 'picture';
 
 const String dialogTitleAddPart = 'Uncompleted Form';
 const String dialogBodyAddPart =

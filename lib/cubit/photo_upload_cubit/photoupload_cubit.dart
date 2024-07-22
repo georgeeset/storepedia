@@ -1,6 +1,6 @@
-import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storepedia/repository/photo_manager_repository.dart';
 
 part 'photoupload_state.dart';
@@ -11,7 +11,10 @@ class PhotouploadCubit extends Cubit<PhotouploadState> {
 
   PhotouploadCubit() : super(PhotouploadInitial());
 
-  attemptUpload({required dynamic photo, String? fileName}) async {
+  attemptUpload(
+      {required dynamic photo,
+      required String companyName,
+      String? fileName}) async {
     //avoid uploading file multiple times. return void if already uploading
     if (state is PhotouploadingState) {
       return null;
@@ -19,7 +22,10 @@ class PhotouploadCubit extends Cubit<PhotouploadState> {
     emit(const PhotouploadingState(percentage: 0));
 
     var upload = photoManagerRepository.uploadItemImage(
-        image: photo, fileName: fileName);
+      image: photo,
+      companyName: companyName,
+      fileName: fileName,
+    );
     upload.listen((taskSnapshot) async {
       if (taskSnapshot.state == TaskState.success) {
         await taskSnapshot.ref.getDownloadURL().then(

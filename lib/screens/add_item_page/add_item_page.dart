@@ -40,12 +40,21 @@ class AddItemPage extends StatelessWidget {
           BlocListener<PhotomanagerBloc, PhotomanagerState>(
             listener: (context, state) {
               var scoreState = context.read<FormLevelCubit>().state;
+              var userState = context.read<UserManagerCubit>().state;
+
+              if (userState is! UserLoadedState) {
+                print('User infomation is not loaded wahala dey');
+                return;
+              }
+
               // print(scoreState);
               if (state is ImageSelectedState &&
                   scoreState >= number_constants.minimumScore) {
-                context
-                    .read<PhotouploadCubit>()
-                    .attemptUpload(photo: state.image);
+                context.read<PhotouploadCubit>().attemptUpload(
+                      photo: state.image,
+                      companyName: userState.userData.company ??
+                          string_constants.pictures,
+                    );
               }
 
               if (state is PhotomanagerEmptyState) {
@@ -114,8 +123,7 @@ class AddItemPage extends StatelessWidget {
             /// clear from make them no send am again
             if (state is PartuploadwizardLoadedState) {
               context.read<PhotomanagerBloc>().add(RemovePhotoEvent());
-
-              context.read<EditItemCubit>().close();
+              // context.read<EditItemCubit>().close();
               Navigator.canPop(context) ? Navigator.pop(context) : null;
             }
           }),
@@ -130,11 +138,20 @@ class AddItemPage extends StatelessWidget {
             var photoState = context.read<PhotomanagerBloc>().state;
             var upload = context.read<PhotouploadCubit>();
             var formStatus = context.read<EditItemCubit>().state;
+            var userState = context.read<UserManagerCubit>().state;
+
+            if (userState is! UserLoadedState) {
+              print('User infomation is not loaded wahala dey');
+              return;
+            }
+
             if (state >= number_constants.minimumScore &&
                 photoState is ImageSelectedState) {
               upload.attemptUpload(
                 photo: photoState.image,
                 fileName: formStatus.photo,
+                companyName:
+                    userState.userData.company ?? string_constants.pictures,
               );
             }
 

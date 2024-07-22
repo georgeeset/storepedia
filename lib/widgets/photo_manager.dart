@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pinch_zoom_image_last/pinch_zoom_image_last.dart';
+import 'package:storepedia/cubit/user_manager_cubit/usermanager_cubit.dart';
 import 'package:storepedia/model/part.dart';
 
 import '../bloc/photo_manager_bloc/photomanager_bloc.dart';
@@ -14,6 +15,7 @@ import '../repository/crop_image.dart';
 import '../repository/image_getter.dart';
 import '../screens/camera_screen/camera_page.dart';
 import 'online_pinch_zoom.dart';
+import '../constants/string_constants.dart' as string_constants;
 
 class PhotoManager extends StatefulWidget {
   const PhotoManager({super.key});
@@ -277,9 +279,21 @@ class DisplayOfflineImage extends StatelessWidget {
                       child: IconButton(
                         icon: const Icon(Icons.refresh, size: 64),
                         tooltip: 'Retry upload',
-                        onPressed: () => context
-                            .read<PhotouploadCubit>()
-                            .attemptUpload(photo: image)(image),
+                        onPressed: () {
+                          var userState =
+                              context.read<UserManagerCubit>().state;
+
+                          if (userState is! UserLoadedState) {
+                            print(
+                                'User infomation is not loaded at Retry Button wahala dey');
+                            return;
+                          }
+                          context.read<PhotouploadCubit>().attemptUpload(
+                                photo: image,
+                                companyName: userState.userData.company ??
+                                    string_constants.pictures,
+                              );
+                        },
                       ),
                     ),
                   );

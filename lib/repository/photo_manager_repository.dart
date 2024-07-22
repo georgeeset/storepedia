@@ -13,6 +13,9 @@ class PhotoManagerRepository {
   Stream<TaskSnapshot> uploadItemImage({
     required dynamic image,
 
+    /// Company name connects to the location where files will be stored
+    required String companyName,
+
     ///fileName represent the file you want to overwrite.
     ///dont provide it if you dont need to.
     String? fileName,
@@ -22,7 +25,8 @@ class PhotoManagerRepository {
     if (image is File) {
       var extension = p.basename(image.path);
       UploadTask task = cloudStorageService.startUpload(
-          filePath: '${firebase_constants.storageLocation}/$name.$extension',
+          filePath:
+              '${firebase_constants.storageLocation}/$companyName/$name.$extension',
           file: image,
           replaceFileName: fileName);
       return task.snapshotEvents;
@@ -32,7 +36,8 @@ class PhotoManagerRepository {
         mime ??= 'image/jpeg';
         var extension = extensionFromMime(mime);
         UploadTask task = cloudStorageService.startUpload(
-            filePath: '${firebase_constants.storageLocation}/$name.$extension',
+            filePath:
+                '${firebase_constants.storageLocation}/$companyName/$name.$extension',
             data: image,
             replaceFileName: fileName);
         return task.snapshotEvents;
