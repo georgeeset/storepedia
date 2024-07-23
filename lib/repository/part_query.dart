@@ -2,8 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:storepedia/model/part.dart';
 import 'package:storepedia/repository/firestore_operaions.dart';
 import 'package:storepedia/repository/string_processor.dart';
-import 'package:storepedia/constants/string_constants.dart' as StringConstants;
-import 'package:storepedia/constants/number_constants.dart' as NumberConstants;
+import 'package:storepedia/constants/string_constants.dart' as string_constants;
+import 'package:storepedia/constants/number_constants.dart' as number_constants;
 
 class PartQuery {
   final FirestoreOperations _firestoreOperations = FirestoreOperations();
@@ -37,10 +37,10 @@ class PartQuery {
       queryResult = await _firestoreOperations
           .pagenateQueryWithListKeywords(
               keywords,
-              StringConstants.partsCollection,
-              StringConstants.searchKeywords,
-              NumberConstants.maximumSearchResult,
-              StringConstants.likesCount,
+              string_constants.partsCollection,
+              string_constants.searchKeywords,
+              number_constants.maximumSearchResult,
+              string_constants.likesCount,
               lastDoc!)
           .onError(
             (error, stackTrace) => Future.error(error.toString(), stackTrace),
@@ -49,10 +49,10 @@ class PartQuery {
       queryResult = await _firestoreOperations
           .queryWithListKeywords(
               keywords,
-              StringConstants.partsCollection,
-              StringConstants.searchKeywords,
-              NumberConstants.maximumSearchResult,
-              StringConstants.likesCount)
+              string_constants.partsCollection,
+              string_constants.searchKeywords,
+              number_constants.maximumSearchResult,
+              string_constants.likesCount)
           .onError(
             (error, stackTrace) => Future.error(error.toString(), stackTrace),
           );

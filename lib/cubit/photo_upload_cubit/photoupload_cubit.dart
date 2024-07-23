@@ -58,7 +58,6 @@ class PhotouploadCubit extends Cubit<PhotouploadState> {
     print('PhotoUploadBloc State ${change.nextState}');
     super.onChange(change);
   }
-
   // @override
   // Future<void> close() {
   //   photoSubscription.cancel();

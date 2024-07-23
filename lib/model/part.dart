@@ -180,6 +180,6 @@ class Part {
   }
 
   clear() {
-    return Part();
+    return Part(photo: null);
   }
 }

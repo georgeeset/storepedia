@@ -156,10 +156,12 @@ class PhotoManagerState extends State<PhotoManager> {
                                 children: [
                                   Icon(Icons.photo_camera,
                                       color: Colors.white, size: 64),
-                                  Text('Camera',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.white)),
+                                  Text(
+                                    'Camera',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white),
+                                  ),
                                 ],
                               ),
                             ),
