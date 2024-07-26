@@ -157,11 +157,15 @@ class AddItemPage extends StatelessWidget {
 
             if (state >= number_constants.minimumScore) {
               var formStatus = context.read<EditItemCubit>().state;
+              var userInfo = context.read<UserManagerCubit>().state;
+              var userCompany = userInfo is UserLoadedState
+                  ? userInfo.userData.company
+                  : null;
               context.read<RepititionCubit>().searchDB(
-                    partNumber: formStatus.partNumber,
-                    storeid: formStatus.storeId,
-                    storageLocation: formStatus.storeLocation,
-                  );
+                  partNumber: formStatus.partNumber,
+                  storeid: formStatus.storeId,
+                  storageLocation: formStatus.storeLocation,
+                  companyName: userCompany!);
             }
           }),
 

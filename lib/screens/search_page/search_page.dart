@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storepedia/cubit/part_query_manager.dart/cubit/partquerymanager_cubit.dart';
+import 'package:storepedia/cubit/user_manager_cubit/usermanager_cubit.dart';
 import 'package:storepedia/widgets/page_layout.dart';
 import 'package:storepedia/widgets/search_result.dart';
 
@@ -37,11 +38,15 @@ class _SearchDonState extends State<SearchDon> {
   @override
   void initState() {
     var searchState = context.read<PartqueryManagerCubit>().state;
+    var userInfo = context.read<UserManagerCubit>().state;
 
     controller = TextEditingController(text: searchState.searchString);
-
+    var userCompany =
+        userInfo is UserLoadedState ? userInfo.userData.company : null;
     if (widget.searchString != null) {
-      context.read<PartqueryManagerCubit>().attemptQuery(widget.searchString!);
+      context
+          .read<PartqueryManagerCubit>()
+          .attemptQuery(widget.searchString!, userCompany!);
     }
 
     super.initState();
@@ -66,11 +71,20 @@ class _SearchDonState extends State<SearchDon> {
       ),
       onChanged: (text) {
         if (text.endsWith(' ')) {
-          context.read<PartqueryManagerCubit>().attemptQuery(text);
+          var userInfo = context.read<UserManagerCubit>().state;
+          var userCompany =
+              userInfo is UserLoadedState ? userInfo.userData.company : null;
+
+          context
+              .read<PartqueryManagerCubit>()
+              .attemptQuery(text, userCompany!);
         }
       },
       onSubmitted: (text) {
-        context.read<PartqueryManagerCubit>().attemptQuery(text);
+        var userInfo = context.read<UserManagerCubit>().state;
+        var userCompany =
+            userInfo is UserLoadedState ? userInfo.userData.company : null;
+        context.read<PartqueryManagerCubit>().attemptQuery(text, userCompany!);
       },
     );
   }

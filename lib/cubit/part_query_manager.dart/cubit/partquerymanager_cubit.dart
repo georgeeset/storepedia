@@ -10,11 +10,15 @@ part 'partquerymanager_state.dart';
 class PartqueryManagerCubit extends Cubit<PartqueryManagerState> {
   PartqueryManagerCubit() : super(PartqueryManagerState());
   final PartQuery partQueryRepository = PartQuery();
+  late String companyName; // fill in data later
 
-  void attemptQuery(String query) {
+  void attemptQuery(String query, String companyName) {
+    this.companyName = companyName; // make available for other functions
     if (query.length > 3) {
       emit(state.copyWith(queryStatus: QueryStatus.loading));
-      partQueryRepository.searchPart(searchString: query).then((value) {
+      partQueryRepository
+          .searchPart(searchString: query, company: companyName)
+          .then((value) {
         print('${value?.length}');
 
         if (value == null) {
@@ -58,7 +62,10 @@ class PartqueryManagerCubit extends Cubit<PartqueryManagerState> {
 
     print('requresting more');
     await partQueryRepository
-        .searchPart(searchString: state.searchString, newSearch: false)
+        .searchPart(
+            searchString: state.searchString,
+            company: companyName,
+            newSearch: false)
         .then((value) {
       print('${value?.length}');
       if (value == null) {

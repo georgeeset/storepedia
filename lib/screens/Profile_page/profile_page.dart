@@ -6,6 +6,7 @@ import 'package:storepedia/widgets/onliine_avatar.dart';
 import 'package:storepedia/widgets/page_layout.dart';
 
 import '../../cubit/fellow_users_cubit/fellow_users_cubit.dart';
+import '../../widgets/input_editor.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -75,8 +76,45 @@ class ProfileData extends StatelessWidget {
         ),
         DataRow(rowKey: 'Full Name:', rowValue: data.userName),
         DataRow(rowKey: 'Email:', rowValue: data.email),
-        DataRow(rowKey: 'Company:', rowValue: data.company),
-        DataRow(rowKey: 'Branch:', rowValue: data.branch),
+        DataRow(
+          rowKey: 'Company:',
+          rowValue: data.company,
+          editAction: () {
+            SignupFormDialog.formDialog(
+              context: context,
+              onSubmit: (value) {
+                var userData = context.read<UserManagerCubit>().state;
+                if (userData is UserLoadedState) {
+                  context.read<UserManagerCubit>().updateCompanyName(
+                        companyName: value,
+                        userData: userData.userData,
+                      );
+                }
+              },
+              title: 'Company Name\ndetermines the where your data is stored',
+            );
+          },
+        ),
+        DataRow(
+          rowKey: 'Branch:',
+          rowValue: data.branch,
+          editAction: () {
+            SignupFormDialog.formDialog(
+              context: context,
+              onSubmit: (value) {
+                var userData = context.read<UserManagerCubit>().state;
+                if (userData is UserLoadedState) {
+                  context.read<UserManagerCubit>().updateCompanyBranch(
+                        companyBranch: value,
+                        userData: userData.userData,
+                      );
+                }
+              },
+              title:
+                  'Company Branch\nYour company branch separates your team from other location',
+            );
+          },
+        ),
         DataRow(
           rowKey: 'User status:',
           rowValue: data.isAdmin ? 'Admin' : 'User',
@@ -91,7 +129,10 @@ class ProfileData extends StatelessWidget {
         const Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text('Find your Co-Workers'),
+            Text(
+              'Find your Co-Workers',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
           ],
         ),
         const SizedBox(
@@ -122,9 +163,11 @@ class ProfileData extends StatelessWidget {
 }
 
 class DataRow extends StatelessWidget {
-  const DataRow({super.key, required this.rowKey, this.rowValue});
+  const DataRow(
+      {super.key, required this.rowKey, this.rowValue, this.editAction});
   final String rowKey;
   final String? rowValue;
+  final Function? editAction;
 
   @override
   Widget build(BuildContext context) {
@@ -132,13 +175,22 @@ class DataRow extends StatelessWidget {
       return Container(
         padding: const EdgeInsets.only(top: 10),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Text(
               rowKey,
               overflow: TextOverflow.ellipsis,
             ),
+            const Spacer(),
             SelectableText(rowValue ?? ''),
+            const SizedBox(
+              width: 30,
+            ),
+            editAction != null
+                ? IconButton(
+                    onPressed: () => editAction!(),
+                    icon: const Icon(Icons.edit))
+                : const SizedBox()
           ],
         ),
       );

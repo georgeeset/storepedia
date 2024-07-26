@@ -17,8 +17,8 @@ class PartQuery {
   ///if newSearch is false, dont forget to add the last document
   Future<List<Part>?> searchPart(
       {required String searchString,
+      required String company,
       bool newSearch = true,
-      String? company,
       String? branch}) async {
     //keywords form here...
     var keywords = _stringProcessor.searchKeywords(searchString);
@@ -37,7 +37,7 @@ class PartQuery {
       queryResult = await _firestoreOperations
           .pagenateQueryWithListKeywords(
               keywords,
-              string_constants.partsCollection,
+              company,
               string_constants.searchKeywords,
               number_constants.maximumSearchResult,
               string_constants.likesCount,
@@ -49,7 +49,7 @@ class PartQuery {
       queryResult = await _firestoreOperations
           .queryWithListKeywords(
               keywords,
-              string_constants.partsCollection,
+              company,
               string_constants.searchKeywords,
               number_constants.maximumSearchResult,
               string_constants.likesCount)

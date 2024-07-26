@@ -9,10 +9,17 @@ class RepititionCubit extends Cubit<RepititionCubitState> {
   RepititionCubit() : super(RepititionInitialState());
 
   ///Pick the important search strings and search for repitition on the DB
-  searchDB({String? partNumber, String? storageLocation, String? storeid}) {
+  searchDB(
+      {String? partNumber,
+      String? storageLocation,
+      required String companyName,
+      String? storeid}) {
     PartQuery partQuery = PartQuery();
     partQuery
-        .searchPart(searchString: '${storageLocation ?? ''} ${storeid ?? ''}')
+        .searchPart(
+      searchString: '${storageLocation ?? ''} ${storeid ?? ''}',
+      company: companyName,
+    )
         .then((value) {
       if (value == null) {
         emit(RepititionNotFoundState());
