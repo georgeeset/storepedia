@@ -85,13 +85,16 @@ class ProfileData extends StatelessWidget {
               onSubmit: (value) {
                 var userData = context.read<UserManagerCubit>().state;
                 if (userData is UserLoadedState) {
+                  // ensure company name is safe before saving
+                  if (!RegExp(r"^[A-Za-z\s]+$").hasMatch(value)) return;
                   context.read<UserManagerCubit>().updateCompanyName(
-                        companyName: value,
+                        companyName: value.trim(),
                         userData: userData.userData,
                       );
                 }
               },
-              title: 'Company Name\ndetermines the where your data is stored',
+              title:
+                  'Company Name\ndetermines the where your data is stored.\nMust contain Aphabet and space only',
             );
           },
         ),
@@ -145,16 +148,22 @@ class ProfileData extends StatelessWidget {
                 children: state.response
                     .map(
                       (user) => FellowUserCard(
+                        myAccount: data,
                         user: user,
+                        key: ValueKey(user.userId),
                       ),
                     )
                     .toList(),
               );
             } else if (state.queryStatus == QueryStatus.error) {
               return Text(state.errorMessage);
-            } else {
+            } else if (state.queryStatus == QueryStatus.loading) {
               return const LinearProgressIndicator();
+            } else if (state.queryStatus == QueryStatus.noResult) {
+              return const Text(
+                  'You are all alone!, No co-workers.\nInvite your co-workers to enjoy full features');
             }
+            return const CircularProgressIndicator();
           },
         ),
       ],
@@ -201,9 +210,11 @@ class DataRow extends StatelessWidget {
 }
 
 class FellowUserCard extends StatelessWidget {
-  const FellowUserCard({super.key, required this.user});
+  const FellowUserCard(
+      {super.key, required this.myAccount, required this.user});
 
   final UserModel user;
+  final UserModel myAccount;
 
   @override
   Widget build(BuildContext context) {
@@ -219,7 +230,11 @@ class FellowUserCard extends StatelessWidget {
               ringColor: Theme.of(context).primaryColor,
               heroTag: user.userId ?? 'One user With Big head',
             ),
+            const SizedBox(
+              width: 5.0,
+            ),
             Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   user.userName ?? '',
@@ -229,9 +244,25 @@ class FellowUserCard extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 8),
-                Text(user.email ?? ''),
-                // const SizedBox(height: 8),
-                // Text(user.bio),
+                SelectableText(user.email ?? ''),
+                const SizedBox(height: 8),
+                Text('Location: ${user.branch}'),
+                Row(
+                  children: [
+                    Text('Access Level: ${user.accessLevel}'),
+                    const SizedBox(
+                      width: 20,
+                    ),
+                    myAccount.accessLevel > user.accessLevel
+                        ? ElevatedButton(
+                            onPressed: () {
+                              context.read<UserManagerCubit>().upgradeCoWorker(
+                                  myAccount: myAccount, coWorker: user);
+                            },
+                            child: const Text("+Add"))
+                        : const SizedBox()
+                  ],
+                ),
               ],
             ),
           ],

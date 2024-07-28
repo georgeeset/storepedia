@@ -111,6 +111,34 @@ class UserManagerCubit extends Cubit<UserManagerState> {
         .then((value) => emit(EmailVerificationSentState(user.email!)));
   }
 
+  upgradeCoWorker(
+      {required UserModel myAccount, required UserModel coWorker}) async {
+    ///Increment a co-worker's Access Level
+    ///myAccount is the account owner.
+    ///coWorker is the user's data who's level is to be upgraded
+
+    if (myAccount.accessLevel <= coWorker.accessLevel) return;
+
+    emit(UserLoadingState());
+
+    UserModel promotedUser =
+        coWorker.copyWith(accessLevel: coWorker.accessLevel += 1);
+
+    await userRepository
+        .addUserProfile(promotedUser.userId!, promotedUser)
+        .then(
+          (value) => emit(
+            UserLoadedState(userData: myAccount),
+          ),
+        )
+        .onError(
+          (error, stackTrace) => emit(
+            UserLoadingErrorState(
+                error: error.toString(), stackTrace: stackTrace),
+          ),
+        );
+  }
+
   @override
   void onChange(Change<UserManagerState> change) {
     print(change.nextState);

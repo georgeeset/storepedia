@@ -122,6 +122,8 @@ class MenuTiles extends StatelessWidget {
                 SignupFormDialog.formDialog(
                   context: context,
                   onSubmit: (value) {
+                    // ensure company name is safe before saving
+                    if (!RegExp(r"^[A-Za-z\s]+$").hasMatch(value)) return;
                     var userData = context.read<UserManagerCubit>().state;
                     if (userData is UserLoadedState) {
                       context.read<UserManagerCubit>().updateCompanyName(
@@ -130,7 +132,8 @@ class MenuTiles extends StatelessWidget {
                           );
                     }
                   },
-                  title: 'Company Name\nGet this info from your colleagues',
+                  title:
+                      'Company Name\nMust contain Aphabet and space only\nGet this info from your colleagues',
                 );
               },
             );
