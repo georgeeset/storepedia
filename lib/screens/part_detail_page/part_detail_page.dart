@@ -154,6 +154,7 @@ class _PartBodyState extends State<PartBody> {
                       BlocBuilder<MarkexhaustedpartCubit,
                           MarkexhaustedpartState>(
                         builder: (context, state) {
+                          var myStatus = context.read<UserManagerCubit>().state;
                           return state == MarkexhaustedpartState.loading
                               ? const SizedBox(
                                   width: 15,
@@ -170,7 +171,13 @@ class _PartBodyState extends State<PartBody> {
                                     context
                                         .read<MarkexhaustedpartCubit>()
                                         .makrExhausted(
-                                            data: newValue, part: widget.part);
+                                            data: newValue,
+                                            part: widget.part,
+                                            companyName: myStatus
+                                                    is UserLoadedState
+                                                ? myStatus.userData.company ??
+                                                    'Unknown'
+                                                : 'Unknown');
                                   });
                         },
                       )
@@ -215,7 +222,10 @@ class _PartBodyState extends State<PartBody> {
                                       context.read<MarkpartCubit>().markBad(
                                           part: widget.part,
                                           reason: value,
-                                          userId: userInfo.userData.userId!);
+                                          userId: userInfo.userData.userId!,
+                                          companyName:
+                                              userInfo.userData.company ??
+                                                  'Umknown');
                                     }
                                   },
                                   title: 'State reason for Deleting this part',

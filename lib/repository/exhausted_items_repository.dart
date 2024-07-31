@@ -9,13 +9,15 @@ class ExhaustedItemsRepository {
   final FirestoreOperations _firestoreOperations = FirestoreOperations();
 
   DocumentSnapshot? lastDoc;
+  late String company;
 
-  Future<List<Part>?> search() async {
+  Future<List<Part>?> search({required String company}) async {
+    this.company = company; //define compapny here
     List<DocumentSnapshot> queryResult;
     if (lastDoc != null) {
       queryResult = await _firestoreOperations
           .paginateQueryWithValue(
-            string_constants.partsCollection,
+            company,
             string_constants.isExhausted,
             true,
             number_constants.maximumSearchResult,
@@ -28,7 +30,7 @@ class ExhaustedItemsRepository {
     } else {
       queryResult = await _firestoreOperations
           .queryWithValue(
-            string_constants.partsCollection,
+            company,
             string_constants.isExhausted,
             true,
             number_constants.maximumSearchResult,

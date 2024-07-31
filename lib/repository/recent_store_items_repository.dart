@@ -16,10 +16,9 @@ class RecentStoreItemsRepository {
   //           ));
   // }
 
-  Stream<List<Part>> fetchRecentItems() {
+  Stream<List<Part>> fetchRecentItems({required String collection}) {
     return _firestoreOperations
-        .streamRecentDocs(
-            StringConstants.partsCollection, StringConstants.dateAdded, 10)
+        .streamRecentDocs(collection, StringConstants.dateAdded, 10)
         .map((event) => event.map((e) => Part.fromMap(snapshot: e)).toList());
   }
 }

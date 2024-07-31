@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storepedia/bloc/photo_manager_bloc/photomanager_bloc.dart';
 import 'package:storepedia/cubit/edit_item_cubit/edititem_cubit.dart';
 import 'package:storepedia/cubit/form_level_cubit/formlevel_cubit.dart';
+import 'package:storepedia/cubit/recent_item_cubit/recentitems_cubit.dart';
 import 'package:storepedia/cubit/user_manager_cubit/usermanager_cubit.dart';
 import 'package:storepedia/screens/Profile_page/profile_page.dart';
 import 'package:storepedia/screens/add_item_page/add_item_page.dart';
@@ -174,6 +175,18 @@ class MenuTiles extends StatelessWidget {
           // next display dialog if user has name but has no company name
           // display dialog if user has not verified his email
           // ...
+
+          if (state is UserLoadedState && state.userData.hasCompany()) {
+            context
+                .read<RecentItemsCubit>()
+                .listenForRecentParts(company: state.userData.company!);
+          }
+
+          if (state is UserLoadedState && !state.userData.hasCompany()) {
+            context
+                .read<RecentItemsCubit>()
+                .listenForRecentParts(company: 'parts');
+          }
 
           if (state is UserLoadedState) {
             if (!state.userData.hasBranch() ||

@@ -5,14 +5,11 @@ import 'package:storepedia/constants/number_constants.dart' as number_constants;
 
 class FellowUsersRepository extends FirestoreOperations {
   Future<List<UserModel>> getFellowUsers(UserModel userModel) {
-    return paginateQueryWithStringValue(
-      string_constants.userCollection,
-      string_constants.company,
-      userModel.company ?? '',
-      string_constants.branch,
-      userModel.branch ?? '',
-      number_constants.maximumSearchResult,
-      string_constants.email,
+    return queryWithStringValue(
+      collection: string_constants.userCollection,
+      field: string_constants.company,
+      fieldValue: userModel.company ?? '',
+      orderBy: string_constants.accessLevel,
     ).then(
         (value) => value.map((e) => UserModel.fromMap(snapshot: e)).toList());
   }

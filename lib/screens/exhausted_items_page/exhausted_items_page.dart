@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:storepedia/cubit/exhausted_items_manager_cubit/cubit/exhausteditemsmanager_cubit.dart';
+import 'package:storepedia/cubit/user_manager_cubit/usermanager_cubit.dart';
 import 'package:storepedia/widgets/loading_layout.dart';
 import 'package:storepedia/widgets/one_part.dart';
 import 'package:storepedia/widgets/page_layout.dart';
@@ -15,7 +16,11 @@ class ExhaustedItemsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // final Size sizeData = MediaQuery.of(context).size;
-    context.read<ExhausteditemsmanagerCubit>().getExhaustedItems();
+    var derived = context.read<UserManagerCubit>().state;
+    context.read<ExhausteditemsmanagerCubit>().getExhaustedItems(
+        companyName: derived is UserLoadedState
+            ? derived.userData.company ?? 'parts'
+            : 'parts');
     return PageLayout(
         title: Text(
           'Exhausted Items',
@@ -105,7 +110,7 @@ class _ExhaustedBodyState extends State<ExhaustedBody> {
               style: Theme.of(context).textTheme.titleMedium,
             ),
             Text(
-              'Kindly check physically to be souble sure.',
+              'Kindly check physically to be double sure.',
               style: Theme.of(context)
                   .textTheme
                   .titleSmall

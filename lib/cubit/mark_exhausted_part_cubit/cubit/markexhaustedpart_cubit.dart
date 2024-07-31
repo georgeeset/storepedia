@@ -1,7 +1,6 @@
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storepedia/model/part.dart';
 import 'package:storepedia/repository/firestore_operaions.dart';
-import 'package:storepedia/constants/string_constants.dart' as StringConstants;
 
 enum MarkexhaustedpartState { idle, loading, loaded }
 
@@ -10,7 +9,11 @@ class MarkexhaustedpartCubit extends Cubit<MarkexhaustedpartState> {
 
   final FirestoreOperations _firestoreOperations = FirestoreOperations();
 
-  makrExhausted({required bool data, required Part part}) async {
+  makrExhausted({
+    required bool data,
+    required Part part,
+    required String companyName,
+  }) async {
     part = part.copyWith(
       isExhausted: data,
       markExhaustedTime: DateTime.now().millisecondsSinceEpoch,
@@ -18,8 +21,7 @@ class MarkexhaustedpartCubit extends Cubit<MarkexhaustedpartState> {
     emit(MarkexhaustedpartState.loading);
 
     await _firestoreOperations
-        .editDocument(
-            StringConstants.partsCollection, part.partUid!, part.toMap())
+        .editDocument(companyName, part.partUid!, part.toMap())
         .then((_) => emit(MarkexhaustedpartState.loaded))
         .onError((error, stackTrace) => emit(MarkexhaustedpartState.idle));
   }

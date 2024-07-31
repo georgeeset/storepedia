@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storepedia/model/user_model.dart';
+import 'package:storepedia/repository/fellow_users_repository.dart';
 import 'package:storepedia/repository/user_repository.dart';
 
 part 'usermanager_state.dart';
@@ -65,6 +66,30 @@ class UserManagerCubit extends Cubit<UserManagerState> {
     required String companyName,
   }) async {
     emit(UserLoadingState());
+
+    if (userData.company != null) {
+      //user already have a company name
+      // perform demotion of user to level 1 if
+      // user is not the only one in the company name
+      // perform demotion of user to level 5 if the user is
+      // among first 3 users in the company
+
+      FellowUsersRepository fellowUsersRepository = FellowUsersRepository();
+      var fellowUsers = await fellowUsersRepository.getFellowUsers(userData);
+
+      if (fellowUsers.length > 3) {
+        // demote to level 1
+        userData.copyWith(accessLevel: 1);
+      } else {
+        // promote to level 5
+        userData.copyWith(accessLevel: 5);
+      }
+    }
+
+    if (userData.company == companyName) {
+      emit(UserLoadedState(userData: userData));
+    }
+
     UserModel companyAdded = userData.copyWith(company: companyName);
 
     await userRepository

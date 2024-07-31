@@ -20,7 +20,6 @@ class HomePage extends StatelessWidget {
     final double horizontalListWidth = sizeData.width / 2.1;
     final double horizontalListHeight = sizeData.width / 2.1;
 
-    context.read<RecentItemsCubit>().listenForRecentParts();
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(

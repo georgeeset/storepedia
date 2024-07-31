@@ -7,10 +7,10 @@ class RecentItemsCubit extends Cubit<List<Part>> {
   final RecentStoreItemsRepository _recentStoreItemsRepository =
       RecentStoreItemsRepository();
 
-  listenForRecentParts() async {
+  listenForRecentParts({required String company}) async {
     // _recentStoreItemsRepository.fetchRecentItems().lis
     await for (List<Part> recentParts
-        in _recentStoreItemsRepository.fetchRecentItems()) {
+        in _recentStoreItemsRepository.fetchRecentItems(collection: company)) {
       //new part have been added
       emit(recentParts);
     }

@@ -237,7 +237,7 @@ class FellowUserCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  user.userName ?? '',
+                  myAccount.userId == user.userId ? 'You' : user.userName ?? '',
                   style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,

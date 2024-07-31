@@ -156,6 +156,21 @@ class FirestoreOperations {
                 Future.error(error.toString(), stackTrace));
   }
 
+  Future<List<DocumentSnapshot>> queryWithStringValue({
+    required String collection,
+    required String field,
+    required String fieldValue,
+    required String orderBy,
+  }) {
+    return _firebaseFirestore
+        .collection(collection)
+        .where(field, isEqualTo: fieldValue)
+        .get()
+        .then((value) => value.docs)
+        .onError(
+            (error, stackTrace) => Future.error(error.toString(), stackTrace));
+  }
+
   Stream<List<DocumentSnapshot>> streamRecentDocs(
     String collection,
     String sortField,
