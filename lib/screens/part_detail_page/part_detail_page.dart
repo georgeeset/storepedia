@@ -55,30 +55,6 @@ class _PartBodyState extends State<PartBody> {
       keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
       children: [
         OnlinePinchZoomImage(link: widget.part.photo),
-
-        // Container(
-        //   child: Row(
-        //     mainAxisAlignment: MainAxisAlignment.end,
-        //     children: [
-        //       Text(
-        //         part.likesCount == null ? '0' : part.likesCount.toString(),
-        //         style: Theme.of(context).textTheme.headline6,
-        //       ),
-        //       Container(
-        //         width: 20.0,
-        //       ),
-        //       IconButton(
-        //         icon: Icon(
-        //           Icons.thumb_up,
-        //           size: 30,
-        //         ),
-        //         onPressed: () {
-        //           //increase likes here;
-        //         },
-        //       ),
-        //     ],
-        //   ),
-        // ),
         space(),
         widget.part.partDescription == null
             ? Container()
@@ -88,7 +64,6 @@ class _PartBodyState extends State<PartBody> {
             ? Container()
             : textCard(
                 string_constants.brandTitle, widget.part.brand!, context),
-
         widget.part.partNumber == null
             ? Container()
             : textCard(string_constants.partNumberTitle,
@@ -104,15 +79,26 @@ class _PartBodyState extends State<PartBody> {
         widget.part.section == null
             ? Container()
             : textCard(
-                string_constants.sectionTitle, widget.part.section!, context),
+                string_constants.sectionTitle,
+                widget.part.section!,
+                context,
+              ),
+        textCard(
+          string_constants.company,
+          widget.part.company ?? 'None',
+          context,
+        ),
+        textCard(
+          string_constants.branch,
+          widget.part.branch ?? 'None',
+          context,
+        ),
         widget.part.reasonForMarkingBad == null
             ? Container()
             : textCard('Deleted', widget.part.reasonForMarkingBad!, context),
-
         widget.part.addedBy == null
             ? Container()
             : textCard('Added By', widget.part.addedBy!, context),
-
         widget.part.dateAdded == null
             ? Container()
             : textCard(
@@ -120,15 +106,12 @@ class _PartBodyState extends State<PartBody> {
                 DateTime.fromMillisecondsSinceEpoch(widget.part.dateAdded!)
                     .toString(),
                 context),
-
         widget.part.lastEditedBy == null
             ? Container()
             : textCard('Last Edited By', widget.part.lastEditedBy!, context),
-
         widget.part.searchKeywords == null
             ? Container()
             : textCard('Tags', widget.part.searchKeywords!.toString(), context),
-
         widget.part.markedBadByUid == null
             ? Card(
                 color: widget.part.isExhausted
@@ -186,7 +169,6 @@ class _PartBodyState extends State<PartBody> {
                 ),
               )
             : Container(),
-
         widget.part.markedBadByUid == null
             ? BlocBuilder<UserManagerCubit, UserManagerState>(
                 builder: (context, state) {
@@ -296,6 +278,7 @@ class _PartBodyState extends State<PartBody> {
                               },
                               icon: const Icon(
                                 Icons.delete_forever,
+                                size: 40,
                                 color: Colors.redAccent,
                               ),
                               tooltip: 'Delete Forever',

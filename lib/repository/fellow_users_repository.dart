@@ -1,7 +1,6 @@
 import 'package:storepedia/model/user_model.dart';
 import 'package:storepedia/repository/firestore_operaions.dart';
 import 'package:storepedia/constants/string_constants.dart' as string_constants;
-import 'package:storepedia/constants/number_constants.dart' as number_constants;
 
 class FellowUsersRepository extends FirestoreOperations {
   Future<List<UserModel>> getFellowUsers(UserModel userModel) {

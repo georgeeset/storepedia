@@ -77,7 +77,7 @@ class UserManagerCubit extends Cubit<UserManagerState> {
       FellowUsersRepository fellowUsersRepository = FellowUsersRepository();
       var fellowUsers = await fellowUsersRepository.getFellowUsers(userData);
 
-      if (fellowUsers.length > 3) {
+      if (fellowUsers.length > 3 && userData.accessLevel < 7) {
         // demote to level 1
         userData.copyWith(accessLevel: 1);
       } else {
@@ -124,7 +124,9 @@ class UserManagerCubit extends Cubit<UserManagerState> {
         .onError(
           (error, stackTrace) => emit(
             UserLoadingErrorState(
-                error: error.toString(), stackTrace: stackTrace),
+              error: error.toString(),
+              stackTrace: stackTrace,
+            ),
           ),
         );
   }
@@ -144,7 +146,7 @@ class UserManagerCubit extends Cubit<UserManagerState> {
 
     if (myAccount.accessLevel <= coWorker.accessLevel) return;
 
-    emit(UserLoadingState());
+    // emit(UserLoadingState());
 
     UserModel promotedUser =
         coWorker.copyWith(accessLevel: coWorker.accessLevel += 1);
