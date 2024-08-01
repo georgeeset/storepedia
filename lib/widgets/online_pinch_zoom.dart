@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pinch_zoom_image_last/pinch_zoom_image_last.dart';
+import 'package:pinch_zoom/pinch_zoom.dart';
 import 'package:storepedia/widgets/conditional_image.dart';
 
 class OnlinePinchZoomImage extends StatelessWidget {
@@ -23,10 +23,10 @@ class OnlinePinchZoomImage extends StatelessWidget {
           )
         : Hero(
             tag: link!,
-            child: PinchZoomImage(
-                zoomedBackgroundColor: Colors.black12,
+            child: PinchZoom(
+                maxScale: 2.0,
                 //hideStatusBarWhileZooming: true,
-                image: ConditionalImage(
+                child: ConditionalImage(
                   imageUrl: link!,
                 )),
           );

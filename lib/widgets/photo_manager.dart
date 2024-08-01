@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:pinch_zoom_image_last/pinch_zoom_image_last.dart';
+import 'package:pinch_zoom/pinch_zoom.dart';
 import 'package:storepedia/cubit/user_manager_cubit/usermanager_cubit.dart';
 import 'package:storepedia/model/part.dart';
 
@@ -225,8 +225,8 @@ class DisplayOfflineImage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        PinchZoomImage(
-            image: image is File ? Image.file(image) : Image.memory(image)),
+        PinchZoom(
+            child: image is File ? Image.file(image) : Image.memory(image)),
         Positioned(
           top: 20,
           right: 20,
