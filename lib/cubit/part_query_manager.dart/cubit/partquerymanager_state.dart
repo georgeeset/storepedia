@@ -30,23 +30,25 @@ class PartqueryManagerState extends Equatable {
   final bool paginationLoading;
   final QueryStatus queryStatus;
   final String errorMessage;
-  PartqueryManagerState({
+  final bool locationFilter;
+  const PartqueryManagerState({
     this.response = const <Part>[],
     this.searchString = '',
     this.hasReachedMax = false,
     this.paginationLoading = false,
     this.queryStatus = QueryStatus.initial,
     this.errorMessage = '',
+    this.locationFilter = true,
   });
 
-  PartqueryManagerState copyWith({
-    List<Part>? response,
-    bool? hasReachedMax,
-    bool? paginationLoading,
-    String? searchString,
-    QueryStatus? queryStatus,
-    String? errorMessage,
-  }) {
+  PartqueryManagerState copyWith(
+      {List<Part>? response,
+      bool? hasReachedMax,
+      bool? paginationLoading,
+      String? searchString,
+      QueryStatus? queryStatus,
+      String? errorMessage,
+      bool? locationFilter}) {
     return PartqueryManagerState(
       searchString: searchString ?? this.searchString,
       response: response ?? this.response,
@@ -54,12 +56,13 @@ class PartqueryManagerState extends Equatable {
       paginationLoading: paginationLoading ?? this.paginationLoading,
       queryStatus: queryStatus ?? this.queryStatus,
       errorMessage: errorMessage ?? this.errorMessage,
+      locationFilter: locationFilter ?? this.locationFilter,
     );
   }
 
   @override
   String toString() {
-    return 'queryStatus: $queryStatus,\nhasReachedMax $hasReachedMax,\nresponse: ${response.toString()},\npaginationLoading: $paginationLoading,\nerrorMessage:$errorMessage';
+    return 'queryStatus: $queryStatus,\nhasReachedMax $hasReachedMax,\nresponse: ${response.toString()},\npaginationLoading: $paginationLoading,\nerrorMessage: $errorMessage,\nlocationFilter:$locationFilter';
   }
 
   @override
@@ -70,6 +73,7 @@ class PartqueryManagerState extends Equatable {
         queryStatus,
         paginationLoading,
         hasReachedMax,
+        locationFilter,
       ];
 }
 

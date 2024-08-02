@@ -11,10 +11,15 @@ class PartqueryManagerCubit extends Cubit<PartqueryManagerState> {
   PartqueryManagerCubit() : super(PartqueryManagerState());
   final PartQuery partQueryRepository = PartQuery();
   late String companyName; // fill in data later
+  late String location;
+  late String lastQuery;
 
-  void attemptQuery(String query, String companyName) {
+  void attemptQuery(String query, String companyName, String location) {
+    this.location = location;
     this.companyName = companyName; // make available for other functions
-    if (query.length > 3) {
+    lastQuery = query;
+    print(query);
+    if (query.length > 2) {
       emit(state.copyWith(queryStatus: QueryStatus.loading));
       partQueryRepository
           .searchPart(searchString: query, company: companyName)
@@ -26,6 +31,10 @@ class PartqueryManagerCubit extends Cubit<PartqueryManagerState> {
         } else {
           // marked parts for delete are removed here if user level is Not admin
           // value.removeWhere((element) => element.markedBadByUid!=null);
+
+          if (state.locationFilter) {
+            value.removeWhere((element) => element.branch != location);
+          }
 
           if (value.length < number_constants.maximumSearchResult) {
             emit(state.copyWith(
@@ -71,6 +80,10 @@ class PartqueryManagerCubit extends Cubit<PartqueryManagerState> {
       if (value == null) {
         emit(state.copyWith(hasReachedMax: true, paginationLoading: false));
       } else {
+        if (state.locationFilter) {
+          value.removeWhere((element) => element.branch != location);
+        }
+
         if (value.length < number_constants.maximumSearchResult) {
           emit(state.copyWith(
             paginationLoading: false,
@@ -88,9 +101,18 @@ class PartqueryManagerCubit extends Cubit<PartqueryManagerState> {
     });
     // state.copyWith(paginationLoading: false);
   }
-  // @override
-  // void onChange(Change<PartqueryManagerState> change) {
-  //   print(change.nextState);
-  //   super.onChange(change);
-  // }
+
+  changeLocationFilter(value) {
+    emit(state.copyWith(locationFilter: value));
+
+    if (state.queryStatus == QueryStatus.loaded) {
+      attemptQuery(lastQuery, companyName, location);
+    }
+  }
+
+  @override
+  void onChange(Change<PartqueryManagerState> change) {
+    print(change.nextState);
+    super.onChange(change);
+  }
 }

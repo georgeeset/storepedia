@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:storepedia/constants/firebase_constants.dart';
 import 'package:storepedia/model/part.dart';
 import 'package:storepedia/repository/firestore_operaions.dart';
 import 'package:storepedia/repository/string_processor.dart';
@@ -58,14 +59,24 @@ class PartQuery {
           );
     }
 
-    if (queryResult.isEmpty) {
-      print('Search Result Empty');
-      return null;
-    }
-
     lastDoc =
         queryResult.last; // keep the last document in case we need to paginate.
 
-    return queryResult.map((data) => Part.fromMap(snapshot: data)).toList();
+    var partList =
+        queryResult.map((data) => Part.fromMap(snapshot: data)).toList();
+    if (partList.isEmpty) return partList;
+
+    partList.sort((a, b) {
+      return relevanceCalc(keywords, b.searchKeywords ?? [])
+          .compareTo(relevanceCalc(keywords, a.searchKeywords ?? []));
+    });
+
+    return partList;
+  }
+
+  int relevanceCalc(List<String> searchKeywords, List<String> itemKeywords) {
+    final skw = searchKeywords.toSet();
+    final ikw = itemKeywords.toSet();
+    return ikw.intersection(skw).length;
   }
 }
