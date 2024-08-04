@@ -10,7 +10,8 @@ import '../../widgets/input_editor.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
-  static String routName = '/profile_page';
+  static String routName = '/profile-page';
+  static String name = 'profile';
 
   @override
   Widget build(BuildContext context) {

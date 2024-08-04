@@ -18,7 +18,8 @@ import '../../widgets/photo_manager.dart';
 
 class AddItemPage extends StatelessWidget {
   const AddItemPage({super.key});
-  static String routName = '/add_item_page';
+  static String routName = '/add-item_page';
+  static String name = 'add-item';
 
   @override
   Widget build(BuildContext context) {

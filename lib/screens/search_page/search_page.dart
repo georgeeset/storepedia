@@ -6,7 +6,8 @@ import 'package:storepedia/widgets/page_layout.dart';
 import 'package:storepedia/widgets/search_result.dart';
 
 class SearchPage extends StatelessWidget {
-  static String routName = '/search_page';
+  static String routName = '/search-page';
+  static String name = 'search';
   final String? searchQuery;
   const SearchPage({this.searchQuery, super.key});
 

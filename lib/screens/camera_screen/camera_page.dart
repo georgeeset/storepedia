@@ -9,6 +9,7 @@ import 'package:storepedia/widgets/page_layout.dart';
 class CameraPage extends StatelessWidget {
   const CameraPage({super.key});
   static String routName = '/camera_page';
+  static String name = 'camera';
 
   @override
   Widget build(BuildContext context) {

@@ -5,14 +5,74 @@ import 'package:storepedia/model/part.dart';
 import 'package:storepedia/widgets/menu_tiles.dart';
 import 'package:storepedia/widgets/one_part.dart';
 
+import '../../bloc/authentication_bloc/bloc/authentication_bloc.dart';
+import '../../bloc/signin_option_bloc/bloc/signinoption_bloc.dart';
 import '../../constants/number_constants.dart' as number_constants;
 import '../../constants/string_constants.dart' as string_constants;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../widgets/email_verification.dart';
+import '../signin_screen/signin_screen.dart';
+
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
-  static String routeName = '/home_page';
+  static String routeName = '/';
+  static String name = 'home';
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocConsumer<AuthenticationBloc, AuthenticationState>(
+        builder: ((context, state) {
+      if (state is AuthenticatedState) {
+        if (!state.user.emailVerified) {
+          return EmailVerification(email: state.user.email!);
+        }
+        return BlocProvider<RecentItemsCubit>(
+          create: (context) => RecentItemsCubit(),
+          child: const HomePage(),
+        );
+      } else {
+        if (state is AuthenticationInitial) {
+          return Scaffold(
+            backgroundColor: Colors.white,
+            body: Container(
+              alignment: Alignment.center,
+              child: Image.asset('assets/images/main_logo.jpg'),
+            ),
+          );
+        } else {
+          return MultiBlocProvider(
+            providers: [
+              BlocProvider<SigninoptionBloc>(
+                create: (context) => SigninoptionBloc(),
+              ),
+            ],
+            child: const SigninScreen(),
+          );
+        }
+      }
+    }), listener: (context, authState) {
+      if (authState is AuthenticatedState) {
+        // start getting the user's information from database
+        context.read<UserManagerCubit>().getUser(authState.user);
+      }
+      if (authState is AuthenticationFailedState) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            backgroundColor: Colors.pink,
+            duration: Duration(seconds: number_constants.errorSnackBarDelay),
+            // content: Text('Failed !\n${authState.errorMessage}'),
+            content: Text('Invalid Email or Password'),
+          ),
+        );
+      }
+    });
+  }
+}
+
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

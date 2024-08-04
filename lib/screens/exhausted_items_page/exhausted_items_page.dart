@@ -9,7 +9,8 @@ import 'package:storepedia/widgets/page_layout.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ExhaustedItemsPage extends StatelessWidget {
-  static String routName = '/exhausted_items_page';
+  static String routName = '/exhausted-items-page';
+  static String name = 'exhausted-items';
 
   const ExhaustedItemsPage({super.key});
 

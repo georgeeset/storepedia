@@ -54,6 +54,7 @@ dependencies:
   mime: ^1.0.5
   camera: ^0.11.0+1
   pinch_zoom: ^2.0.0
+  go_router: ^14.2.2
 
 dev_dependencies:
   flutter_test:
