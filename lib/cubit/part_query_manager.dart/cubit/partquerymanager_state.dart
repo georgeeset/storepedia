@@ -2,27 +2,6 @@ part of 'partquerymanager_cubit.dart';
 
 enum QueryStatus { initial, loading, loaded, noResult, error }
 
-// abstract class PartquerymanagerState extends Equatable {
-//   const PartquerymanagerState();
-
-//   @override
-//   List<Object> get props => [];
-// }
-
-// class PartquerymanagerInitialState extends PartquerymanagerState {
-//   @override
-//   String toString() {
-//     return 'PartquerymanagerInitialState';
-//   }
-// }
-
-// class PartqueryloadingState extends PartquerymanagerState {
-//   @override
-//   String toString() {
-//     return 'Partqueryloadingstate';
-//   }
-// }
-
 class PartqueryManagerState extends Equatable {
   final List<Part> response;
   final String searchString;

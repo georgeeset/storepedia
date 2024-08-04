@@ -2,7 +2,6 @@ import 'package:about/about.dart';
 import 'package:storepedia/cubit/recent_item_cubit/recentitems_cubit.dart';
 import 'package:storepedia/cubit/user_manager_cubit/usermanager_cubit.dart';
 import 'package:storepedia/model/part.dart';
-import 'package:storepedia/widgets/input_editor.dart';
 import 'package:storepedia/widgets/menu_tiles.dart';
 import 'package:storepedia/widgets/one_part.dart';
 
@@ -13,6 +12,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
+  static String routeName = '/home_page';
 
   @override
   Widget build(BuildContext context) {
@@ -89,8 +89,9 @@ class HomePage extends StatelessWidget {
                   decoration: const BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(50.0),
-                        topRight: Radius.circular(50.0)),
+                      topLeft: Radius.circular(50.0),
+                      topRight: Radius.circular(50.0),
+                    ),
                   ),
                   child: LayoutBuilder(builder: (context, constraints) {
                     if (constraints.maxWidth < 700) {
@@ -100,9 +101,10 @@ class HomePage extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             MenuTiles(
-                                sizeData: sizeData,
-                                horizontalListWidth: horizontalListWidth,
-                                horizontalListHeight: horizontalListHeight),
+                              sizeData: sizeData,
+                              horizontalListWidth: horizontalListWidth,
+                              horizontalListHeight: horizontalListHeight,
+                            ),
                             const Divider(),
                             const Text('Recently Added Store Items'),
                             BlocBuilder<RecentItemsCubit, List<Part>>(
@@ -152,10 +154,22 @@ class HomePage extends StatelessWidget {
                               ),
                               child: BlocBuilder<RecentItemsCubit, List<Part>>(
                                 builder: (context, recentItemState) {
+                                  var userInfo =
+                                      context.read<UserManagerCubit>().state;
+                                  if (userInfo is UserLoadedState &&
+                                      recentItemState.isEmpty) {
+                                    context
+                                        .read<RecentItemsCubit>()
+                                        .listenForRecentParts(
+                                            company:
+                                                userInfo.userData.company ??
+                                                    'parts');
+                                  }
                                   return Wrap(
                                     direction: Axis.horizontal,
                                     children: recentItemState
-                                        .map((e) => Container(
+                                        .map(
+                                          (e) => Container(
                                             width: sizeData.width / 4,
                                             height: sizeData.width / 2.8,
                                             constraints: const BoxConstraints(
@@ -164,7 +178,9 @@ class HomePage extends StatelessWidget {
                                               minHeight: 200,
                                               minWidth: 150,
                                             ),
-                                            child: OnePart(part: e)))
+                                            child: OnePart(part: e),
+                                          ),
+                                        )
                                         .toList(),
                                   );
                                 },
@@ -181,59 +197,6 @@ class HomePage extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-}
-
-class EditProfileOption extends StatelessWidget {
-  const EditProfileOption({required this.sizeData, super.key});
-  final Size sizeData;
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      splashColor: Colors.blue,
-      child: Container(
-        width: sizeData.width / 5,
-        height: sizeData.width / 5,
-        constraints: const BoxConstraints(
-          minWidth: 80,
-          minHeight: 80,
-          maxHeight: 120,
-          maxWidth: 120,
-        ),
-        padding: const EdgeInsets.all(5.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(
-              Icons.person,
-              size: 54,
-            ),
-            Text(
-              string_constants.completeYourProfile,
-              style: Theme.of(context).textTheme.titleLarge,
-              textAlign: TextAlign.center,
-              softWrap: true,
-            ),
-          ],
-        ),
-      ),
-      onTap: () {
-        SignupFormDialog.formDialog(
-          context: context,
-          onSubmit: (value) {
-            var userData = context.read<UserManagerCubit>().state;
-            if (userData is UserLoadedState) {
-              context.read<UserManagerCubit>().updateUserName(
-                    fullName: value,
-                    userData: userData.userData,
-                  );
-            }
-          },
-          title: 'Your Name In Full \n This cannot be edited',
-        );
-      },
     );
   }
 }

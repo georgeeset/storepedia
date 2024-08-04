@@ -10,6 +10,7 @@ class ExhausteditemsmanagerState extends Equatable {
     this.paginationLoading = false,
     this.queryStatus = QueryStatus.initial,
     this.errorMessage = '',
+    this.locationFilter = true,
   });
 
   final List<Part> response;
@@ -18,6 +19,7 @@ class ExhausteditemsmanagerState extends Equatable {
   final bool paginationLoading;
   final QueryStatus queryStatus;
   final String errorMessage;
+  final bool locationFilter;
 
   ExhausteditemsmanagerState copyWith({
     List<Part>? response,
@@ -26,6 +28,7 @@ class ExhausteditemsmanagerState extends Equatable {
     String? searchString,
     QueryStatus? queryStatus,
     String? errorMessage,
+    bool? locationFilter,
   }) {
     return ExhausteditemsmanagerState(
       searchString: searchString ?? this.searchString,
@@ -34,12 +37,13 @@ class ExhausteditemsmanagerState extends Equatable {
       paginationLoading: paginationLoading ?? this.paginationLoading,
       queryStatus: queryStatus ?? this.queryStatus,
       errorMessage: errorMessage ?? this.errorMessage,
+      locationFilter: locationFilter ?? this.locationFilter,
     );
   }
 
   @override
   String toString() {
-    return 'queryStatus: $queryStatus,\nhasReachedMax $hasReachedMax,\nresponse: ${response.toString()},\npaginationLoading: $paginationLoading,\nerrorMessage:$errorMessage';
+    return 'queryStatus: $queryStatus,\nhasReachedMax $hasReachedMax,\nresponse: ${response.toString()},\npaginationLoading: $paginationLoading,\nerrorMessage:$errorMessage,\nlocationFilter:$locationFilter';
   }
 
   @override
@@ -50,5 +54,6 @@ class ExhausteditemsmanagerState extends Equatable {
         queryStatus,
         paginationLoading,
         hasReachedMax,
+        locationFilter,
       ];
 }

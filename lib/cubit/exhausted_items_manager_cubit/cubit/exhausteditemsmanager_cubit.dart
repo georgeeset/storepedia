@@ -11,9 +11,14 @@ class ExhausteditemsmanagerCubit extends Cubit<ExhausteditemsmanagerState> {
   final ExhaustedItemsRepository partQueryRepository =
       ExhaustedItemsRepository();
   late String company;
+  late String branch;
 
-  void getExhaustedItems({required companyName}) async {
+  void getExhaustedItems({
+    required String companyName,
+    required String branch,
+  }) async {
     company = companyName;
+    this.branch = branch;
     emit(state.copyWith(queryStatus: QueryStatus.loading));
     await partQueryRepository.search(company: company).then((value) {
       print('${value?.length}');
@@ -24,20 +29,18 @@ class ExhausteditemsmanagerCubit extends Cubit<ExhausteditemsmanagerState> {
         // marked parts for delete are removed here if user level is Not admin
         // value.removeWhere((element) => element.markedBadByUid!=null);
 
-        if (value.length < number_constants.maximumSearchResult) {
-          emit(state.copyWith(
-            queryStatus: QueryStatus.loaded,
-            paginationLoading: false,
-            hasReachedMax: true,
-            response: value,
-          ));
-        } else {
-          emit(state.copyWith(
-            queryStatus: QueryStatus.loaded,
-            hasReachedMax: false,
-            response: value,
-          ));
+        if (state.locationFilter) {
+          value.removeWhere((element) => element.branch != branch);
         }
+
+        emit(state.copyWith(
+          queryStatus: QueryStatus.loaded,
+          paginationLoading: false,
+          hasReachedMax: value.length < number_constants.maximumSearchResult
+              ? true
+              : false,
+          response: value,
+        ));
       }
     }).onError((error, stackTrace) {
       emit(state.copyWith(
@@ -60,19 +63,17 @@ class ExhausteditemsmanagerCubit extends Cubit<ExhausteditemsmanagerState> {
       if (value == null) {
         emit(state.copyWith(hasReachedMax: true, paginationLoading: false));
       } else {
-        if (value.length < number_constants.maximumSearchResult) {
-          emit(state.copyWith(
-            paginationLoading: false,
-            hasReachedMax: true,
-            response: List.of(state.response)..addAll(value),
-          ));
-        } else {
-          emit(state.copyWith(
-            paginationLoading: false,
-            hasReachedMax: false,
-            response: List.of(state.response)..addAll(value),
-          ));
+        if (state.locationFilter) {
+          value.removeWhere((element) => element.branch != branch);
         }
+
+        emit(state.copyWith(
+          paginationLoading: false,
+          hasReachedMax: value.length < number_constants.maximumSearchResult
+              ? true
+              : false,
+          response: List.of(state.response)..addAll(value),
+        ));
       }
     });
     // state.copyWith(paginationLoading: false);

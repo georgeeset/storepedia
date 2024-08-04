@@ -18,9 +18,13 @@ class ExhaustedItemsPage extends StatelessWidget {
     // final Size sizeData = MediaQuery.of(context).size;
     var derived = context.read<UserManagerCubit>().state;
     context.read<ExhausteditemsmanagerCubit>().getExhaustedItems(
-        companyName: derived is UserLoadedState
-            ? derived.userData.company ?? 'parts'
-            : 'parts');
+          companyName: derived is UserLoadedState
+              ? derived.userData.company ?? 'parts'
+              : 'parts',
+          branch: derived is UserLoadedState
+              ? derived.userData.branch ?? 'Ikeja'
+              : 'Ikeja',
+        );
     return PageLayout(
         title: Text(
           'Exhausted Items',
@@ -84,7 +88,8 @@ class _ExhaustedBodyState extends State<ExhaustedBody> {
                   : const Shimmer(
                       gradient:
                           LinearGradient(colors: [Colors.green, Colors.teal]),
-                      child: Card(color: Colors.blue));
+                      child: Card(color: Colors.blue),
+                    );
             } else {
               return OnePart(part: state.response[index]);
             }
