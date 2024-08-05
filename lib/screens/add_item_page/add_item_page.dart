@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:storepedia/bloc/part_upload_wizard/bloc/partuploadwizard_bloc.dart';
 import 'package:storepedia/bloc/photo_manager_bloc/photomanager_bloc.dart';
 import 'package:storepedia/cubit/edit_item_cubit/edititem_cubit.dart';
@@ -125,7 +126,7 @@ class AddItemPage extends StatelessWidget {
             if (state is PartuploadwizardLoadedState) {
               context.read<PhotomanagerBloc>().add(RemovePhotoEvent());
               // context.read<EditItemCubit>().close();
-              Navigator.canPop(context) ? Navigator.pop(context) : null;
+              context.canPop() ? context.pop(context) : null;
             }
           }),
 
@@ -262,8 +263,7 @@ class AddItemPage extends StatelessWidget {
                           state.partUid == null) {
                         return TextButton(
                           onPressed: () {
-                            Navigator.of(context)
-                                .pushNamed(SearchPage.routName);
+                            context.push(SearchPage.routName);
                           },
                           child: Text(
                             'It seems the part already exist,\n Click Here to View,Edit or Delete the existing part.',

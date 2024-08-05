@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:storepedia/bloc/photo_manager_bloc/photomanager_bloc.dart';
 import 'package:storepedia/cubit/edit_item_cubit/edititem_cubit.dart';
 import 'package:storepedia/cubit/form_level_cubit/formlevel_cubit.dart';
@@ -47,13 +48,9 @@ class MenuTiles extends StatelessWidget {
           context.read<EditItemCubit>().clearPart();
           context.read<PhotomanagerBloc>().add(RemovePhotoEvent());
           context.read<FormLevelCubit>().clearScore();
-          Navigator.pushNamed(context, AddItemPage.routName);
-        } else {
-          Navigator.pushNamed(context, AddItemPage.routName);
         }
-      } else {
-        Navigator.pushNamed(context, AddItemPage.routName);
       }
+      context.pushNamed(AddItemPage.name);
     }
 
     return Wrap(
@@ -67,7 +64,7 @@ class MenuTiles extends StatelessWidget {
           itemIcon: Icons.search,
           itemText: 'Search Store Item',
           onTapAction: () async {
-            Navigator.pushNamed(context, SearchPage.routName);
+            context.pushNamed(SearchPage.name);
           },
         ),
 
@@ -216,7 +213,7 @@ class MenuTiles extends StatelessWidget {
             itemIcon: Icons.hourglass_empty,
             itemText: 'Exhausted Items',
             onTapAction: () {
-              Navigator.pushNamed(context, ExhaustedItemsPage.routName);
+              context.pushNamed(ExhaustedItemsPage.name);
             }),
 
         MenuItem(
@@ -224,7 +221,7 @@ class MenuTiles extends StatelessWidget {
           itemIcon: Icons.person,
           itemText: 'Profile',
           onTapAction: () async {
-            Navigator.pushNamed(context, ProfilePage.routName);
+            context.pushNamed(ProfilePage.name);
           },
         ),
       ],

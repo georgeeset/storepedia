@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:storepedia/bloc/photo_manager_bloc/photomanager_bloc.dart';
 import 'package:storepedia/cubit/camera_cubit/camera_cubit.dart';
 import 'package:storepedia/model/camera_model.dart';
@@ -92,7 +93,7 @@ class _CameraButtons extends StatelessWidget {
                           .read<PhotomanagerBloc>()
                           .add(SelectPhotoEvent(photo: camera.image!));
                       context.read<CameraCubit>().close();
-                      Navigator.of(context).pop();
+                      context.pop();
                     })
                 : const SizedBox(),
             const Spacer(),
@@ -141,7 +142,7 @@ class _CameraButtons extends StatelessWidget {
               child: const Text('Back'),
               onPressed: () {
                 context.read<CameraCubit>().close();
-                Navigator.of(context).pop();
+                context.pop();
               },
             ),
           ],

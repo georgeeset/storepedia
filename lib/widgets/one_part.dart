@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:storepedia/cubit/user_manager_cubit/usermanager_cubit.dart';
 import 'package:storepedia/model/part.dart';
-import 'package:storepedia/screens/part_detail_page/part_detail_page.dart';
 
 import 'conditional_image.dart';
 
@@ -65,11 +67,12 @@ class OnePart extends StatelessWidget {
           ],
         ),
         onTap: () {
-          Navigator.pushNamed(
-            context,
-            PartDetailPage.routeName,
-            arguments: part,
-          );
+          var user = context.read<UserManagerCubit>().state;
+          if (user is UserLoadedState) {
+            context.push(
+                '/part-detail/${user.userData.company}/${part.partUid}',
+                extra: part);
+          }
         },
       ),
     );

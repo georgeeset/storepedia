@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:storepedia/bloc/part_upload_wizard/bloc/partuploadwizard_bloc.dart';
 
 import 'package:storepedia/cubit/edit_item_cubit/edititem_cubit.dart';
@@ -7,6 +8,7 @@ import 'package:storepedia/cubit/mark_bad_part/cubit/mark_bad_part_cubit.dart';
 import 'package:storepedia/cubit/mark_exhausted_part_cubit/cubit/markexhaustedpart_cubit.dart';
 import 'package:storepedia/cubit/user_manager_cubit/usermanager_cubit.dart';
 import 'package:storepedia/model/part.dart';
+import 'package:storepedia/repository/firestore_operaions.dart';
 import 'package:storepedia/screens/add_item_page/add_item_page.dart';
 import 'package:storepedia/widgets/input_editor.dart';
 import 'package:storepedia/widgets/online_pinch_zoom.dart';
@@ -15,21 +17,48 @@ import 'package:storepedia/constants/string_constants.dart' as string_constants;
 import 'package:storepedia/constants/number_constants.dart' as number_constants;
 
 class PartDetailPage extends StatelessWidget {
-  static String routeName = '/part-detail';
+  static String routeName = '/part-detail/:companyName/:partId';
   static String name = 'detail';
-  const PartDetailPage({super.key});
+  const PartDetailPage({
+    this.part,
+    required this.partId,
+    required this.companyName,
+    super.key,
+  });
+  final Part? part;
+  final String partId;
+  final String companyName;
 
   @override
   Widget build(BuildContext context) {
-    final part = ModalRoute.of(context)?.settings.arguments as Part;
+    // final part = ModalRoute.of(context)?.settings.arguments as Part;
+    final FirestoreOperations firestoreOperations = FirestoreOperations();
 
     return PageLayout(
       hasBackButton: true,
-      body: PartBody(
-        part: part,
-      ),
+      body: part == null
+          ? FutureBuilder(
+              future: firestoreOperations.getPart(partId, companyName),
+              builder: (context, result) {
+                if (result.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (result.hasError) {
+                  return Center(
+                    child: Text(
+                      'Error: ${result.error}',
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    ),
+                  );
+                } else {
+                  final part = result.data;
+                  return PartBody(part: part!);
+                }
+              })
+          : PartBody(
+              part: part!,
+            ),
       title: Text(
-        part.partName!,
+        'part!.partName!',
         style: Theme.of(context)
             .textTheme
             .titleLarge!
@@ -181,8 +210,7 @@ class _PartBodyState extends State<PartBody> {
                       IconButton(
                         onPressed: () {
                           context.read<EditItemCubit>().jumpEdit(widget.part);
-                          Navigator.of(context)
-                              .popAndPushNamed(AddItemPage.routName);
+                          context.pushNamed(AddItemPage.name);
                         },
                         icon: const Icon(Icons.edit),
                         tooltip: 'Edit',
@@ -250,7 +278,7 @@ class _PartBodyState extends State<PartBody> {
                   return BlocConsumer<PartuploadwizardBloc,
                       PartuploadwizardState>(
                     listener: (context, state) {
-                      Navigator.of(context).pop();
+                      context.pop();
                       if (state is PartuploadwizardErrorState) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(

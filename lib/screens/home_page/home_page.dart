@@ -30,7 +30,7 @@ class HomePage extends StatelessWidget {
         }
         return BlocProvider<RecentItemsCubit>(
           create: (context) => RecentItemsCubit(),
-          child: const HomePage(),
+          child: const HomeScreen(),
         );
       } else {
         if (state is AuthenticationInitial) {

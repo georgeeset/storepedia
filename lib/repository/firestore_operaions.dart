@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:storepedia/model/part.dart';
 import 'package:storepedia/model/user_model.dart';
 
 class FirestoreOperations {
@@ -189,6 +190,16 @@ class FirestoreOperations {
         .collection(collection)
         .doc(documentId)
         .delete()
+        .onError(
+            (error, stackTrace) => Future.error(error.toString(), stackTrace));
+  }
+
+  Future<Part> getPart(String partId, String partCollection) async {
+    return _firebaseFirestore
+        .collection(partCollection)
+        .doc(partId)
+        .get()
+        .then((value) => Part.fromMap(snapshot: value))
         .onError(
             (error, stackTrace) => Future.error(error.toString(), stackTrace));
   }

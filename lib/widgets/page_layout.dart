@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:storepedia/constants/number_constants.dart' as NumberConstants;
 
 class PageLayout extends StatelessWidget {
   const PageLayout(
-      {super.key, required this.body,
+      {super.key,
+      required this.body,
       required this.title,
       this.hasBackButton = false,
       this.levelIndicator});
@@ -36,8 +38,8 @@ class PageLayout extends StatelessWidget {
                   ? InkWell(
                       splashColor: Colors.purple,
                       onTap: () {
-                        if (Navigator.of(context).canPop()) {
-                          Navigator.pop(context);
+                        if (context.canPop()) {
+                          context.pop(context);
                         }
                       },
                       child: const CircleAvatar(

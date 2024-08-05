@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:storepedia/constants/string_constants.dart';
 import 'package:storepedia/screens/Profile_page/profile_page.dart';
 import 'package:storepedia/screens/add_item_page/add_item_page.dart';
 import 'package:storepedia/screens/camera_screen/camera_page.dart';
@@ -14,6 +15,7 @@ import '../cubit/fellow_users_cubit/fellow_users_cubit.dart';
 import '../cubit/mark_bad_part/cubit/mark_bad_part_cubit.dart';
 import '../cubit/mark_exhausted_part_cubit/cubit/markexhaustedpart_cubit.dart';
 import '../cubit/repitition_cubit/cubit/repitition_cubit.dart';
+import '../model/part.dart';
 
 class AppRouter {
   static final _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -41,20 +43,29 @@ class AppRouter {
         ),
       ),
       GoRoute(
-        path: PartDetailPage.routeName,
-        name: PartDetailPage.name,
-        builder: (context, state) => MultiBlocProvider(
-          providers: [
-            BlocProvider(
-              create: (context) => MarkpartCubit(),
-            ),
-            BlocProvider(
-              create: (context) => MarkexhaustedpartCubit(),
-            ),
-          ],
-          child: const PartDetailPage(),
-        ),
-      ),
+          path: PartDetailPage.routeName,
+          name: PartDetailPage.name,
+          builder: (context, state) {
+            var companyName = state.pathParameters['companyName'];
+            var partId = state.pathParameters['partId'];
+            Part? onePart = state.extra as Part?;
+
+            return MultiBlocProvider(
+              providers: [
+                BlocProvider(
+                  create: (context) => MarkpartCubit(),
+                ),
+                BlocProvider(
+                  create: (context) => MarkexhaustedpartCubit(),
+                ),
+              ],
+              child: PartDetailPage(
+                partId: partId!,
+                companyName: companyName!,
+                part: onePart,
+              ),
+            );
+          }),
       GoRoute(
         path: CameraPage.routName,
         name: CameraPage.name,

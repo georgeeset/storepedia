@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pinch_zoom/pinch_zoom.dart';
 import 'package:storepedia/cubit/user_manager_cubit/usermanager_cubit.dart';
@@ -69,10 +70,7 @@ class PhotoManagerState extends State<PhotoManager> {
                                   child: InkWell(
                                     onTap: () => {
                                       if (kIsWeb)
-                                        {
-                                          Navigator.of(context)
-                                              .pushNamed(CameraPage.routName)
-                                        }
+                                        {context.push(CameraPage.routName)}
                                       else
                                         {getImage(ImageSource.camera)}
                                     },
@@ -140,8 +138,7 @@ class PhotoManagerState extends State<PhotoManager> {
                           child: InkWell(
                             onTap: () {
                               if (kIsWeb) {
-                                Navigator.pushNamed(
-                                    context, CameraPage.routName);
+                                context.pushNamed(CameraPage.name);
                               } else {
                                 getImage(ImageSource.camera);
                               }
