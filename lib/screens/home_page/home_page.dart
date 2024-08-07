@@ -1,4 +1,5 @@
 import 'package:about/about.dart';
+import 'package:go_router/go_router.dart';
 import 'package:storepedia/cubit/recent_item_cubit/recentitems_cubit.dart';
 import 'package:storepedia/cubit/user_manager_cubit/usermanager_cubit.dart';
 import 'package:storepedia/model/part.dart';
@@ -16,12 +17,15 @@ import '../../widgets/email_verification.dart';
 import '../signin_screen/signin_screen.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+  const HomePage({super.key, this.destinationUrl});
   static String routeName = '/';
   static String name = 'home';
+  static String jumpRoute = '/jump-to/:path';
+  final String? destinationUrl;
 
   @override
   Widget build(BuildContext context) {
+    print('destination=> $destinationUrl');
     return BlocConsumer<AuthenticationBloc, AuthenticationState>(
         builder: ((context, state) {
       if (state is AuthenticatedState) {
@@ -56,6 +60,7 @@ class HomePage extends StatelessWidget {
       if (authState is AuthenticatedState) {
         // start getting the user's information from database
         context.read<UserManagerCubit>().getUser(authState.user);
+        if (destinationUrl != null) context.pushReplacement(destinationUrl!);
       }
       if (authState is AuthenticationFailedState) {
         ScaffoldMessenger.of(context).showSnackBar(

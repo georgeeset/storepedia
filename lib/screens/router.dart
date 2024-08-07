@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:storepedia/constants/string_constants.dart';
+import 'package:storepedia/bloc/authentication_bloc/bloc/authentication_bloc.dart';
 import 'package:storepedia/screens/Profile_page/profile_page.dart';
 import 'package:storepedia/screens/add_item_page/add_item_page.dart';
 import 'package:storepedia/screens/camera_screen/camera_page.dart';
@@ -21,75 +21,92 @@ class AppRouter {
   static final _rootNavigatorKey = GlobalKey<NavigatorState>();
 
   static final GoRouter _router = GoRouter(
-    debugLogDiagnostics: true,
-    navigatorKey: _rootNavigatorKey,
-    routes: [
-      GoRoute(
-        path: HomePage.routeName,
-        name: HomePage.name,
-        builder: (context, state) => const HomePage(),
-      ),
-      GoRoute(
-        path: SearchPage.routName,
-        name: SearchPage.name,
-        builder: (context, state) => const SearchPage(),
-      ),
-      GoRoute(
-        path: ProfilePage.routName,
-        name: ProfilePage.name,
-        builder: (context, state) => BlocProvider(
-          create: (context) => FellowUsersCubit(),
-          child: const ProfilePage(),
+      debugLogDiagnostics: true,
+      navigatorKey: _rootNavigatorKey,
+      routes: [
+        GoRoute(
+          path: HomePage.routeName,
+          name: HomePage.name,
+          builder: (context, state) => const HomePage(),
         ),
-      ),
-      GoRoute(
-          path: PartDetailPage.routeName,
-          name: PartDetailPage.name,
-          builder: (context, state) {
-            var companyName = state.pathParameters['companyName'];
-            var partId = state.pathParameters['partId'];
-            Part? onePart = state.extra as Part?;
+        GoRoute(
+          path: SearchPage.routName,
+          name: SearchPage.name,
+          builder: (context, state) => const SearchPage(),
+        ),
+        GoRoute(
+          path: ProfilePage.routName,
+          name: ProfilePage.name,
+          builder: (context, state) => BlocProvider(
+            create: (context) => FellowUsersCubit(),
+            child: const ProfilePage(),
+          ),
+        ),
+        GoRoute(
+            path: PartDetailPage.routeName,
+            name: PartDetailPage.name,
+            builder: (context, state) {
+              var companyName = state.pathParameters['companyName'];
+              var partId = state.pathParameters['partId'];
+              Part? onePart = state.extra as Part?;
 
-            return MultiBlocProvider(
-              providers: [
-                BlocProvider(
-                  create: (context) => MarkpartCubit(),
+              return MultiBlocProvider(
+                providers: [
+                  BlocProvider(
+                    create: (context) => MarkpartCubit(),
+                  ),
+                  BlocProvider(
+                    create: (context) => MarkexhaustedpartCubit(),
+                  ),
+                ],
+                child: PartDetailPage(
+                  partId: partId!,
+                  companyName: companyName!,
+                  part: onePart,
                 ),
-                BlocProvider(
-                  create: (context) => MarkexhaustedpartCubit(),
-                ),
-              ],
-              child: PartDetailPage(
-                partId: partId!,
-                companyName: companyName!,
-                part: onePart,
-              ),
+              );
+            }),
+        GoRoute(
+          path: CameraPage.routName,
+          name: CameraPage.name,
+          builder: (context, state) => const CameraPage(),
+        ),
+        GoRoute(
+          path: AddItemPage.routName,
+          name: AddItemPage.name,
+          builder: (context, state) => BlocProvider<RepititionCubit>(
+            create: (context) => RepititionCubit(),
+            child: const AddItemPage(),
+          ),
+        ),
+        GoRoute(
+          path: ExhaustedItemsPage.routName,
+          name: ExhaustedItemsPage.name,
+          builder: (context, state) => BlocProvider<ExhausteditemsmanagerCubit>(
+            create: (context) => ExhausteditemsmanagerCubit(),
+            child: const ExhaustedItemsPage(),
+          ),
+        ),
+        GoRoute(
+          path: HomePage.jumpRoute,
+          name: 'jump-to',
+          builder: (context, state) {
+            var path = state.pathParameters['path'];
+            return HomePage(
+              destinationUrl: path,
             );
-          }),
-      GoRoute(
-        path: CameraPage.routName,
-        name: CameraPage.name,
-        builder: (context, state) => const CameraPage(),
-      ),
-      GoRoute(
-        path: AddItemPage.routName,
-        name: AddItemPage.name,
-        builder: (context, state) => BlocProvider<RepititionCubit>(
-          create: (context) => RepititionCubit(),
-          child: const AddItemPage(),
-        ),
-      ),
-      GoRoute(
-        path: ExhaustedItemsPage.routName,
-        name: ExhaustedItemsPage.name,
-        builder: (context, state) => BlocProvider<ExhausteditemsmanagerCubit>(
-          create: (context) => ExhausteditemsmanagerCubit(),
-          child: const ExhaustedItemsPage(),
-        ),
-      ),
-    ],
-    errorBuilder: (context, state) => const NotFoundPage(),
-  );
+          },
+        )
+      ],
+      errorBuilder: (context, state) => const NotFoundPage(),
+      redirect: (context, state) {
+        var authState = context.read<AuthenticationBloc>().state;
+        if (authState is AuthenticatedState) {
+          return state.path;
+        } else {
+          return HomePage.routeName;
+        }
+      });
 
   static GoRouter get router => _router;
 }

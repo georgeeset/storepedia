@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:storepedia/constants/firebase_constants.dart';
 import 'package:storepedia/model/part.dart';
 import 'package:storepedia/repository/firestore_operaions.dart';
 import 'package:storepedia/repository/string_processor.dart';

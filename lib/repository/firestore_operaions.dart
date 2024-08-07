@@ -201,6 +201,7 @@ class FirestoreOperations {
         .get()
         .then((value) => Part.fromMap(snapshot: value))
         .onError(
-            (error, stackTrace) => Future.error(error.toString(), stackTrace));
+          (error, stackTrace) => Future.error(error.toString(), stackTrace),
+        );
   }
 }

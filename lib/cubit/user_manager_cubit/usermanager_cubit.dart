@@ -79,10 +79,10 @@ class UserManagerCubit extends Cubit<UserManagerState> {
 
       if (fellowUsers.length > 3 && userData.accessLevel < 7) {
         // demote to level 1
-        userData.copyWith(accessLevel: 1);
+        userData = userData.copyWith(accessLevel: 1);
       } else {
         // promote to level 5
-        userData.copyWith(accessLevel: 5);
+        userData = userData.copyWith(accessLevel: 5);
       }
     }
 

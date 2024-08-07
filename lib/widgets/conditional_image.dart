@@ -12,6 +12,17 @@ class ConditionalImage extends StatelessWidget {
     if (kIsWeb) {
       return Image.network(
         imageUrl,
+        frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
+          return child;
+        },
+        loadingBuilder: (context, child, loadingProgress) {
+          if (loadingProgress == null) {
+            return child;
+          } else {
+            return loadingStack();
+          }
+          // return ;
+        },
       );
     } else {
       // Web platform: use Image.network from the image package
@@ -19,18 +30,22 @@ class ConditionalImage extends StatelessWidget {
           imageUrl: imageUrl,
           fit: BoxFit.cover,
           placeholder: (context, data) {
-            return Stack(
-              alignment: Alignment.center,
-              children: [
-                Image.asset('assets/images/bin.jpg'),
-                const SizedBox(
-                  width: 15,
-                  height: 15,
-                  child: CircularProgressIndicator(),
-                )
-              ],
-            );
+            return loadingStack();
           });
     }
+  }
+
+  Widget loadingStack() {
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        Image.asset('assets/images/bin.jpg'),
+        const SizedBox(
+          width: 15,
+          height: 15,
+          child: CircularProgressIndicator(),
+        )
+      ],
+    );
   }
 }

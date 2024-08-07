@@ -16,6 +16,8 @@ import 'package:storepedia/widgets/page_layout.dart';
 import 'package:storepedia/constants/string_constants.dart' as string_constants;
 import 'package:storepedia/constants/number_constants.dart' as number_constants;
 
+import '../../bloc/authentication_bloc/bloc/authentication_bloc.dart';
+
 class PartDetailPage extends StatelessWidget {
   static String routeName = '/part-detail/:companyName/:partId';
   static String name = 'detail';
@@ -34,38 +36,42 @@ class PartDetailPage extends StatelessWidget {
     // final part = ModalRoute.of(context)?.settings.arguments as Part;
     final FirestoreOperations firestoreOperations = FirestoreOperations();
 
-    return PageLayout(
-      hasBackButton: true,
-      body: part == null
-          ? FutureBuilder(
-              future: firestoreOperations.getPart(partId, companyName),
-              builder: (context, result) {
-                if (result.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                } else if (result.hasError) {
-                  return Center(
-                    child: Text(
-                      'Error: ${result.error}',
-                      style: Theme.of(context).textTheme.bodyLarge,
-                    ),
-                  );
-                } else {
-                  final part = result.data;
-                  return PartBody(part: part!);
-                }
-              })
-          : PartBody(
+    return part == null
+        ? FutureBuilder(
+            future: firestoreOperations.getPart(partId, companyName),
+            builder: (context, result) {
+              if (result.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (result.hasError) {
+                return Center(
+                  child: Text(
+                    'Error: ${result.error}',
+                    style: Theme.of(context).textTheme.bodyLarge,
+                  ),
+                );
+              } else {
+                final part = result.data;
+                return PageLayout(
+                  body: PartBody(part: part!),
+                  title: partTitle(context, result.data!.partName!),
+                );
+              }
+            })
+        : PageLayout(
+            body: PartBody(
               part: part!,
             ),
-      title: Text(
-        'part!.partName!',
-        style: Theme.of(context)
-            .textTheme
-            .titleLarge!
-            .copyWith(color: Colors.white),
-        textAlign: TextAlign.center,
-        softWrap: true,
-      ),
+            title: partTitle(context, part!.partName!),
+          );
+  }
+
+  Widget partTitle(context, String titleString) {
+    return Text(
+      titleString,
+      style:
+          Theme.of(context).textTheme.titleLarge!.copyWith(color: Colors.white),
+      textAlign: TextAlign.center,
+      softWrap: true,
     );
   }
 }

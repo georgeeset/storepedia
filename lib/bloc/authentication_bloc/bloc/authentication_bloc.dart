@@ -1,4 +1,3 @@
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -12,6 +11,7 @@ class AuthenticationBloc
   late User? _user;
 
   AuthenticationBloc() : super(AuthenticationInitial()) {
+    print('Auth Initialized');
     void onAuthStateChanged(User? firebaseUser) {
       _user = firebaseUser;
       if (_user == null) {
