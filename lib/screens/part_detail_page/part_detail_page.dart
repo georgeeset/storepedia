@@ -17,6 +17,8 @@ import 'package:storepedia/constants/string_constants.dart' as string_constants;
 import 'package:storepedia/constants/number_constants.dart' as number_constants;
 
 import '../../bloc/authentication_bloc/bloc/authentication_bloc.dart';
+import '../../bloc/signin_option_bloc/bloc/signinoption_bloc.dart';
+import '../signin_screen/signin_screen.dart';
 
 class PartDetailPage extends StatelessWidget {
   static String routeName = '/part-detail/:companyName/:partId';
@@ -35,33 +37,48 @@ class PartDetailPage extends StatelessWidget {
   Widget build(BuildContext context) {
     // final part = ModalRoute.of(context)?.settings.arguments as Part;
     final FirestoreOperations firestoreOperations = FirestoreOperations();
-
     return part == null
-        ? FutureBuilder(
-            future: firestoreOperations.getPart(partId, companyName),
-            builder: (context, result) {
-              if (result.connectionState == ConnectionState.waiting) {
-                return const Center(child: CircularProgressIndicator());
-              } else if (result.hasError) {
-                return Center(
-                  child: Text(
-                    'Error: ${result.error}',
-                    style: Theme.of(context).textTheme.bodyLarge,
-                  ),
-                );
-              } else {
-                final part = result.data;
-                return PageLayout(
-                  body: PartBody(part: part!),
-                  title: partTitle(context, result.data!.partName!),
-                );
+        ? BlocBuilder<AuthenticationBloc, AuthenticationState>(
+            builder: (context, state) {
+              if (state is AuthenticatedState) {
+                return FutureBuilder(
+                    future: firestoreOperations.getPart(partId, companyName),
+                    builder: (context, result) {
+                      if (result.connectionState == ConnectionState.waiting) {
+                        return const Center(child: CircularProgressIndicator());
+                      } else if (result.hasError) {
+                        return Center(
+                          child: Text(
+                            'Error: ${result.error}',
+                            style: Theme.of(context).textTheme.bodyLarge,
+                          ),
+                        );
+                      } else {
+                        final part = result.data;
+                        return PageLayout(
+                          body: PartBody(part: part!),
+                          title: partTitle(context, result.data!.partName!),
+                          hasBackButton: true,
+                        );
+                      }
+                    });
               }
-            })
+              return MultiBlocProvider(
+                providers: [
+                  BlocProvider<SigninoptionBloc>(
+                    create: (context) => SigninoptionBloc(),
+                  ),
+                ],
+                child: const SigninScreen(),
+              );
+            },
+          )
         : PageLayout(
             body: PartBody(
               part: part!,
             ),
             title: partTitle(context, part!.partName!),
+            hasBackButton: true,
           );
   }
 
@@ -184,6 +201,15 @@ class _PartBodyState extends State<PartBody> {
                               : Switch(
                                   value: widget.part.isExhausted,
                                   onChanged: (newValue) {
+                                    var userInfo =
+                                        context.read<UserManagerCubit>().state;
+
+                                    // only users with same company name can update this data
+                                    if (userInfo is! UserLoadedState ||
+                                        userInfo.userData.company !=
+                                            widget.part.company) {
+                                      return;
+                                    }
                                     setState(() {
                                       widget.part.isExhausted = newValue;
                                     });
@@ -235,7 +261,12 @@ class _PartBodyState extends State<PartBody> {
                                   onSubmit: (value) {
                                     var userInfo =
                                         context.read<UserManagerCubit>().state;
-                                    if (userInfo is UserLoadedState) {
+                                    if (userInfo is UserLoadedState &&
+                                        userInfo.userData.company ==
+                                            widget.part.company &&
+                                        userInfo.userData.accessLevel >
+                                            number_constants
+                                                .minimumDeleteLevel) {
                                       context.read<MarkpartCubit>().markBad(
                                           part: widget.part,
                                           reason: value,

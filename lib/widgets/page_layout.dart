@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:storepedia/constants/number_constants.dart' as NumberConstants;
+import 'package:storepedia/screens/home_page/home_page.dart';
 
 class PageLayout extends StatelessWidget {
   const PageLayout(
@@ -41,6 +42,7 @@ class PageLayout extends StatelessWidget {
                         if (context.canPop()) {
                           context.pop(context);
                         }
+                        context.pushReplacement(HomePage.routeName);
                       },
                       child: const CircleAvatar(
                         radius: 15,

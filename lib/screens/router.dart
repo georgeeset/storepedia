@@ -23,6 +23,7 @@ class AppRouter {
   static final GoRouter _router = GoRouter(
       debugLogDiagnostics: true,
       navigatorKey: _rootNavigatorKey,
+      initialLocation: HomePage.routeName,
       routes: [
         GoRoute(
           path: HomePage.routeName,
@@ -87,25 +88,18 @@ class AppRouter {
             child: const ExhaustedItemsPage(),
           ),
         ),
-        GoRoute(
-          path: HomePage.jumpRoute,
-          name: 'jump-to',
-          builder: (context, state) {
-            var path = state.pathParameters['path'];
-            return HomePage(
-              destinationUrl: path,
-            );
-          },
-        )
       ],
       errorBuilder: (context, state) => const NotFoundPage(),
       redirect: (context, state) {
-        var authState = context.read<AuthenticationBloc>().state;
-        if (authState is AuthenticatedState) {
+        var userInfo = context.read<AuthenticationBloc>().state;
+        if (state.fullPath != null &&
+            state.fullPath!.contains('/part-detail/')) {
           return state.path;
-        } else {
-          return HomePage.routeName;
         }
+        if (userInfo is AuthenticatedState) {
+          return state.path;
+        }
+        return HomePage.routeName;
       });
 
   static GoRouter get router => _router;
