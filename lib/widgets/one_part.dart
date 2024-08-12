@@ -30,7 +30,7 @@ class OnePart extends StatelessWidget {
                         size: 50,
                       )
                     : Hero(
-                        tag: part.photo!,
+                        tag: part.partUid!,
                         child: ConditionalImage(
                           imageUrl: part.photo!,
                         ),

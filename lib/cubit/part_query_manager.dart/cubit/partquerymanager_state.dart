@@ -41,7 +41,7 @@ class PartqueryManagerState extends Equatable {
 
   @override
   String toString() {
-    return 'queryStatus: $queryStatus,\nhasReachedMax $hasReachedMax,\nresponse: ${response.toString()},\npaginationLoading: $paginationLoading,\nerrorMessage: $errorMessage,\nlocationFilter:$locationFilter';
+    return 'queryStatus: $queryStatus,\nhasReachedMax $hasReachedMax,\nresponse: [${response.length} parts],\npaginationLoading: $paginationLoading,\nerrorMessage: $errorMessage,\nlocationFilter:$locationFilter';
   }
 
   @override

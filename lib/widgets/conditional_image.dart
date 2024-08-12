@@ -10,19 +10,22 @@ class ConditionalImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (kIsWeb) {
-      return Image.network(
-        imageUrl,
-        frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
-          return child;
-        },
-        loadingBuilder: (context, child, loadingProgress) {
-          if (loadingProgress == null) {
+      return Container(
+        constraints: const BoxConstraints(maxHeight: 500),
+        child: Image.network(
+          imageUrl,
+          frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
             return child;
-          } else {
-            return loadingStack();
-          }
-          // return ;
-        },
+          },
+          loadingBuilder: (context, child, loadingProgress) {
+            if (loadingProgress == null) {
+              return child;
+            } else {
+              return loadingStack();
+            }
+            // return ;
+          },
+        ),
       );
     } else {
       // Web platform: use Image.network from the image package

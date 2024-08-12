@@ -46,8 +46,10 @@ class PartuploadwizardBloc
               );
         }
       } else {
-        emit(const PartuploadwizardErrorState(
-            message: 'Form is not yet complete!'));
+        emit(
+          const PartuploadwizardErrorState(
+              message: 'Form is not yet complete!'),
+        );
       }
     });
 

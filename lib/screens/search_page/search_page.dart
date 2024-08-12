@@ -62,8 +62,10 @@ class _SearchDonState extends State<SearchDon> {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        SizedBox(
-          width: widget.pageSize.width * 0.6,
+        Container(
+          constraints: BoxConstraints(
+              maxWidth: widget.pageSize.width * 0.5,
+              minWidth: widget.pageSize.width * 0.3),
           child: TextField(
             controller: controller,
             textInputAction: TextInputAction.search,
@@ -113,7 +115,7 @@ class _SearchDonState extends State<SearchDon> {
             },
           ),
         ),
-        const SizedBox(width: 20),
+        const SizedBox(width: 10),
         BlocBuilder<PartqueryManagerCubit, PartqueryManagerState>(
           builder: (context, state) {
             return Switch(

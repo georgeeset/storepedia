@@ -10,17 +10,22 @@ class LoadingLayout extends StatelessWidget {
     return Shimmer.fromColors(
       baseColor: Colors.blue.shade50,
       highlightColor: Colors.white,
-      child: StaggeredGridView.countBuilder(
-        //gridDelegate: SliverStaggeredGridDelegateWithMaxCrossAxisExtent(maxCrossAxisExtent: 100,mainAxisSpacing: 10, staggeredTileBuilder: (int index) { return StaggeredTile.count(1, index.isEven ? 1.2 : 1.8); },),
-        itemCount: 4,
-        //shrinkWrap: true,
-        itemBuilder: (context, index) => const Card(color: Colors.blue),
-        crossAxisCount: 2,
-        staggeredTileBuilder: (int index) {
-          return StaggeredTile.count(1, index.isEven ? 1.4 : 1.8);
-        },
-        //Text(state.response[index].partName!)
+      child: SizedBox(
+        width: 100,
+        height: 100,
+        child: Container(color: Colors.blue),
       ),
+      // child: StaggeredGridView.countBuilder(
+      //   //gridDelegate: SliverStaggeredGridDelegateWithMaxCrossAxisExtent(maxCrossAxisExtent: 100,mainAxisSpacing: 10, staggeredTileBuilder: (int index) { return StaggeredTile.count(1, index.isEven ? 1.2 : 1.8); },),
+      //   itemCount: 4,
+      //   //shrinkWrap: true,
+      //   itemBuilder: (context, index) => const Card(color: Colors.blue),
+      //   crossAxisCount: 2,
+      //   staggeredTileBuilder: (int index) {
+      //     return StaggeredTile.count(1, index.isEven ? 1.4 : 1.8);
+      //   },
+      //   //Text(state.response[index].partName!)
+      // ),
     );
   }
 }

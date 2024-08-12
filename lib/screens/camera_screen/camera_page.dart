@@ -70,7 +70,7 @@ class CameraWidget extends StatelessWidget {
 }
 
 class _CameraButtons extends StatelessWidget {
-  const _CameraButtons({super.key});
+  const _CameraButtons();
 
   @override
   Widget build(BuildContext context) {

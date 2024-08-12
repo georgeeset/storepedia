@@ -81,6 +81,15 @@ class HomeScreen extends StatelessWidget {
     final double horizontalListWidth = sizeData.width / 2.1;
     final double horizontalListHeight = sizeData.width / 2.1;
 
+    var userInfo = context.read<UserManagerCubit>().state;
+    var userLoaded = userInfo is UserLoadedState;
+
+    if (userLoaded) {
+      context.read<RecentItemsCubit>().listenForRecentParts(
+          company:
+              userInfo.userData.company ?? string_constants.partsCollection);
+    }
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -174,8 +183,10 @@ class HomeScreen extends StatelessWidget {
                                   direction: Axis.horizontal,
                                   children: recentItemState
                                       .map((e) => SizedBox(
-                                            width: 150,
-                                            height: 200,
+                                            width:
+                                                number_constants.onePartwidth,
+                                            height:
+                                                number_constants.onePartHeight,
                                             child: OnePart(part: e),
                                           ))
                                       .toList(),

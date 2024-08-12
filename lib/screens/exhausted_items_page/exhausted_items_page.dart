@@ -75,32 +75,33 @@ class _ExhaustedBodyState extends State<ExhaustedBody> {
     return BlocBuilder<ExhausteditemsmanagerCubit, ExhausteditemsmanagerState>(
         builder: (context, state) {
       if (state.queryStatus == QueryStatus.loaded) {
-        return StaggeredGridView.countBuilder(
-          controller: _scrollController,
-          //gridDelegate: SliverStaggeredGridDelegateWithMaxCrossAxisExtent(maxCrossAxisExtent: 100,mainAxisSpacing: 10, staggeredTileBuilder: (int index) { return StaggeredTile.count(1, index.isEven ? 1.2 : 1.8); },),
-          itemCount: state.hasReachedMax
-              ? state.response.length
-              : state.response.length + 1, // for displaying loading indicator.
-          //shrinkWrap: true,
-          itemBuilder: (context, index) {
-            if (index >= state.response.length) {
-              return state.hasReachedMax == true
-                  ? Container()
-                  : const Shimmer(
-                      gradient:
-                          LinearGradient(colors: [Colors.green, Colors.teal]),
-                      child: Card(color: Colors.blue),
-                    );
-            } else {
-              return OnePart(part: state.response[index]);
-            }
-          },
-          crossAxisCount: 2,
-          staggeredTileBuilder: (int index) {
-            return StaggeredTile.count(1, index.isEven ? 1.4 : 1.8);
-          },
-          //Text(state.response[index].partName!)
-        );
+        return Container();
+        // return StaggeredGridView.countBuilder(
+        //   controller: _scrollController,
+        //   //gridDelegate: SliverStaggeredGridDelegateWithMaxCrossAxisExtent(maxCrossAxisExtent: 100,mainAxisSpacing: 10, staggeredTileBuilder: (int index) { return StaggeredTile.count(1, index.isEven ? 1.2 : 1.8); },),
+        //   itemCount: state.hasReachedMax
+        //       ? state.response.length
+        //       : state.response.length + 1, // for displaying loading indicator.
+        //   //shrinkWrap: true,
+        //   itemBuilder: (context, index) {
+        //     if (index >= state.response.length) {
+        //       return state.hasReachedMax == true
+        //           ? Container()
+        //           : const Shimmer(
+        //               gradient:
+        //                   LinearGradient(colors: [Colors.green, Colors.teal]),
+        //               child: Card(color: Colors.blue),
+        //             );
+        //     } else {
+        //       return OnePart(part: state.response[index]);
+        //     }
+        //   },
+        //   crossAxisCount: 2,
+        //   staggeredTileBuilder: (int index) {
+        //     return StaggeredTile.count(1, index.isEven ? 1.4 : 1.8);
+        //   },
+        //   //Text(state.response[index].partName!)
+        // );
       }
 
       if (state.queryStatus == QueryStatus.loading) {

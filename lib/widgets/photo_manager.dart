@@ -205,6 +205,8 @@ class PhotoManagerState extends State<PhotoManager> {
               .read<PhotomanagerBloc>()
               .add(SelectPhotoEvent(photo: File(value.path)));
         }
+      }).catchError((error, stackTrace) {
+        print('Error loading file: ${error.toString()}');
       });
     });
   }

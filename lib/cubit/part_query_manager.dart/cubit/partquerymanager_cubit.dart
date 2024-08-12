@@ -8,7 +8,7 @@ import 'package:storepedia/constants/number_constants.dart' as number_constants;
 part 'partquerymanager_state.dart';
 
 class PartqueryManagerCubit extends Cubit<PartqueryManagerState> {
-  PartqueryManagerCubit() : super(PartqueryManagerState());
+  PartqueryManagerCubit() : super(const PartqueryManagerState());
   final PartQuery partQueryRepository = PartQuery();
   late String companyName; // fill in data later
   late String location;
@@ -112,7 +112,7 @@ class PartqueryManagerCubit extends Cubit<PartqueryManagerState> {
 
   @override
   void onChange(Change<PartqueryManagerState> change) {
-    print(change.nextState);
+    print(change.nextState.toString());
     super.onChange(change);
   }
 }

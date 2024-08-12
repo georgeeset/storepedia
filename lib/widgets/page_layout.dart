@@ -41,8 +41,9 @@ class PageLayout extends StatelessWidget {
                       onTap: () {
                         if (context.canPop()) {
                           context.pop(context);
+                        } else {
+                          context.pushReplacement(HomePage.routeName);
                         }
-                        context.pushReplacement(HomePage.routeName);
                       },
                       child: const CircleAvatar(
                         radius: 15,
@@ -68,6 +69,7 @@ class PageLayout extends StatelessWidget {
               top: NumberConstants.appbarHeight,
               child: Container(
                 padding: const EdgeInsets.only(bottom: 60),
+                constraints: const BoxConstraints(maxWidth: 1000),
                 clipBehavior: Clip.antiAliasWithSaveLayer,
                 decoration: const BoxDecoration(
                   color: Colors.white,

@@ -125,6 +125,9 @@ class AddItemPage extends StatelessWidget {
             /// clear from make them no send am again
             if (state is PartuploadwizardLoadedState) {
               context.read<PhotomanagerBloc>().add(RemovePhotoEvent());
+              context.read<EditItemCubit>().clear();
+              context.read<EditItemCubit>().clearPart();
+              context.read<FormLevelCubit>().clearScore();
               // context.read<EditItemCubit>().close();
               context.canPop() ? context.pop(context) : null;
             }

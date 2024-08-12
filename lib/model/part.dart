@@ -182,4 +182,9 @@ class Part {
   clear() {
     return Part(photo: null);
   }
+
+  @override
+  String toString() {
+    return "Part(partName: $partName, partDescription: $partDescription, partNumber: $partNumber, storeId: $storeId, storeLocation: $storeLocation, addedBy: $addedBy, addedById: $addedById, dateAdded: $dateAdded, lastEditedBy: $lastEditedBy, section: $section, brand: $brand, likesCount: $likesCount, isExhausted: $isExhausted, markExhaustedTime: $markExhaustedTime, searchKeywords: $searchKeywords, photo: $photo, markedBadByUid: $markedBadByUid, reasonForMarkingBad: $reasonForMarkingBad, partUid: $partUid, price: $price, quantity: $quantity, company: $company, branch: $branch)";
+  }
 }
