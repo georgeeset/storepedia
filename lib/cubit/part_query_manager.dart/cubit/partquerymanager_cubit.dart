@@ -24,7 +24,7 @@ class PartqueryManagerCubit extends Cubit<PartqueryManagerState> {
       partQueryRepository
           .searchPart(searchString: query, company: companyName)
           .then((value) {
-        print('${value?.length}');
+        // print('${value?.length}');
 
         if (value == null) {
           emit(state.copyWith(queryStatus: QueryStatus.noResult));
@@ -54,6 +54,7 @@ class PartqueryManagerCubit extends Cubit<PartqueryManagerState> {
           }
         }
       }).onError((error, stackTrace) {
+        print(stackTrace);
         emit(state.copyWith(
             queryStatus: QueryStatus.error, errorMessage: error.toString()));
       });

@@ -58,8 +58,10 @@ class PartQuery {
           );
     }
 
-    lastDoc =
-        queryResult.last; // keep the last document in case we need to paginate.
+    lastDoc = queryResult.isEmpty
+        ? null
+        : queryResult
+            .last; // keep the last document in case we need to paginate.
 
     var partList =
         queryResult.map((data) => Part.fromMap(snapshot: data)).toList();
