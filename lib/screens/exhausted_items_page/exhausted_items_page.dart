@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:storepedia/cubit/exhausted_items_manager_cubit/cubit/exhausteditemsmanager_cubit.dart';
 import 'package:storepedia/cubit/user_manager_cubit/usermanager_cubit.dart';
 import 'package:storepedia/widgets/loading_layout.dart';
@@ -72,62 +70,59 @@ class _ExhaustedBodyState extends State<ExhaustedBody> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ExhausteditemsmanagerCubit, ExhausteditemsmanagerState>(
-        builder: (context, state) {
-      if (state.queryStatus == QueryStatus.loaded) {
+    return BlocConsumer<ExhausteditemsmanagerCubit, ExhausteditemsmanagerState>(
+      builder: (context, state) {
+        if (state.queryStatus == QueryStatus.loaded) {
+          return SingleChildScrollView(
+            controller: _scrollController,
+            child: Wrap(
+              direction: Axis.horizontal,
+              children: state.response.map((e) {
+                return Container(
+                  constraints: const BoxConstraints(maxHeight: 400),
+                  child: AspectRatio(
+                    aspectRatio: 3 / 5,
+                    child: OnePart(part: e),
+                  ),
+                );
+              }).toList(),
+            ),
+          );
+        }
+
+        if (state.queryStatus == QueryStatus.loading) {
+          return const LoadingLayout();
+        }
+
+        if (state.queryStatus == QueryStatus.noResult) {
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'Our Stock seem OK',
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              Text(
+                'Kindly check physically to be double sure.',
+                style: Theme.of(context)
+                    .textTheme
+                    .titleSmall
+                    ?.copyWith(fontStyle: FontStyle.italic),
+              ),
+            ],
+          );
+        }
         return Container();
-        // return StaggeredGridView.countBuilder(
-        //   controller: _scrollController,
-        //   //gridDelegate: SliverStaggeredGridDelegateWithMaxCrossAxisExtent(maxCrossAxisExtent: 100,mainAxisSpacing: 10, staggeredTileBuilder: (int index) { return StaggeredTile.count(1, index.isEven ? 1.2 : 1.8); },),
-        //   itemCount: state.hasReachedMax
-        //       ? state.response.length
-        //       : state.response.length + 1, // for displaying loading indicator.
-        //   //shrinkWrap: true,
-        //   itemBuilder: (context, index) {
-        //     if (index >= state.response.length) {
-        //       return state.hasReachedMax == true
-        //           ? Container()
-        //           : const Shimmer(
-        //               gradient:
-        //                   LinearGradient(colors: [Colors.green, Colors.teal]),
-        //               child: Card(color: Colors.blue),
-        //             );
-        //     } else {
-        //       return OnePart(part: state.response[index]);
-        //     }
-        //   },
-        //   crossAxisCount: 2,
-        //   staggeredTileBuilder: (int index) {
-        //     return StaggeredTile.count(1, index.isEven ? 1.4 : 1.8);
-        //   },
-        //   //Text(state.response[index].partName!)
-        // );
-      }
-
-      if (state.queryStatus == QueryStatus.loading) {
-        return const LoadingLayout();
-      }
-
-      if (state.queryStatus == QueryStatus.noResult) {
-        return Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              'Our Stock seem OK',
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-            Text(
-              'Kindly check physically to be double sure.',
-              style: Theme.of(context)
-                  .textTheme
-                  .titleSmall
-                  ?.copyWith(fontStyle: FontStyle.italic),
-            ),
-          ],
-        );
-      }
-      return Container();
-    });
+      },
+      listener: (BuildContext context, ExhausteditemsmanagerState state) {
+        if (state.queryStatus == QueryStatus.loaded &&
+            !state.hasReachedMax &&
+            !_scrollController.hasClients) {
+          print('fake bottom: no scrollbar');
+          context.read<ExhausteditemsmanagerCubit>().moreExhaustedItems();
+        }
+      },
+    );
   }
 
   @override

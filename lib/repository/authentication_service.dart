@@ -3,11 +3,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 class AuthenticationService {
   AuthenticationService() {
     _auth = FirebaseAuth.instance;
-    _user = _auth.currentUser;
+    user = _auth.currentUser;
   }
 
   late FirebaseAuth _auth;
-  User? _user;
+  User? user;
 
   Future<UserCredential> signinWithEmail(
       {required String email, required String password}) async {
