@@ -3,26 +3,25 @@ import 'action_dialog.dart';
 
 class WarningDialog {
   static Future<bool?> boolActionsDialog({
-    required BuildContext context,   
-    
+    required BuildContext context,
+
     /// title text displays on top of the dialog page
     required String titleText,
-    
+
     /// inform the user what he/she is about to do
-    required String bodyText, 
-    
+    required String bodyText,
+
     /// When good option is clicked,
     /// the widget returns false.
     required String goodOption,
-    
+
     /// when bad option is clicked,
     /// the widget returns true.
-    String? badOption, 
+    String? badOption,
 
     ///If set to true, the dialog box will not
     /// exit till an option is selected.
-    bool isDismissible=true,
-
+    bool isDismissible = true,
   }) async {
     return showGeneralDialog(
       barrierColor: Colors.black38,
@@ -30,7 +29,6 @@ class WarningDialog {
       barrierDismissible: isDismissible,
       barrierLabel: '',
       context: context,
-      
       transitionBuilder: (context, animation1, animation2, widget) {
         final curvedValue =
             Curves.easeInOutBack.transform(animation1.value) - 1.0;
@@ -46,7 +44,11 @@ class WarningDialog {
                 badOption: badOption,
               )),
         );
-      }, pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) { return Container();  },
+      },
+      pageBuilder: (BuildContext context, Animation<double> animation,
+          Animation<double> secondaryAnimation) {
+        return Container();
+      },
     );
   }
 }

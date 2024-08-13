@@ -164,7 +164,7 @@ class HomeScreen extends StatelessWidget {
                     ),
                   ),
                   child: LayoutBuilder(builder: (context, constraints) {
-                    if (constraints.maxWidth < 700) {
+                    if (constraints.maxWidth < number_constants.maxMobileView) {
                       return SingleChildScrollView(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -218,6 +218,8 @@ class HomeScreen extends StatelessWidget {
                           SingleChildScrollView(
                             child: Container(
                               width: sizeData.width / 1.7,
+                              margin:
+                                  const EdgeInsets.symmetric(horizontal: 20.0),
                               constraints: const BoxConstraints(maxWidth: 1000),
                               alignment: Alignment.topRight,
                               padding: const EdgeInsetsDirectional.symmetric(

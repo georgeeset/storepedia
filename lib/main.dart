@@ -1,7 +1,7 @@
-import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:path_provider/path_provider.dart';
@@ -30,20 +30,20 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  await FirebaseAppCheck.instance.activate(
-    // webProvider: ReCaptchaV3Provider()
-    androidProvider: AndroidProvider.playIntegrity,
-  );
+  // await FirebaseAppCheck.instance.activate(
+  //   // webProvider: ReCaptchaV3Provider(),
+  //   androidProvider: AndroidProvider.playIntegrity,
+  // );
 
-  // SystemChrome.setSystemUIOverlayS`tyle(const SystemUiOverlayStyle(
-  //   systemNavigationBarColor: Colors.white, // navigation bar color
-  //   statusBarColor: Colors.blue, // status bar color
-  //   statusBarBrightness: Brightness.dark, //status bar brigtness
-  //   statusBarIconBrightness: Brightness.light, //status barIcon Brightness
-  //   systemNavigationBarDividerColor:
-  //       Colors.black, //Navigation bar divider color
-  //   systemNavigationBarIconBrightness: Brightness.dark,
-  // )); //navigation bar icon
+  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+    systemNavigationBarColor: Colors.white, // navigation bar color
+    statusBarColor: Colors.blue, // status bar color
+    statusBarBrightness: Brightness.dark, //status bar brigtness
+    statusBarIconBrightness: Brightness.light, //status barIcon Brightness
+    systemNavigationBarDividerColor:
+        Colors.black, //Navigation bar divider color
+    systemNavigationBarIconBrightness: Brightness.dark,
+  )); //navigation bar icon
 
   runApp(const MyApp());
 }

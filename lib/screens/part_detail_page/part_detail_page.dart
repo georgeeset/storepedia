@@ -104,10 +104,33 @@ class PartBody extends StatefulWidget {
 class _PartBodyState extends State<PartBody> {
   @override
   Widget build(BuildContext context) {
+    return LayoutBuilder(builder: (context, constraint) {
+      if (constraint.maxWidth > number_constants.maxMobileView) {
+        return Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+                width: constraint.maxWidth / 2,
+                child: OnlinePinchZoomImage(link: widget.part.photo)),
+            Container(
+                width: constraint.maxWidth / 2,
+                padding: const EdgeInsets.only(left: 10.0),
+                child: listItems(context, showFirstItem: false)),
+          ],
+        );
+      } else {
+        return listItems(context);
+      }
+    });
+  }
+
+  ListView listItems(BuildContext context, {bool showFirstItem = true}) {
     return ListView(
       keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
       children: [
-        OnlinePinchZoomImage(link: widget.part.photo),
+        showFirstItem
+            ? OnlinePinchZoomImage(link: widget.part.photo)
+            : const SizedBox(),
         space(),
         widget.part.partDescription == null
             ? Container()

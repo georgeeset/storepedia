@@ -74,7 +74,7 @@ class _QueryBodyState extends State<QueryBody> {
             children: [
               Image.asset('assets/gifs/sitting-alone.gif'),
               Text(
-                'Not found in your locaiton.\nToggle the location swich to see more results from other branches',
+                'Not found in your locaiton.\nSwitch off Branch filter to see more results from other branches',
                 style: Theme.of(context).textTheme.titleMedium,
               ),
               const SizedBox(height: 20),

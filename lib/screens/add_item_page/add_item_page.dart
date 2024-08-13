@@ -336,9 +336,10 @@ class AddItemPage extends StatelessWidget {
       ),
       levelIndicator:
           BlocBuilder<FormLevelCubit, int>(builder: (context, state) {
-        return SizedBox(
+        return Container(
           width: sizeData.width / 1.1,
           height: 5,
+          constraints: const BoxConstraints(maxWidth: 950),
           child: LinearProgressIndicator(
             valueColor: state >= number_constants.minimumScore
                 ? const AlwaysStoppedAnimation<Color>(Colors.purple)

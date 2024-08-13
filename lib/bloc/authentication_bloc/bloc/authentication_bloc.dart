@@ -31,6 +31,8 @@ class AuthenticationBloc
 
     on<EmailPasswordSigninEvent>((event, emit) async {
       emit(AuthenticatingState());
+      await _auth.setSettings(appVerificationDisabledForTesting: true);
+
       try {
         await _auth.signInWithEmailAndPassword(
             email: event.email, password: event.password);

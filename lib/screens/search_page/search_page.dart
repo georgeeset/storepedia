@@ -17,7 +17,6 @@ class SearchPage extends StatelessWidget {
     return PageLayout(
       title: Container(
           margin: const EdgeInsets.only(left: 10),
-          width: pageSize.width / 1.3,
           child: SearchDon(searchString: searchQuery, pageSize: pageSize)),
       hasBackButton: true,
       body: const QueryBody(),
@@ -116,6 +115,8 @@ class _SearchDonState extends State<SearchDon> {
           ),
         ),
         const SizedBox(width: 10),
+        const Text("Branch Filter",
+            style: TextStyle(fontSize: 18, color: Colors.white)),
         BlocBuilder<PartqueryManagerCubit, PartqueryManagerState>(
           builder: (context, state) {
             return Switch(
