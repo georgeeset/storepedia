@@ -109,40 +109,17 @@ class HomeScreen extends StatelessWidget {
               child: SizedBox(
                 width: sizeData.width,
                 child: Center(
-                  child: SelectableText(
-                    'Store Pedia',
-                    style: Theme.of(context)
-                        .textTheme
-                        .headlineMedium
-                        ?.copyWith(color: Colors.white),
-                    onTap: () {
-                      showAboutPage(
-                        context: context,
-                        values: {'version': '3.0.1', 'year': '2021'},
-                        applicationLegalese:
-                            'Copyright © CXG Technologies, {{ year }}',
-                        applicationDescription: const Text(
-                          string_constants.aboutApp,
-                          softWrap: true,
-                        ),
-                        children: const <Widget>[
-                          MarkdownPageListTile(
-                            icon: Icon(Icons.list),
-                            title: Text('StorePedia'),
-                            filename: 'CHANGELOG.md',
-                          ),
-                          LicensesPageListTile(
-                            icon: Icon(Icons.favorite),
-                          ),
-                        ],
-                        applicationIcon: const SizedBox(
-                          width: 100,
-                          height: 100,
-                          child: Image(
-                            image: AssetImage('assets/images/splash.png'),
-                          ),
-                        ),
-                      );
+                  child: TextButton(
+                    child: Text(
+                      'Store Pedia',
+                      style: Theme.of(context)
+                          .textTheme
+                          .headlineMedium
+                          ?.copyWith(
+                              color: Colors.white, fontWeight: FontWeight.bold),
+                    ),
+                    onPressed: () {
+                      displayAbout(context);
                     },
                   ),
                 ),
@@ -269,6 +246,35 @@ class HomeScreen extends StatelessWidget {
                   ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  void displayAbout(BuildContext context) async {
+    return showAboutPage(
+      context: context,
+      values: {'version': '3.0.1', 'year': '2021'},
+      applicationLegalese: 'Copyright © CXG Technologies, {{ year }}',
+      applicationDescription: const Text(
+        string_constants.aboutApp,
+        softWrap: true,
+      ),
+      children: const <Widget>[
+        MarkdownPageListTile(
+          icon: Icon(Icons.list),
+          title: Text('StorePedia'),
+          filename: 'CHANGELOG.md',
+        ),
+        LicensesPageListTile(
+          icon: Icon(Icons.favorite),
+        ),
+      ],
+      applicationIcon: const SizedBox(
+        width: 100,
+        height: 100,
+        child: Image(
+          image: AssetImage('assets/images/splash.png'),
         ),
       ),
     );

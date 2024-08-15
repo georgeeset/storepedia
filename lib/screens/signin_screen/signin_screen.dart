@@ -21,37 +21,45 @@ class SigninScreen extends StatelessWidget {
         width: MediaQuery.of(context).size.width,
         color: Colors.white54,
         padding: const EdgeInsets.symmetric(horizontal: 15.0),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10.0),
-          child: BlocBuilder<SigninoptionBloc, SigninoptionState>(
-            builder: (context, state) {
-              if (state is RegisterState) {
-                return const RegisterWidget();
-              } else {
-                if (state is SigninState) {
-                  return const SigninWidget();
-                } else {
-                  return BlocListener<AuthenticationBloc, AuthenticationState>(
-                    listener: (context, state) {
-                      if (state is AuthEmailSentState) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            backgroundColor: Colors.purpleAccent,
-                            duration: Duration(
-                                seconds: number_constants.errorSnackBarDelay),
-                            content: Text('Reset Email Sent !'),
-                          ),
-                        );
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: 10.0),
+              child: BlocBuilder<SigninoptionBloc, SigninoptionState>(
+                builder: (context, state) {
+                  if (state is RegisterState) {
+                    return const RegisterWidget();
+                  } else {
+                    if (state is SigninState) {
+                      return const SigninWidget();
+                    } else {
+                      return BlocListener<AuthenticationBloc,
+                          AuthenticationState>(
+                        listener: (context, state) {
+                          if (state is AuthEmailSentState) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                backgroundColor: Colors.purpleAccent,
+                                duration: Duration(
+                                    seconds:
+                                        number_constants.errorSnackBarDelay),
+                                content: Text('Reset Email Sent !'),
+                              ),
+                            );
 
-                        context.read<SigninoptionBloc>().add(SigninEvent());
-                      }
-                    },
-                    child: const ForgotPasswordWidget(),
-                  );
-                }
-              }
-            },
-          ),
+                            context.read<SigninoptionBloc>().add(SigninEvent());
+                          }
+                        },
+                        child: const ForgotPasswordWidget(),
+                      );
+                    }
+                  }
+                },
+              ),
+            ),
+          ],
         ),
       ),
     );
