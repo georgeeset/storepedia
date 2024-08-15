@@ -10,6 +10,7 @@ import 'package:storepedia/screens/home_page/home_page.dart';
 import 'package:storepedia/screens/not_found_page/not_found_page.dart';
 import 'package:storepedia/screens/part_detail_page/part_detail_page.dart';
 import 'package:storepedia/screens/search_page/search_page.dart';
+import 'package:storepedia/widgets/online_photoview_dialog.dart';
 import '../cubit/exhausted_items_manager_cubit/cubit/exhausteditemsmanager_cubit.dart';
 import '../cubit/fellow_users_cubit/fellow_users_cubit.dart';
 import '../cubit/mark_bad_part/cubit/mark_bad_part_cubit.dart';
@@ -88,6 +89,12 @@ class AppRouter {
             child: const ExhaustedItemsPage(),
           ),
         ),
+        GoRoute(
+            path: OnlinePhotoviewDialog.routeName,
+            builder: (context, state) {
+              var photoLink = state.extra as String;
+              return OnlinePhotoviewDialog(photoLink: photoLink);
+            })
       ],
       errorBuilder: (context, state) => const NotFoundPage(),
       redirect: (context, state) {
@@ -99,6 +106,9 @@ class AppRouter {
         if (userInfo is AuthenticatedState) {
           return state.path;
         }
+        // if (state.extra != null &&
+        //     state.extra is String &&
+        //     state.fullPath!.contains('/photo_view')) {}
         return HomePage.routeName;
       });
 

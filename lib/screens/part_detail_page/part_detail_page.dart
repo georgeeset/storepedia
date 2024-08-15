@@ -10,6 +10,7 @@ import 'package:storepedia/cubit/user_manager_cubit/usermanager_cubit.dart';
 import 'package:storepedia/model/part.dart';
 import 'package:storepedia/repository/firestore_operaions.dart';
 import 'package:storepedia/screens/add_item_page/add_item_page.dart';
+import 'package:storepedia/widgets/conditional_image.dart';
 import 'package:storepedia/widgets/input_editor.dart';
 import 'package:storepedia/widgets/online_pinch_zoom.dart';
 import 'package:storepedia/widgets/page_layout.dart';
@@ -109,9 +110,17 @@ class _PartBodyState extends State<PartBody> {
         return Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(
-                width: constraint.maxWidth / 2,
-                child: OnlinePinchZoomImage(link: widget.part.photo)),
+            Container(
+              width: constraint.maxWidth / 2,
+              margin: const EdgeInsets.only(top: 10),
+              child: GestureDetector(
+                  child: ConditionalImage(
+                    imageUrl: widget.part.photo!,
+                  ),
+                  onTap: () {
+                    context.push('/photo_view', extra: widget.part.photo);
+                  }),
+            ),
             Container(
                 width: constraint.maxWidth / 2,
                 padding: const EdgeInsets.only(left: 10.0),
