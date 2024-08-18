@@ -6,6 +6,8 @@ import 'package:storepedia/widgets/one_part.dart';
 import 'package:storepedia/widgets/page_layout.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../constants/number_constants.dart' as number_constants;
+
 class ExhaustedItemsPage extends StatelessWidget {
   static String routName = '/exhausted-items-page';
   static String name = 'exhausted-items';
@@ -79,7 +81,8 @@ class _ExhaustedBodyState extends State<ExhaustedBody> {
               direction: Axis.horizontal,
               children: state.response.map((e) {
                 return Container(
-                  constraints: const BoxConstraints(maxHeight: 400),
+                  constraints: const BoxConstraints(
+                      maxHeight: number_constants.onePartMaxHeight),
                   child: AspectRatio(
                     aspectRatio: 3 / 5,
                     child: OnePart(part: e),

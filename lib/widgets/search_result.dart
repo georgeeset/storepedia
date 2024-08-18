@@ -4,6 +4,8 @@ import 'package:storepedia/cubit/part_query_manager.dart/cubit/partquerymanager_
 import 'package:storepedia/widgets/loading_layout.dart';
 import 'package:storepedia/widgets/one_part.dart';
 
+import '../constants/number_constants.dart' as number_constants;
+
 class QueryBody extends StatefulWidget {
   const QueryBody({super.key});
 
@@ -47,7 +49,8 @@ class _QueryBodyState extends State<QueryBody> {
               direction: Axis.horizontal,
               children: state.response.map((e) {
                 return Container(
-                  constraints: const BoxConstraints(maxHeight: 400),
+                  constraints: const BoxConstraints(
+                      maxHeight: number_constants.onePartMaxHeight),
                   child: AspectRatio(
                     aspectRatio: 3 / 5,
                     child: OnePart(part: e),

@@ -5,6 +5,8 @@ import 'package:storepedia/cubit/user_manager_cubit/usermanager_cubit.dart';
 import 'package:storepedia/widgets/page_layout.dart';
 import 'package:storepedia/widgets/search_result.dart';
 
+import '../../constants/number_constants.dart' as number_constants;
+
 class SearchPage extends StatelessWidget {
   static String routName = '/search-page';
   static String name = 'search';
@@ -115,8 +117,10 @@ class _SearchDonState extends State<SearchDon> {
           ),
         ),
         const SizedBox(width: 10),
-        const Text("Branch Filter",
-            style: TextStyle(fontSize: 18, color: Colors.white)),
+        widget.pageSize.width > number_constants.maxMobileView
+            ? const Text("Branch Filter",
+                style: TextStyle(fontSize: 18, color: Colors.white))
+            : const SizedBox(),
         BlocBuilder<PartqueryManagerCubit, PartqueryManagerState>(
           builder: (context, state) {
             return Switch(

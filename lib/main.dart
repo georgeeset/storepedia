@@ -69,9 +69,6 @@ class MyApp extends StatelessWidget {
         BlocProvider<PhotomanagerBloc>(
           create: (context) => PhotomanagerBloc(),
         ),
-        BlocProvider<PhotouploadCubit>(
-          create: (context) => PhotouploadCubit(),
-        ),
         BlocProvider<UserManagerCubit>(
           create: (context) => UserManagerCubit(),
         ),

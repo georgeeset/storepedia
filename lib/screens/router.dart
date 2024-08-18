@@ -15,6 +15,7 @@ import '../cubit/exhausted_items_manager_cubit/cubit/exhausteditemsmanager_cubit
 import '../cubit/fellow_users_cubit/fellow_users_cubit.dart';
 import '../cubit/mark_bad_part/cubit/mark_bad_part_cubit.dart';
 import '../cubit/mark_exhausted_part_cubit/cubit/markexhaustedpart_cubit.dart';
+import '../cubit/photo_upload_cubit/photoupload_cubit.dart';
 import '../cubit/repitition_cubit/cubit/repitition_cubit.dart';
 import '../model/part.dart';
 
@@ -76,8 +77,15 @@ class AppRouter {
         GoRoute(
           path: AddItemPage.routName,
           name: AddItemPage.name,
-          builder: (context, state) => BlocProvider<RepititionCubit>(
-            create: (context) => RepititionCubit(),
+          builder: (context, state) => MultiBlocProvider(
+            providers: [
+              BlocProvider<RepititionCubit>(
+                create: (context) => RepititionCubit(),
+              ),
+              BlocProvider<PhotouploadCubit>(
+                create: (context) => PhotouploadCubit(),
+              ),
+            ],
             child: const AddItemPage(),
           ),
         ),

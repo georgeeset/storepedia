@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
+import '../constants/number_constants.dart' as number_constants;
+
 class LoadingLayout extends StatelessWidget {
   const LoadingLayout({super.key});
 
@@ -16,7 +18,8 @@ class LoadingLayout extends StatelessWidget {
               Card(
                 color: Colors.blue,
                 child: Container(
-                  constraints: const BoxConstraints(maxHeight: 400),
+                  constraints: const BoxConstraints(
+                      maxHeight: number_constants.onePartMaxHeight),
                   child: const AspectRatio(aspectRatio: 3 / 5),
                 ),
               ),

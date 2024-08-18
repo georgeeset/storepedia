@@ -15,3 +15,4 @@ const double maxTextFieldWidth = 500;
 const double onePartwidth = 180;
 const double onePartHeight = 250;
 const int maxMobileView = 700;
+const double onePartMaxHeight = 300;
