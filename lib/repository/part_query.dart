@@ -40,7 +40,7 @@ class PartQuery {
               company,
               string_constants.searchKeywords,
               number_constants.maximumSearchResult,
-              string_constants.likesCount,
+              string_constants.dateAdded,
               lastDoc!)
           .onError(
             (error, stackTrace) => Future.error(error.toString(), stackTrace),
@@ -52,7 +52,7 @@ class PartQuery {
               company,
               string_constants.searchKeywords,
               number_constants.maximumSearchResult,
-              string_constants.likesCount)
+              string_constants.dateAdded)
           .onError(
             (error, stackTrace) => Future.error(error.toString(), stackTrace),
           );

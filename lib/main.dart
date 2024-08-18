@@ -14,7 +14,6 @@ import 'package:storepedia/cubit/user_manager_cubit/usermanager_cubit.dart';
 import 'package:storepedia/firebase_options.dart';
 import 'cubit/edit_item_cubit/edititem_cubit.dart';
 import 'cubit/part_query_manager.dart/cubit/partquerymanager_cubit.dart';
-import 'cubit/photo_upload_cubit/photoupload_cubit.dart';
 import 'screens/router.dart';
 
 Future<void> main() async {

@@ -17,49 +17,58 @@ class SigninScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        width: MediaQuery.of(context).size.width,
-        color: Colors.white54,
-        padding: const EdgeInsets.symmetric(horizontal: 15.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              padding: const EdgeInsets.symmetric(vertical: 10.0),
-              child: BlocBuilder<SigninoptionBloc, SigninoptionState>(
-                builder: (context, state) {
-                  if (state is RegisterState) {
-                    return const RegisterWidget();
-                  } else {
-                    if (state is SigninState) {
-                      return const SigninWidget();
-                    } else {
-                      return BlocListener<AuthenticationBloc,
-                          AuthenticationState>(
-                        listener: (context, state) {
-                          if (state is AuthEmailSentState) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                backgroundColor: Colors.purpleAccent,
-                                duration: Duration(
-                                    seconds:
-                                        number_constants.errorSnackBarDelay),
-                                content: Text('Reset Email Sent !'),
-                              ),
-                            );
-
-                            context.read<SigninoptionBloc>().add(SigninEvent());
-                          }
-                        },
-                        child: const ForgotPasswordWidget(),
-                      );
-                    }
-                  }
-                },
+      body: SingleChildScrollView(
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          color: Colors.white54,
+          padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 20.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset(
+                'assets/images/main_logo.jpg',
+                width: 200,
+                height: 300,
               ),
-            ),
-          ],
+              Container(
+                padding: const EdgeInsets.symmetric(vertical: 10.0),
+                child: BlocBuilder<SigninoptionBloc, SigninoptionState>(
+                  builder: (context, state) {
+                    if (state is RegisterState) {
+                      return const RegisterWidget();
+                    } else {
+                      if (state is SigninState) {
+                        return const SigninWidget();
+                      } else {
+                        return BlocListener<AuthenticationBloc,
+                            AuthenticationState>(
+                          listener: (context, state) {
+                            if (state is AuthEmailSentState) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  backgroundColor: Colors.purpleAccent,
+                                  duration: Duration(
+                                      seconds:
+                                          number_constants.errorSnackBarDelay),
+                                  content: Text('Reset Email Sent !'),
+                                ),
+                              );
+
+                              context
+                                  .read<SigninoptionBloc>()
+                                  .add(SigninEvent());
+                            }
+                          },
+                          child: const ForgotPasswordWidget(),
+                        );
+                      }
+                    }
+                  },
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

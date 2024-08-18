@@ -56,7 +56,7 @@ class FirestoreOperations {
     return _firebaseFirestore
         .collection(collection)
         .where(targetField, arrayContainsAny: keywords)
-        //.orderBy(orderByField)
+        // .orderBy(orderByField, descending: true)
         .limit(resultLimit)
         .get()
         .then((value) => value.docs)
@@ -76,7 +76,7 @@ class FirestoreOperations {
     return _firebaseFirestore
         .collection(collection)
         .where(targetField, arrayContainsAny: keywords)
-        //.orderBy(orderByField)
+        // .orderBy(orderByField, descending: true)
         .limit(resultLimit)
         .startAfterDocument(startAfter)
         .get()

@@ -181,7 +181,7 @@ class HomeScreen extends StatelessWidget {
                           SingleChildScrollView(
                             child: Container(
                               padding: const EdgeInsets.symmetric(
-                                horizontal: 50,
+                                horizontal: 10,
                                 vertical: 10,
                               ),
                               child: MenuTiles(
@@ -192,17 +192,17 @@ class HomeScreen extends StatelessWidget {
                               ),
                             ),
                           ),
+                          const Spacer(),
                           SingleChildScrollView(
                             child: Container(
-                              width: sizeData.width / 1.7,
-                              margin:
-                                  const EdgeInsets.symmetric(horizontal: 20.0),
+                              width: sizeData.width / 1.5,
+                              margin: const EdgeInsets.only(right: 40.0),
                               constraints: const BoxConstraints(maxWidth: 1000),
                               alignment: Alignment.topRight,
-                              padding: const EdgeInsetsDirectional.symmetric(
-                                horizontal: 10.0,
-                                vertical: 10.0,
-                              ),
+                              // padding: const EdgeInsetsDirectional.symmetric(
+                              //   horizontal: 10.0,
+                              //   vertical: 10.0,
+                              // ),
                               child: BlocBuilder<RecentItemsCubit, List<Part>>(
                                 builder: (context, recentItemState) {
                                   var userInfo =
@@ -221,15 +221,19 @@ class HomeScreen extends StatelessWidget {
                                     children: recentItemState
                                         .map(
                                           (e) => Container(
-                                            width: sizeData.width / 4,
-                                            height: sizeData.width / 2.8,
+                                            // width: sizeData.width / 4,
+                                            // height: sizeData.width / 2.8,
                                             constraints: const BoxConstraints(
-                                              maxHeight: 360,
-                                              maxWidth: 250,
-                                              minHeight: 200,
-                                              minWidth: 150,
+                                              // maxHeight: 360,
+                                              // maxWidth: 250,
+                                              // minHeight: 200,
+                                              // minWidth: 150,
+                                              maxHeight: number_constants
+                                                  .onePartMaxHeight,
                                             ),
-                                            child: OnePart(part: e),
+                                            child: AspectRatio(
+                                                aspectRatio: 3 / 5,
+                                                child: OnePart(part: e)),
                                           ),
                                         )
                                         .toList(),
@@ -238,6 +242,7 @@ class HomeScreen extends StatelessWidget {
                               ),
                             ),
                           ),
+                          const Spacer(),
                         ],
                       );
                     }
