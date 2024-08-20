@@ -68,7 +68,7 @@ class PageLayout extends StatelessWidget {
             Positioned(
               top: NumberConstants.appbarHeight,
               child: Container(
-                padding: const EdgeInsets.only(bottom: 60),
+                padding: const EdgeInsets.only(bottom: 20),
                 constraints: const BoxConstraints(maxWidth: 1000),
                 clipBehavior: Clip.antiAliasWithSaveLayer,
                 decoration: const BoxDecoration(

@@ -129,126 +129,10 @@ class HomeScreen extends StatelessWidget {
               top: number_constants.appbarHeight -
                   number_constants.bodyOverlapHeight,
               left: 0,
-              child: Container(
-                  width: sizeData.width,
-                  height: sizeData.height - number_constants.appbarHeight,
-                  //padding: EdgeInsets.symmetric(vertical: 5.0),
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(50.0),
-                      topRight: Radius.circular(50.0),
-                    ),
-                  ),
-                  child: LayoutBuilder(builder: (context, constraints) {
-                    if (constraints.maxWidth < number_constants.maxMobileView) {
-                      return SingleChildScrollView(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            MenuTiles(
-                              sizeData: sizeData,
-                              horizontalListWidth: horizontalListWidth,
-                              horizontalListHeight: horizontalListHeight,
-                            ),
-                            const Divider(),
-                            const Text('Recently Added Store Items'),
-                            BlocBuilder<RecentItemsCubit, List<Part>>(
-                              builder: (context, recentItemState) {
-                                return Wrap(
-                                  direction: Axis.horizontal,
-                                  children: recentItemState
-                                      .map((e) => SizedBox(
-                                            width:
-                                                number_constants.onePartwidth,
-                                            height:
-                                                number_constants.onePartHeight,
-                                            child: OnePart(part: e),
-                                          ))
-                                      .toList(),
-                                );
-                              },
-                            ),
-                          ],
-                        ),
-                      );
-                    } else {
-                      return Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SingleChildScrollView(
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 10,
-                                vertical: 10,
-                              ),
-                              child: MenuTiles(
-                                sizeData: sizeData,
-                                horizontalListWidth: horizontalListWidth,
-                                horizontalListHeight: horizontalListHeight,
-                                itemsDirection: Axis.vertical,
-                              ),
-                            ),
-                          ),
-                          const Spacer(),
-                          SingleChildScrollView(
-                            child: Container(
-                              width: sizeData.width / 1.5,
-                              margin: const EdgeInsets.only(right: 40.0),
-                              constraints: const BoxConstraints(maxWidth: 1000),
-                              alignment: Alignment.topRight,
-                              // padding: const EdgeInsetsDirectional.symmetric(
-                              //   horizontal: 10.0,
-                              //   vertical: 10.0,
-                              // ),
-                              child: BlocBuilder<RecentItemsCubit, List<Part>>(
-                                builder: (context, recentItemState) {
-                                  var userInfo =
-                                      context.read<UserManagerCubit>().state;
-                                  if (userInfo is UserLoadedState &&
-                                      recentItemState.isEmpty) {
-                                    context
-                                        .read<RecentItemsCubit>()
-                                        .listenForRecentParts(
-                                            company:
-                                                userInfo.userData.company ??
-                                                    'parts');
-                                  }
-                                  return Wrap(
-                                    direction: Axis.horizontal,
-                                    children: recentItemState
-                                        .map(
-                                          (e) => Container(
-                                            // width: sizeData.width / 4,
-                                            // height: sizeData.width / 2.8,
-                                            constraints: const BoxConstraints(
-                                              // maxHeight: 360,
-                                              // maxWidth: 250,
-                                              // minHeight: 200,
-                                              // minWidth: 150,
-                                              maxHeight: number_constants
-                                                  .onePartMaxHeight,
-                                            ),
-                                            child: AspectRatio(
-                                                aspectRatio: 3 / 5,
-                                                child: OnePart(part: e)),
-                                          ),
-                                        )
-                                        .toList(),
-                                  );
-                                },
-                              ),
-                            ),
-                          ),
-                          const Spacer(),
-                        ],
-                      );
-                    }
-                  })
-                  //child: TextField(),
-                  ),
+              child: HomeBody(
+                  sizeData: sizeData,
+                  horizontalListWidth: horizontalListWidth,
+                  horizontalListHeight: horizontalListHeight),
             ),
           ],
         ),
@@ -283,5 +167,136 @@ class HomeScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class HomeBody extends StatelessWidget {
+  const HomeBody({
+    super.key,
+    required this.sizeData,
+    required this.horizontalListWidth,
+    required this.horizontalListHeight,
+  });
+
+  final Size sizeData;
+  final double horizontalListWidth;
+  final double horizontalListHeight;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        width: sizeData.width,
+        height: sizeData.height - number_constants.appbarHeight,
+        //padding: EdgeInsets.symmetric(vertical: 5.0)
+        clipBehavior: Clip.hardEdge,
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(50.0),
+            topRight: Radius.circular(50.0),
+          ),
+        ),
+        child: LayoutBuilder(builder: (context, constraints) {
+          if (constraints.maxWidth < number_constants.maxMobileView) {
+            return SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  MenuTiles(
+                    sizeData: sizeData,
+                    horizontalListWidth: horizontalListWidth,
+                    horizontalListHeight: horizontalListHeight,
+                  ),
+                  const Divider(),
+                  const Text('Recently Added Store Items'),
+                  BlocBuilder<RecentItemsCubit, List<Part>>(
+                    builder: (context, recentItemState) {
+                      return Wrap(
+                        direction: Axis.horizontal,
+                        children: recentItemState
+                            .map((e) => SizedBox(
+                                  width: number_constants.onePartwidth,
+                                  height: number_constants.onePartHeight,
+                                  child: OnePart(part: e),
+                                ))
+                            .toList(),
+                      );
+                    },
+                  ),
+                ],
+              ),
+            );
+          } else {
+            return Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SingleChildScrollView(
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 10,
+                    ),
+                    child: MenuTiles(
+                      sizeData: sizeData,
+                      horizontalListWidth: horizontalListWidth,
+                      horizontalListHeight: horizontalListHeight,
+                      itemsDirection: Axis.vertical,
+                    ),
+                  ),
+                ),
+                const Spacer(),
+                SingleChildScrollView(
+                  child: Container(
+                    width: sizeData.width / 1.5,
+                    margin: const EdgeInsets.only(right: 40.0),
+                    constraints: const BoxConstraints(maxWidth: 1000),
+                    alignment: Alignment.topRight,
+                    // padding: const EdgeInsetsDirectional.symmetric(
+                    //   horizontal: 10.0,
+                    //   vertical: 10.0,
+                    // ),
+                    child: BlocBuilder<RecentItemsCubit, List<Part>>(
+                      builder: (context, recentItemState) {
+                        var userInfo = context.read<UserManagerCubit>().state;
+                        if (userInfo is UserLoadedState &&
+                            recentItemState.isEmpty) {
+                          context.read<RecentItemsCubit>().listenForRecentParts(
+                              company: userInfo.userData.company ?? 'parts');
+                        }
+                        return Wrap(
+                          direction: Axis.horizontal,
+                          children: recentItemState
+                              .map(
+                                (e) => Container(
+                                  // width: sizeData.width / 4,
+                                  // height: sizeData.width / 2.8,
+                                  constraints: const BoxConstraints(
+                                    // maxHeight: 360,
+                                    // maxWidth: 250,
+                                    // minHeight: 200,
+                                    // minWidth: 150,
+                                    maxHeight:
+                                        number_constants.onePartMaxHeight,
+                                  ),
+                                  child: AspectRatio(
+                                      aspectRatio: 3 / 5,
+                                      child: OnePart(part: e)),
+                                ),
+                              )
+                              .toList(),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+                const Spacer(),
+              ],
+            );
+          }
+        })
+        //child: TextField(),
+        );
   }
 }

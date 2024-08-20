@@ -75,10 +75,16 @@ class _QueryBodyState extends State<QueryBody> {
         if (state.queryStatus == QueryStatus.loaded && state.response.isEmpty) {
           return Column(
             children: [
-              Image.asset('assets/gifs/sitting-alone.gif'),
-              Text(
-                'Not found in your locaiton.\nSwitch off Branch filter to see more results from other branches',
-                style: Theme.of(context).textTheme.titleMedium,
+              Image.asset(
+                'assets/gifs/sitting-alone.gif',
+                width: 200,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Text(
+                  'Not found in your locaiton.\nSwitch off Branch filter to see more results from other branches',
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
               ),
               const SizedBox(height: 20),
               Text(

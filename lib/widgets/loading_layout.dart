@@ -19,7 +19,7 @@ class LoadingLayout extends StatelessWidget {
                 color: Colors.blue,
                 child: Container(
                   constraints: const BoxConstraints(
-                      maxHeight: number_constants.onePartMaxHeight),
+                      maxHeight: number_constants.onePartMaxHeight - 10),
                   child: const AspectRatio(aspectRatio: 3 / 5),
                 ),
               ),

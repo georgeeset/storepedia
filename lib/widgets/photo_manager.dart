@@ -38,137 +38,142 @@ class PhotoManagerState extends State<PhotoManager> {
       margin: const EdgeInsets.all(10.0),
       elevation: 3.0,
       shadowColor: Colors.blue,
-      child: BlocBuilder<PhotomanagerBloc, PhotomanagerState>(
-        builder: ((context, state) {
-          if (state is ImageSelectedState) {
-            return DisplayOfflineImage(image: state.image);
-          }
+      child: Container(
+        constraints: const BoxConstraints(minHeight: 100),
+        child: BlocBuilder<PhotomanagerBloc, PhotomanagerState>(
+          builder: ((context, state) {
+            if (state is ImageSelectedState) {
+              return DisplayOfflineImage(image: state.image);
+            }
 
-          return BlocBuilder<EditItemCubit, Part>(builder: ((context, state) {
-            return state.photo != null
-                ? Stack(
-                    alignment: Alignment.topCenter,
-                    children: [
-                      OnlinePinchZoomImage(link: state.photo),
-                      Positioned(
-                          bottom: 10,
-                          child: SizedBox(
-                            height: 50,
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Container(
-                                  width: 50,
-                                  height: 50,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: Colors.white60,
-                                    border: Border.all(
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                  child: InkWell(
-                                    onTap: () => {
-                                      if (kIsWeb)
-                                        {context.push(CameraPage.routName)}
-                                      else
-                                        {getImage(ImageSource.camera)}
-                                    },
-                                    child: const Icon(
-                                      Icons.photo_camera,
-                                      size: 36,
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                  width: 20,
-                                ),
-                                Container(
-                                  width: 50,
-                                  height: 50,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: Colors.white60,
-                                    border: Border.all(
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                  child: InkWell(
-                                    onTap: () => getImage(ImageSource.gallery),
-                                    child: const Icon(
-                                      Icons.photo,
-                                      size: 36,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ))
-                    ],
-                  )
-                : SizedBox(
-                    width: 300,
-                    height: 200,
-                    child: Row(
+            return BlocBuilder<EditItemCubit, Part>(builder: ((context, state) {
+              return state.photo != null
+                  ? Stack(
+                      alignment: Alignment.topCenter,
                       children: [
-                        Expanded(
-                            child: InkWell(
-                          onTap: () {
-                            getImage(ImageSource.gallery);
-                          },
-                          splashColor: Colors.blue,
-                          child: Container(
-                            width: double.infinity,
-                            height: double.infinity,
-                            decoration: BoxDecoration(
-                                border: Border.all(color: Colors.blue)),
-                            child: const Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(Icons.image, color: Colors.blue, size: 64),
-                                Text('Gallery',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.blue)),
-                              ],
-                            ),
-                          ),
-                        )),
-                        Expanded(
-                          child: InkWell(
-                            onTap: () {
-                              if (kIsWeb) {
-                                context.pushNamed(CameraPage.name);
-                              } else {
-                                getImage(ImageSource.camera);
-                              }
-                            },
-                            splashColor: Colors.white,
-                            child: Container(
-                              width: double.infinity,
-                              height: double.infinity,
-                              color: Colors.blue,
-                              child: const Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
+                        OnlinePinchZoomImage(link: state.photo),
+                        Positioned(
+                            bottom: 10,
+                            child: SizedBox(
+                              height: 50,
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  Icon(Icons.photo_camera,
-                                      color: Colors.white, size: 64),
-                                  Text(
-                                    'Camera',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white),
+                                  Container(
+                                    width: 50,
+                                    height: 50,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.white60,
+                                      border: Border.all(
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                    child: InkWell(
+                                      onTap: () => {
+                                        if (kIsWeb)
+                                          {context.push(CameraPage.routName)}
+                                        else
+                                          {getImage(ImageSource.camera)}
+                                      },
+                                      child: const Icon(
+                                        Icons.photo_camera,
+                                        size: 36,
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                    width: 20,
+                                  ),
+                                  Container(
+                                    width: 50,
+                                    height: 50,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.white60,
+                                      border: Border.all(
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                    child: InkWell(
+                                      onTap: () =>
+                                          getImage(ImageSource.gallery),
+                                      child: const Icon(
+                                        Icons.photo,
+                                        size: 36,
+                                      ),
+                                    ),
                                   ),
                                 ],
                               ),
+                            ))
+                      ],
+                    )
+                  : SizedBox(
+                      width: 300,
+                      height: 200,
+                      child: Row(
+                        children: [
+                          Expanded(
+                              child: InkWell(
+                            onTap: () {
+                              getImage(ImageSource.gallery);
+                            },
+                            splashColor: Colors.blue,
+                            child: Container(
+                              width: double.infinity,
+                              height: double.infinity,
+                              decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.blue)),
+                              child: const Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(Icons.image,
+                                      color: Colors.blue, size: 64),
+                                  Text('Gallery',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.blue)),
+                                ],
+                              ),
+                            ),
+                          )),
+                          Expanded(
+                            child: InkWell(
+                              onTap: () {
+                                if (kIsWeb) {
+                                  context.pushNamed(CameraPage.name);
+                                } else {
+                                  getImage(ImageSource.camera);
+                                }
+                              },
+                              splashColor: Colors.white,
+                              child: Container(
+                                width: double.infinity,
+                                height: double.infinity,
+                                color: Colors.blue,
+                                child: const Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(Icons.photo_camera,
+                                        color: Colors.white, size: 64),
+                                    Text(
+                                      'Camera',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white),
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                  );
-          }));
-        }),
+                        ],
+                      ),
+                    );
+            }));
+          }),
+        ),
       ),
     );
   }

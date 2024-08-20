@@ -29,7 +29,7 @@ class ExhausteditemsmanagerCubit extends Cubit<ExhausteditemsmanagerState> {
         // marked parts for delete are removed here if user level is Not admin
         // value.removeWhere((element) => element.markedBadByUid!=null);
 
-        if (state.locationFilter) {
+        if (state.locationFilter && companyName != 'parts') {
           value.removeWhere((element) => element.branch != branch);
         }
 
