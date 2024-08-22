@@ -68,7 +68,7 @@ class PartqueryManagerCubit extends Cubit<PartqueryManagerState> {
       return;
     }
 
-    state.copyWith(paginationLoading: true);
+    emit(state.copyWith(paginationLoading: true));
 
     print('requresting more');
     await partQueryRepository

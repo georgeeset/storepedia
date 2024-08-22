@@ -93,6 +93,8 @@ class EditItemCubit extends HydratedCubit<Part> {
       emit(state.copyWith(
         lastEditedBy: user.userName,
         searchKeywords: stringProcessor.searchKeywords(combinedString),
+        company: state.company ?? user.company,
+        branch: state.branch ?? user.branch,
       ));
     }
   }

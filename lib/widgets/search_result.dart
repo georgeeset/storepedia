@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:storepedia/cubit/part_query_manager.dart/cubit/partquerymanager_cubit.dart';
 import 'package:storepedia/widgets/loading_layout.dart';
 import 'package:storepedia/widgets/one_part.dart';
@@ -56,16 +57,16 @@ class _QueryBodyState extends State<QueryBody> {
                     child: OnePart(part: e),
                   ),
                 );
-              }).toList(),
+              }).toList()
+                ..add(Container(
+                    child: state.hasReachedMax
+                        ? null
+                        : const Shimmer(
+                            gradient: LinearGradient(
+                                colors: [Colors.green, Colors.teal]),
+                            child: Card(color: Colors.blue)))),
             ),
           );
-          // ..add(Container(
-          //     child: state.hasReachedMax
-          //         ? null
-          //         : const Shimmer(
-          //             gradient: LinearGradient(
-          //                 colors: [Colors.green, Colors.teal]),
-          //             child: Card(color: Colors.blue)))),
         }
 
         if (state.queryStatus == QueryStatus.loading) {
