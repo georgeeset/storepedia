@@ -78,7 +78,7 @@ const String deviceChanged =
     'Your Device Id has changed. Ensure you are not abusing this app.';
 
 const String aboutApp =
-    '''StorePedia is a robust database for keeping record of parts stored in the factory’s engineering store. This project was motivated by time loss while trying to locate required part at the spare part store.\n
+    '''Developed by George Esetevbe.\n Email: georgeperfect4u@gmail.com\nLinkedin:linkedin.com/in/george-esetevbe-b5447280\nGithub:https://github.com/georgeeset\n\nStorePedia is a robust database for keeping record of parts stored in the factory’s engineering store. This project was motivated by time loss while trying to locate required part at the spare part store.\n
   StorePedia works on the principle of active information collation. In this case, Store items information and location will be stored by approved app users in a central repository, where it can be queried and retrieved by the app 
   users in need of it. This app comes with the following features:\n
   Add and Edit Store Item: Users can either add non existing store items or Edit existing store items with latest information to enable others get more accurate information.\n
