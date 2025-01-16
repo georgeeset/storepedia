@@ -17,7 +17,7 @@ class PartqueryManagerState extends Equatable {
     this.paginationLoading = false,
     this.queryStatus = QueryStatus.initial,
     this.errorMessage = '',
-    this.locationFilter = true,
+    this.locationFilter = false,
   });
 
   PartqueryManagerState copyWith(
