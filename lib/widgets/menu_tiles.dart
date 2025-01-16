@@ -16,6 +16,8 @@ import 'package:storepedia/screens/search_page/search_page.dart';
 import 'package:storepedia/widgets/input_editor.dart';
 import 'package:storepedia/widgets/warining_dialog.dart';
 
+import '../bloc/authentication_bloc/bloc/authentication_bloc.dart';
+
 class MenuTiles extends StatelessWidget {
   const MenuTiles(
       {super.key,
@@ -67,7 +69,6 @@ class MenuTiles extends StatelessWidget {
             context.pushNamed(SearchPage.name);
           },
         ),
-
         BlocConsumer<UserManagerCubit, UserManagerState>(
             builder: (context, state) {
           if (state is UserManagerInitial || state is UserLoadingState) {
@@ -201,13 +202,6 @@ class MenuTiles extends StatelessWidget {
             }
           }
         }),
-
-        // ElevatedButton(
-        //     onPressed: () => context
-        //         .read<AuthenticationBloc>()
-        //         .add(SignOutEvent()),
-        //     child: Text('Signout'))
-
         MenuItem(
             sizeData: sizeData,
             itemIcon: Icons.hourglass_empty,
@@ -215,7 +209,6 @@ class MenuTiles extends StatelessWidget {
             onTapAction: () {
               context.pushNamed(ExhaustedItemsPage.name);
             }),
-
         MenuItem(
           sizeData: sizeData,
           itemIcon: Icons.person,
@@ -224,6 +217,15 @@ class MenuTiles extends StatelessWidget {
             context.pushNamed(ProfilePage.name);
           },
         ),
+
+        // Container(
+        //   constraints: ,
+        //   width: sizeData.width / 5,
+        //   child: ElevatedButton(
+        //       onPressed: () =>
+        //           context.read<AuthenticationBloc>().add(SignOutEvent()),
+        //       child: const Text('Signout')),
+        // ),
       ],
     );
   }

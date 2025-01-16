@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:storepedia/bloc/authentication_bloc/bloc/authentication_bloc.dart';
 import 'package:storepedia/cubit/user_manager_cubit/usermanager_cubit.dart';
 import 'package:storepedia/model/user_model.dart';
 import 'package:storepedia/widgets/onliine_avatar.dart';
@@ -129,6 +131,15 @@ class ProfileData extends StatelessWidget {
         ),
         const SizedBox(
           height: 20.0,
+        ),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: ElevatedButton(
+              onPressed: () {
+                context.read<AuthenticationBloc>().add(SignOutEvent());
+                context.pop();
+              },
+              child: const Text('Sign Out')),
         ),
         const Row(
           mainAxisAlignment: MainAxisAlignment.center,
